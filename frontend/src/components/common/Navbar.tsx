@@ -46,18 +46,21 @@ const Menus = styled.div`
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isSearch, setIsSearch] = useState<boolean>(false);
 
   return (
     <>
       <Nav>
         <img src={biscuit} alt="biscuit" />
         <Menus>
-          <img src={search} alt="search" />
+          <img src={search} alt="search"
+            onClick={() => isSearch ? setIsSearch(false) : setIsSearch(true)}  />
           <img src={theme} alt="theme" />
           <img src={menu} alt="aside-bar"
             onClick={() => isOpen ? setIsOpen(false) : setIsOpen(true)}  />
         </Menus>
       </Nav>
+      {isSearch ? <Searchbar isSearch={isSearch} setIsSearch={setIsSearch} /> : null}
       {isOpen ? <Asidebar isOpen={isOpen} setIsOpen={setIsOpen} /> : null}
     </>
   )
