@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Asidebar from "./Asidebar";
+import Searchbar from "./SearchBar";
 
 // css
 import styled from "styled-components";
@@ -40,7 +41,6 @@ const Menus = styled.div`
   height: 24.82px;
 
   flex: none;
-  order: 2;
   flex-grow: 0;
 `
 

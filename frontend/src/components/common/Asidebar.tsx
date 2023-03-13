@@ -1,16 +1,18 @@
+import BigCategory from "./BigCategory";
+import AsideButton from "./AsideButton";
+
 // css
 import styled from "styled-components";
 
 // icons
 import close from '../../assets/icons/close.svg';
-import setdefault from '../../assets/icons/Property 1=default.svg';
-import dropdown from '../../assets/icons/arrow_drop_down.svg';
 
 const Aside = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   padding: 8px;
+  background: #1A1B1E;
 
   position: fixed;
   width: 298px;
@@ -70,70 +72,16 @@ const Nickname = styled.div`
   flex-grow: 0;
 `
 
-const Sidemenu = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 4px 0px;
-  gap: 10px;
-
-  flex: none;
-  order: 3;
-  align-self: stretch;
-  flex-grow: 0;
-`
-
-const Category = styled.div`
-  box-sizing: border-box;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  gap: 10px;
-
-  width: 298px;
-  height: 52px;
-
-  border-bottom: 1px solid #252B30;
-  color: #FFFFFF;
-
-  flex: none;
-  order: 4;
-  align-self: stretch;
-  flex-grow: 0;
-`
-
 export default function Asidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: any }) {
-  const category = [
-    { name: "Frontend"},
-    { name: "Backend"},
-    { name: "DevOps"},
-    { name: "Android"},
-    { name: "QA"},
-  ];
 
   return (
     <Aside className={isOpen ? 'open' : ''}>
       <Closeicon><img src={close} alt="close" onClick={() => isOpen ? setIsOpen(false) : setIsOpen(true)} /></Closeicon>
       <Middle>
-        <Nickname>Jiny님</Nickname>
-        <Sidemenu>
-          <img src={setdefault} alt="default" />
-          <img src={setdefault} alt="default" />
-          <img src={setdefault} alt="default" />
-        </Sidemenu>
+        <Nickname>내닉네임 님</Nickname>
+        <AsideButton />
       </Middle>
-      {category.map((data) => (
-        <>
-          <Category>
-            <p>{data.name}</p>
-            <img src={dropdown} alt="dropdown" />
-          </Category>
-        </>
-      ))}
+      <BigCategory />
     </Aside>
   )
 }

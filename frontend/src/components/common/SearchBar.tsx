@@ -1,3 +1,5 @@
+import { useState, FormEvent, KeyboardEvent } from 'react';
+
 // css
 import styled from "styled-components";
 
@@ -19,26 +21,35 @@ const SearchBar = styled.div`
   background: #1A1B1E;
 `
 
-const Bar = styled.div`
-  box-sizing: border-box;
-
-  width: 278px;
-  height: 35px;
-
-  border-bottom: 1px solid #ECECEC;
-
-  flex: none;
-  // order: 0;
-  flex-grow: 1;
-`
-
 export default function Searchbar({ isSearch, setIsSearch }: { isSearch: boolean; setIsSearch: any }) {
+  const [value, setValue] = useState<string>("");
+
+  const onChange = (e: FormEvent<HTMLInputElement>) => {
+    const {
+      currentTarget: { value },
+    } = e;
+    setValue(value);
+  }
+
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      console.log(value);
+    }
+  }
 
   return (
     <SearchBar>
       <img src={searchBar} alt='search' />
-      <Bar></Bar>
-      <img src={close} alt='close' />
+      <form>
+        <input 
+          type="text"
+          value={value}
+          onChange={onChange}
+          onKeyPress={handleKeyPress}
+        />
+      </form>
+      <img src={close} alt='close' onClick={() => isSearch ? setIsSearch(false) : setIsSearch(true)} />
     </SearchBar>
   )
 }
