@@ -8,20 +8,24 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 @Entity
-public class Member {
+public class Content {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String email;
-	private SocialDomain socialDomain;
-	private Role role;
-	private LocalDateTime signupDate;
-	private LocalDateTime withdrawDate;
-	@OneToOne
-	private MemberProfile memberProfile;
+	@ManyToOne
+	private Category category;
+	private String url;
+	private String title;
+	private String writer;
+	private String creditBy;
+	private LocalDateTime createdDate;
+	private Integer hit;
+	private Integer timeCost;
+	private Type type;
 
 }
