@@ -21,7 +21,7 @@ module.exports = {
         grey80: '#32373D',
         grey90: '#252B30',
         // bg
-        evalutated: '#ECECEC',
+        evaluated: '#ECECEC',
         // main
         primary: '#3FE5EF',
         'primary-var': '#6DF5F1',
@@ -31,7 +31,7 @@ module.exports = {
         danger: '#FF7B5E',
         'danger-var': '#FFA693',
         // text
-        sub: '#9DA3AA',
+        subColor: '#9DA3AA',
 
         // Dark Theme Color
         dark: {
@@ -46,7 +46,7 @@ module.exports = {
           grey80: '#DDDDDD',
           grey90: '#ECECEC',
           // bg
-          evalutated: '#252B30',
+          evaluated: '#252B30',
           // main
           primary: '#3FE5EF',
           'primary-var': '#2FB0CF',
@@ -56,10 +56,62 @@ module.exports = {
           danger: '#FF7B5E',
           'danger-var': '#EC6447',
           // text
-          sub: '#636971',
+          subColor: '#636971',
         },
       },
-      spacing: {},
+      fontFamily: {
+        sans: ['Pretendard', 'sans-serif'],
+      },
+      fontSize: {
+        // headings
+        h1: ['32px', { fontWeight: '800' }],
+        h2: ['24px', { fontWeight: '800' }],
+        h3: ['20px', { fontWeight: '800' }],
+        h4: ['16px', { fontWeight: '800' }],
+        h5: ['14px', { fontWeight: '800' }],
+        h6: ['12px', { fontWeight: '800' }],
+        // content text
+        main: ['16px', { fontWeight: '400' }],
+        'main-bold': ['16px', { fontWeight: '500' }],
+        sub: ['14px', { fontWeight: '400' }],
+        'sub-bold': ['14px', { fontWeight: '500' }],
+        tiny: ['12px', { fontWeight: '200' }],
+        'tiny-bold': ['12px', { fontWeight: '500' }],
+      },
+      spacing: {
+        1: '4px',
+        2: '8px',
+        3: '12px',
+        4: '16px',
+        5: '20px',
+        6: '24px',
+        7: '28px',
+        8: '32px',
+        9: '36px',
+        10: '40px',
+        11: '44px',
+        12: '48px',
+        13: '52px',
+        14: '56px',
+        15: '60px',
+        16: '64px',
+        17: '68px',
+        18: '72px',
+        19: '76px',
+        20: '80px',
+      },
+      borderRadius: {
+        0: '0px',
+        2: '2px',
+        4: '4px',
+        8: '8px',
+        10: '10px',
+        12: '12px',
+        14: '14px',
+        16: '16px',
+        18: '18px',
+        20: '20px',
+      },
     },
   },
   variants: {
@@ -69,5 +121,8 @@ module.exports = {
       textColor: ['dark'],
     },
   },
-  plugins: [],
+  corePlugins: {
+    aspectRatio: false,
+  },
+  plugins: [require('@tailwindcss/aspect-ratio')],
 };
