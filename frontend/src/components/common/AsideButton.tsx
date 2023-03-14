@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 // css
 import styled from "styled-components";
 
@@ -28,7 +30,7 @@ const Btn = styled.div`
   padding: 16px;
   gap: 8px;
 
-  position: relative;
+  // position: relative;
   width: 83px;
 
   background: #252B30;
@@ -45,18 +47,24 @@ const Btn = styled.div`
 export default function AsideButton() {
   return (
     <AsideBtn>
-      <Btn>
-        <img src={setting} alt="setting" />
-        <span>계정설정</span>
-      </Btn>
-      <Btn>
-        <img src={bookmark} alt="bookmark" />
-        <span>북마크</span>
-      </Btn>
-      <Btn>
-        <img src={history} alt="history" />
-        <span>히스토리</span>
-      </Btn>
+      <Link to="/">
+        <Btn>
+          <img src={setting} alt="setting" />
+          <span>계정설정</span>
+        </Btn>
+      </Link>
+      <Link to="/">
+        <Btn>
+          <img src={bookmark} alt="bookmark" />
+          <span>북마크</span>
+        </Btn>
+      </Link>
+      <Link to="/">
+        <Btn>
+          <img src={history} alt="history" />
+          <span>히스토리</span>
+        </Btn>
+      </Link>
     </AsideBtn>
   )
 }

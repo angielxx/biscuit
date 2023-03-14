@@ -1,3 +1,4 @@
+import { useState } from "react";
 import BigCategory from "./BigCategory";
 import AsideButton from "./AsideButton";
 
@@ -15,8 +16,8 @@ const Aside = styled.div`
   background: #1A1B1E;
 
   position: fixed;
-  width: 298px;
-  height: 828px;
+  width: 314px;
+  height: 844px;
 
   right: -55%;
   top: 0;
@@ -72,13 +73,15 @@ const Nickname = styled.div`
   flex-grow: 0;
 `
 
-export default function Asidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: any }) {
+export default function Asidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: any; }) {
+  const [name, setName] = useState<string>("");
 
   return (
     <Aside className={isOpen ? 'open' : ''}>
       <Closeicon><img src={close} alt="close" onClick={() => isOpen ? setIsOpen(false) : setIsOpen(true)} /></Closeicon>
       <Middle>
-        <Nickname>내닉네임 님</Nickname>
+        {/* <Nickname>{name} 님</Nickname> */}
+        <Nickname>유진 님</Nickname>
         <AsideButton />
       </Middle>
       <BigCategory />
