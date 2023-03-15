@@ -7,6 +7,7 @@ const functionToggleState = atom({
   key: "functionToggleState",
   default: {
     homePageToggle : false,
+    buttonToggle: false,
   },
   effects_UNSTABLE: [persistAtom],
 })
