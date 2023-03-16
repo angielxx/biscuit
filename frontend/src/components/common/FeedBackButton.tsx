@@ -2,10 +2,10 @@ import React from 'react';
 
 import tw, { styled, css } from 'twin.macro';
 
-// Export interface for Button.stories.tsx
 export interface FeedBackButtonProps {
-  number: string;
+  number: number;
   filled: boolean;
+  onClick: () => void;
 }
 
 // Styled component
@@ -18,9 +18,9 @@ const Btn = styled.div((props: { filled: boolean }) => [
 const Text = tw.span`text-sub`;
 
 // Main component
-const FeedBackButton = ({ number, filled }: FeedBackButtonProps) => {
+const FeedBackButton = ({ number, filled, onClick }: FeedBackButtonProps) => {
   return (
-    <Btn filled={filled}>
+    <Btn filled={filled} onClick={onClick}>
       <Text>{number}</Text>
     </Btn>
   );
