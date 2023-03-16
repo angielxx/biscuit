@@ -21,7 +21,7 @@ public class Member {
 	private Role role;
 	private LocalDateTime signupDate;
 	private LocalDateTime withdrawDate;
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	private MemberProfile memberProfile;
 
 }

@@ -13,10 +13,10 @@ import javax.persistence.ManyToOne;
 public class MemberHistory {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long memberHistoryId;
-	@ManyToOne
+	private Long id;
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Member member;
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Content content;
 	private LocalDateTime createdDate;
 }

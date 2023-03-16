@@ -10,8 +10,8 @@ import javax.persistence.ManyToOne;
 public class MemberPoint {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long memberPointId;
-	@ManyToOne
+	private Long id;
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Member member;
 	private Integer changedPoints; //포인트 변동값
 	private PointTrigger pointTrigger;

@@ -11,9 +11,9 @@ import javax.persistence.ManyToOne;
 public class MemberInterest {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long memberInterestId;
-	@ManyToOne
+	private Long id;
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Member member;
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Category category;
 }

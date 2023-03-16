@@ -10,9 +10,10 @@ import javax.persistence.OneToOne;
 @Entity
 public class MemberProfile {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long memberProfileId;
-	@OneToOne(mappedBy = "memberProfile")
+	private Long memberId;
+	@MapsId
+	@JoinColumn(name = "member_id")
+	@OneToOne(fetch = FetchType.LAZY)
 	private Member member;
 	private Job job; //직무
 	private Integer period; //연차
