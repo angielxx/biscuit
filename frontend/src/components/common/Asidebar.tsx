@@ -3,78 +3,54 @@ import BigCategory from "./BigCategory";
 import AsideButton from "./AsideButton";
 
 // css
-import styled from "styled-components";
+import tw, { styled } from "twin.macro";
 
 // icons
 import close from '../../assets/icons/close.svg';
+// icons
+import setting from '../../assets/icons/setting.svg';
+import bookmark from '../../assets/icons/bookmark.svg';
+import history from '../../assets/icons/history.svg';
 
 const Aside = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 8px;
-  background: #1A1B1E;
-
-  position: fixed;
-  width: 314px;
-  height: 844px;
-
-  right: -55%;
-  top: 0;
-  position: fixed;
+  ${tw`flex flex-col items-start p-2 fixed w-[314px] right-[-55%] top-0 bg-[#1A1B1E]`}
 
   &.open {
-    right: 0;
+    ${tw`right-0`}
   }
 `
 
 const Closeicon = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: flex-start;
-  padding: 10px;
-  gap: 10px;
-
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 0;
+  ${tw`flex justify-end items-start p-[10px] gap-[10px] flex-none order-1 self-stretch grow-0`}
 `
 
 const Middle = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start;
-  padding: 16px;
-  gap: 19px;
-
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 0;
+  ${tw`flex flex-col justify-end items-start p-[16px] gap-[19px] flex-none order-2 self-stretch grow-0`}
 `
 
 const Nickname = styled.div`
-  width: 136px;
-  height: 34px;
-
-  font-family: 'Pretendard';
-  font-style: normal;
-  font-weight: 800;
-  font-size: 24px;
-  line-height: 140%;
-
-  color: #3FE5EF;
-
-  flex: none;
-  order: 2;
-  flex-grow: 0;
+  ${tw`w-[136px] h-[34px] text-primary flex-none order-3 grow-0 text-h2`}
 `
 
-export default function Asidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: any; }) {
-  const [name, setName] = useState<string>("");
+const AsideBtn = styled.div`
+  ${tw`flex justify-between items-start flex-none order-3 self-stretch px-1 py-0 grow-0 gap-[10px]`}
+`
+
+const Btn = styled.div`
+  ${tw`flex flex-col justify-center items-center w-[83px] bg-dark-grey10 p-4 gap-2 rounded-10 text-h6 text-white`}
+
+  &:hover {
+    ${tw`bg-dark-primary-var text-black`}
+  }
+`
+
+interface AsidebarStatus {
+  isOpen: boolean;
+  setIsOpen: any;
+}
+
+const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
+  // const [name, setName] = useState<string>("");
 
   return (
     <Aside className={isOpen ? 'open' : ''}>
@@ -82,9 +58,15 @@ export default function Asidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIs
       <Middle>
         {/* <Nickname>{name} 님</Nickname> */}
         <Nickname>유진 님</Nickname>
-        <AsideButton />
+        <AsideBtn>
+          <AsideButton linkto="/setting" src={setting} alt="setting" title="계정설정" />
+          <AsideButton linkto="/bookmark" src={bookmark} alt="bookmark" title="북마크" />
+          <AsideButton linkto="/history" src={history} alt="history" title="히스토리" />
+        </AsideBtn>
       </Middle>
       <BigCategory />
     </Aside>
   )
 }
+
+export default Asidebar;

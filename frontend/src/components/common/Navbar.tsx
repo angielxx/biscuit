@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import Asidebar from "./Asidebar";
 import Searchbar from "./SearchBar";
 
 // css
-import styled from "styled-components";
+import tw, { styled } from "twin.macro";
 
 // icons
 import biscuit from '../../assets/icons/biscuit.svg';
@@ -12,46 +14,26 @@ import theme from '../../assets/icons/theme.svg';
 import menu from '../../assets/icons/menu.svg';
 
 const Nav = styled.div`
-  box-sizing: border-box;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  // gap: 157px;
-
-  position: absolute;
-  width: 390px;
-  height: 73.23px;
-  left: 0px;
-  top: 0px;
-
-  border-bottom: 1px solid #32373D;
+  ${tw`box-border flex justify-between items-center px-3 py-4 absolute w-[390px] h-[73.23px] left-0 top-0 border-b border-solid border-dark-grey20`}
 `
 
 const Menus = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  padding: 0px;
-  gap: 12px;
-
-  width: 94.99px;
-  height: 24.82px;
-
-  flex: none;
-  flex-grow: 0;
+  ${tw`flex items-start p-0 gap-3 w-[94.99px] h-[24.82px] flex-none grow-0`}
 `
 
-export default function Navbar() {
+const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isSearch, setIsSearch] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  const goHome = () => {
+    navigate('/');
+  }
 
   return (
     <>
       <Nav>
-        <img src={biscuit} alt="biscuit" />
+        <img src={biscuit} alt="biscuit" onClick={goHome} />
         <Menus>
           <img src={search} alt="search"
             onClick={() => isSearch ? setIsSearch(false) : setIsSearch(true)}  />
@@ -65,3 +47,5 @@ export default function Navbar() {
     </>
   )
 }
+
+export default Navbar;

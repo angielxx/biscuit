@@ -1,54 +1,34 @@
 import { useState } from "react";
 
 // css
-import styled from "styled-components";
+import tw, { styled } from 'twin.macro';
 
 // icons
 import dropdown from '../../assets/icons/arrow_drop_down.svg';
+import SmallCategory from "./SmallCategory";
 
-const Category = styled.div`
-  box-sizing: border-box;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  gap: 10px;
-
-  width: 298px;
-  height: 52px;
-
-  border-bottom: 1px solid #252B30;
-  color: #FFFFFF;
-
-  flex: none;
-  order: 4;
-  align-self: stretch;
-  flex-grow: 0;
+const CategoryBox = styled.div`
+  ${tw`flex flex-col order-4`}
 `
 
-export default function BigCategory() {
+const Category = styled.div`
+  ${tw`flex justify-between items-center w-[298px] h-13 box-border px-3 py-4 text-white flex-none self-stretch grow-0 order-4 border-b border-solid border-dark-evaluated`}
+`
+
+const BigCategory = () => {
   const [isCategory, setIsCategory] = useState<boolean>(false);
 
-  const category = [
-    { name: "Frontend" },
-    { name: "Backend" },
-    { name: "DevOps" },
-    { name: "Android" },
-    { name: "QA" },
-  ];
-
   return (
-    <>
-      {category.map((data) => (
-        <>
-          <Category>
-            <p>{data.name}</p>
-            <img src={dropdown} alt="dropdown" onClick={() => {isCategory ? setIsCategory(false) : setIsCategory(true); }} />
-          </Category>
-        </>
-      ))}
-    </>
+    <CategoryBox>
+      <Category>
+        <p className="text-h3">카테고리</p>
+        <img src={dropdown} alt="dropdown" onClick={() => {isCategory ? setIsCategory(false) : setIsCategory(true); }} />
+      </Category>
+      {isCategory ? (
+        <SmallCategory />
+      ) : null}
+    </CategoryBox>
   )
 }
+
+export default BigCategory;

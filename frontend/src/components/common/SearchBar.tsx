@@ -1,50 +1,33 @@
 import { useState, FormEvent, KeyboardEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // css
-import styled from "styled-components";
+import tw, { styled } from 'twin.macro';
 
 // icons
 import searchBar from '../../assets/icons/search-bar.svg';
 import close from '../../assets/icons/close.svg';
-import axios from 'axios';
 
 const SearchBar = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 16px;
-  gap: 16px;
-
-  position: absolute;
-  left: 0px;
-  top: 73px;
-
-  background: #1A1B1E;
+  ${tw`flex items-center p-4 gap-4 absolute left-0 top-[73px]`}
 `
 
 const Input = styled.input`
-  box-sizing: border-box;
-  background: transparent;
-
-  width: 278px;
-  height: 35px;
-
-  border-bottom: 1px solid #7F878F;
-
-  flex: none;
-  order: 1;
-  flex-grow: 1;
+  ${tw`box-border w-[278px] h-[35px] bg-transparent border-b border-solid border-dark-grey50`}
 
   &:focus {
-    outline: none;
-    border-bottom: 1px solid #3FE5EF;
-    color: #3FE5EF;
+    ${tw`outline-none text-primary border-b border-solid border-dark-primary`}
   }
 `
 
-export default function Searchbar({ isSearch, setIsSearch }: { isSearch: boolean; setIsSearch: any }) {
+interface SearchProps {
+  isSearch: boolean;
+  setIsSearch: any;
+}
+
+const Searchbar = ({ isSearch, setIsSearch }: SearchProps) => {
   const [search, setSearch] = useState<string>("");
-  const [searchlist, setSearchList] = useState([]);
+  const navigate = useNavigate();
 
   const onChange = (e: FormEvent<HTMLInputElement>) => {
     const {
@@ -58,18 +41,10 @@ export default function Searchbar({ isSearch, setIsSearch }: { isSearch: boolean
       e.preventDefault();
       console.log(search);
 
-      // 검색 키워드 백으로 보내서 받아오는 로직
-      // axios
-      //   .post(`/api/search?${search}`)
-      //   .then((res) => {
-      //     console.log(res);
-      //     // search_list = 각 검색 결과가 담긴 리스트
-      //     const search_list = res.data.results;
-      //     setSearchList(search_list);
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   })
+      const URLSearch = new URLSearchParams(location.search);
+      URLSearch.set('q', String(search));
+      const newParam = URLSearch.toString();
+      navigate('/search?' + newParam);
     }
   }
 
@@ -90,3 +65,5 @@ export default function Searchbar({ isSearch, setIsSearch }: { isSearch: boolean
     </>
   )
 }
+
+export default Searchbar;
