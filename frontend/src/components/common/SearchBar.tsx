@@ -49,20 +49,18 @@ const Searchbar = ({ isSearch, setIsSearch }: SearchProps) => {
   }
 
   return (
-    <>
-      <SearchBar>
-        <img src={searchBar} alt='search' />
-        <form>
-          <Input 
-            type="text"
-            value={search}
-            onChange={onChange}
-            onKeyPress={handleKeyPress}
-          />
-        </form>
-        <img src={close} alt='close' onClick={() => isSearch ? setIsSearch(false) : setIsSearch(true)} />
-      </SearchBar>
-    </>
+    <SearchBar>
+      <img src={searchBar} alt='search' />
+      <form>
+        <Input 
+          type="text"
+          value={search}
+          onChange={onChange}
+          onKeyPress={handleKeyPress}
+        />
+      </form>
+      <img src={close} alt='close' onClick={() => isSearch ? setIsSearch(false) : setIsSearch(true)} />
+    </SearchBar>
   )
 }
 
