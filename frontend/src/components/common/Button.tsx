@@ -29,6 +29,8 @@ const Btn = styled.button((props: { status: StatusType }) => [
 
 const Text = tw.span`text-h4`;
 
+/** title : 버튼 내용,
+ * status : "active", "disabled", "danger", "activeHover" */
 const Button = ({title, status, onClick}: ButtonProps) => {
   return (
     <Btn status={status} onClick={onClick}>

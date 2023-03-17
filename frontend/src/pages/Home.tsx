@@ -14,7 +14,7 @@ export default function Home() {
     <div>
       <h1>Home</h1>
       { functionToggle.homePageToggle ? <p>Toggle On</p> : <p>Toggle Off</p>}
-      { functionToggle.buttonToggle ? <Button title="버튼" status="active" onClick={clickBtn}/> : null}
+      { functionToggle.buttonToggle ? <Button title="퀴즈 풀래요" status="active" onClick={clickBtn}/> : null}
     </div>
   )
 }
