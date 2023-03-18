@@ -9,6 +9,7 @@ const functionToggleState = atom({
     homePageToggle : true,
     buttonToggle: true,
     dropDownToggle: true,
+    filterBarToggle: true,
   },
   effects_UNSTABLE: [persistAtom],
 })
