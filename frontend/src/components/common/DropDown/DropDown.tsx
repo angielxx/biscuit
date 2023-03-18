@@ -1,38 +1,57 @@
-import { ReactEventHandler, useState } from 'react';
-import tw, { styled, css, TwStyle } from 'twin.macro';
+import { useState, useRef } from 'react';
+import tw, { styled, css } from 'twin.macro';
 import DropDownList from './DropDownList';
 
-import arrowDropDown from '../../assets/icons/arrow_drop_down.svg';
+import arrowDropDown from '../../../assets/icons/arrow_drop_down.svg';
+import useOnClickOutside from '../../../hooks/useOnClickOutside';
 
-type StatusType = "selected" | "unselected"; 
+type ItemObj = {
+  id: number,
+  content: string,
+}
+
+interface DropDownProps {
+  itemList: ItemObj[];
+  placeHolder: string;
+}
 
 const DropDownBtn = tw.button
-  `w-full h-14 rounded flex justify-between items-center`;
+  `w-full h-14 rounded flex justify-between items-center bg-dark-evaluated px-4`;
 
 const ArrowDropDown = styled.div
   `${css`
-    background-image: ${arrowDropDown};
+    width: 24px;
+    height: 24px;
+    background-size: cover;
+    background-image: url("${arrowDropDown}");
+    
   `}
 `;
 
 const DropDownHolder = styled.span((props: { selected: string }) => [
   props.selected !== ""
-    ? tw`text-dark-primary text-sub`
-    : tw`text-dark-subColor text-main font-bold`
+    ? tw`text-dark-primary text-main`
+    : tw`text-dark-subColor text-sub`
 ])
 
-const DropDown = ({itemList, placeHolder}) => {
-  const [isClicked, setIsClicked] = useState(false);
-  const [selected, setSelected] = useState("");
+/** itemList는 드롭다운 아이템 리스트 {id: number, content:string},
+ * placeHolder는 드롭다운 기본 홀더(string)
+*/
+const DropDown = ({itemList, placeHolder}: DropDownProps) => {
+  const [isClicked, setIsClicked] = useState<boolean>(false);
+  const [selected, setSelected] = useState<string>("");
+  const ref = useRef<HTMLDivElement>(null);
 
   const onClick = () => {
     setIsClicked(!isClicked);
   }
 
+  useOnClickOutside(ref, () => setIsClicked(false));
+
   return (
-    <div>
+    <div ref={ref}>
       <DropDownBtn onClick={onClick}>
-        <DropDownHolder selected={selected}>{selected}</DropDownHolder>
+        <DropDownHolder selected={selected}>{selected !== "" ? selected : placeHolder}</DropDownHolder>
         <ArrowDropDown />
       </DropDownBtn>
       {isClicked
