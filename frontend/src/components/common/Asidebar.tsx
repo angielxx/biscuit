@@ -21,19 +21,19 @@ const Aside = styled.div`
 `
 
 const Closeicon = styled.div`
-  ${tw`flex justify-end items-start p-[10px] gap-[10px] flex-none order-1 self-stretch grow-0`}
+  ${tw`flex justify-end items-start p-[10px] gap-[10px] self-stretch`}
 `
 
 const ProfileBox = styled.div`
-  ${tw`flex flex-col justify-end items-start p-[16px] gap-[19px] flex-none order-2 self-stretch grow-0`}
+  ${tw`flex flex-col justify-end items-start p-[16px] gap-[19px] self-stretch`}
 `
 
 const Nickname = styled.div`
-  ${tw`w-[136px] h-[34px] text-primary flex-none order-3 grow-0 text-h2`}
+  ${tw`w-[136px] h-[34px] text-primary text-h2`}
 `
 
 const AsideBtn = styled.div`
-  ${tw`flex justify-between items-start flex-none order-3 self-stretch px-1 py-0 grow-0 gap-[10px]`}
+  ${tw`flex justify-between items-start self-stretch px-1 py-0 gap-[10px]`}
 `
 
 interface AsidebarStatus {
@@ -56,7 +56,7 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
           <AsideButton to="/history" src={history} alt="history" title="히스토리" />
         </AsideBtn>
       </ProfileBox>
-      <BigCategory />
+      <BigCategory isOpen={isOpen} setIsOpen={setIsOpen} />
     </Aside>
   )
 }

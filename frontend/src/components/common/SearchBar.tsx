@@ -9,7 +9,7 @@ import searchBar from '../../assets/icons/search-bar.svg';
 import close from '../../assets/icons/close.svg';
 
 const SearchBar = styled.div`
-  ${tw`flex items-center p-4 gap-4 absolute left-0 top-[73px]`}
+  ${tw`flex items-center p-4 gap-4 left-0 top-[73px]`}
 `
 
 const Input = styled.input`
@@ -45,6 +45,7 @@ const Searchbar = ({ isSearch, setIsSearch }: SearchProps) => {
       URLSearch.set('q', String(search));
       const newParam = URLSearch.toString();
       navigate('/search?' + newParam);
+      // console.log(decodeURI(location.search));  // 한글이 안깨지게 가져오려면 decodeURI 써주어야함
     }
   }
 
