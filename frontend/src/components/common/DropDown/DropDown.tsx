@@ -30,7 +30,7 @@ const ArrowDropDown = styled.div
 
 const DropDownHolder = styled.span((props: { selected: string }) => [
   props.selected !== ""
-    ? tw`text-dark-primary text-main`
+    ? tw`text-dark-primary text-main-bold`
     : tw`text-dark-subColor text-sub`
 ])
 

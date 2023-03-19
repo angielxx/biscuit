@@ -21,7 +21,7 @@ const onClick = ({content, setSelected, setIsClicked}: onClickProps) => {
 
 const DropDownItemBtn = styled.button((props: { isHovering: boolean }) => [
   props.isHovering === true
-    ? tw`w-full h-14 rounded flex justify-between items-center bg-dark-primary-var px-4 text-main text-black`
+    ? tw`w-full h-14 rounded flex justify-between items-center bg-dark-primary-var px-4 text-main-bold text-black`
     : tw`w-full h-14 rounded flex justify-between items-center bg-dark-evaluated px-4 text-main text-dark-primary`
 ])
 
