@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { useRecoilValue } from "recoil"
+import { useRecoilState, useRecoilValue } from "recoil"
 import Button from "../components/common/Button";
 import DropDown from "../components/common/DropDown/DropDown";
 import FilterBar from "../components/common/FilterBar/FilterBar";
 import { functionToggleState } from "../recoils/FuntionToggle/Atoms"
+import { homeFilterBtnState, homeFilterTimeState } from "../recoils/Home/Atoms";
 
 export default function Home() {
   const functionToggle = useRecoilValue(functionToggleState);
@@ -19,8 +19,8 @@ export default function Home() {
     { id: 3, content: "DevOps" },
   ]
 
-  const [filterBtnState, setFilterBtnState] = useState([false, false]);
-  const [filterTimeState, setFilterTimeState] = useState([false, false, false, false, false, false]);
+  const [filterBtnState, setFilterBtnState] = useRecoilState(homeFilterBtnState);
+  const [filterTimeState, setFilterTimeState] = useRecoilState(homeFilterTimeState);
 
   return (
     <div>
