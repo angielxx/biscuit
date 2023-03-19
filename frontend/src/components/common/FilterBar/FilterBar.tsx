@@ -2,15 +2,21 @@ import tw, { styled, css } from 'twin.macro';
 import FilterBtnList from './FilterBtnList';
 import FilterTime from './FilterTime';
 
+type ItemObj = {
+  id: number;
+  content: string;
+  status: boolean;
+}
+
 interface FilterBarProps {
   filterBtnState: boolean[];
   setFilterBtnState: React.Dispatch<React.SetStateAction<boolean[]>>;
-  filterTimeState: boolean[];
-  setFilterTimeState: React.Dispatch<React.SetStateAction<boolean[]>>;
+  filterTimeState: ItemObj[];
+  setFilterTimeState: React.Dispatch<React.SetStateAction<ItemObj[]>>;
 }
 
 const FilterBarContainer = tw.div`
-  w-full h-14 flex justify-between items-center px-4
+  w-full h-17 flex justify-between items-start px-4 bg-black
 `;
 
 const FilterBar = ({filterBtnState, setFilterBtnState, filterTimeState, setFilterTimeState}: FilterBarProps) => {

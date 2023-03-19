@@ -7,21 +7,21 @@ interface FilterBtnProps {
 }
 
 const FilterBtnContainer = tw.div`
-  w-full h-14 flex justify-between items-center px-4 bg-black
+  gap-3 h-17 flex justify-between items-center bg-black
 `;
 
 const FilterBtn = styled.button((props: { state: boolean }) => [
-  tw`w-[84px] h-9 flex rounded-[10px] justify-center items-center`,
+  tw`h-9 flex rounded-[10px] justify-center items-center px-2 py-3`,
   props.state === true
     ? tw`bg-dark-primary`
     : tw`bg-black border-[1px] border-dark-primary`
 ])
 
 const Span = styled.span((props: { state: boolean }) => [
-  tw`text-center text-h5`,
+  tw`text-center`,
   props.state === true
-    ? tw`text-black`
-    : tw`text-dark-primary`
+    ? tw`text-black text-tiny-bold`
+    : tw`text-dark-primary text-tiny`
 ])
 
 const onclick = (idx: number, filterBtnState: boolean[], setFilterBtnState: React.Dispatch<React.SetStateAction<boolean[]>>) => {
