@@ -13,7 +13,7 @@ const FilterBtnContainer = tw.div`
 const FilterBtn = styled.button((props: { state: boolean }) => [
   tw`h-9 flex rounded-[10px] justify-center items-center px-2 py-3`,
   props.state === true
-    ? tw`bg-dark-primary`
+    ? tw`bg-dark-primary border-[1px] border-black`
     : tw`bg-black border-[1px] border-dark-primary`
 ])
 

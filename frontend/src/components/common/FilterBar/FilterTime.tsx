@@ -4,6 +4,8 @@ import tw, { styled, css } from 'twin.macro';
 import FilterTimeList from './FilterTimeList';
 
 import arrowDropDown from '../../../assets/icons/arrow_drop_down.svg';
+import cancel from  '../../../assets/icons/cancel.svg';
+
 import useOnClickOutside from '../../../hooks/useOnClickOutside';
 import { useRecoilState } from 'recoil';
 import { filterTimeSelectedState } from '../../../recoils/Home/Atoms';
@@ -23,18 +25,6 @@ const FilterTimeContainer = tw.div`
   h-14 flex-col justify-between py-4 px-4 bg-black
 `;
 
-// const ArrowDropDown = styled.div((props: { selected: string }) => [
-//   `${css`
-//   width: 24px;
-//   height: 24px;
-//   background-size: cover;
-//   background-image: url("${arrowDropDown}");
-//   `}`,
-//   // props.selected === ""
-//   //   ? tw`bg-dark-primary`
-//   //   : tw`bg-black`
-// ]);
-
 const ArrowDropDown = styled.div
   `${css`
     width: 24px;
@@ -52,7 +42,7 @@ const CancleBtn = styled.div
     height: 24px;
     background-color: black;
     mask-size: cover;
-    mask-image: url("${arrowDropDown}");    
+    mask-image: url("${cancel}");    
   `}
 `;
 
@@ -64,7 +54,7 @@ const FilterTimeBtn = styled.button((props: { selected: string }) => [
 ]);
 
 const FilterTimeHolder = styled.span((props: { selected: string }) => [
-  tw`text-tiny-bold truncate`,
+  tw`text-tiny-bold truncate w-18 text-start`,
   props.selected === ""
     ? tw`text-dark-primary`
     : tw`text-black`
