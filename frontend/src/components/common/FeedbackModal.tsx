@@ -33,7 +33,6 @@ const FeedbackBtns = styled.div`
 // interface
 interface FeedbackModalProps {
   onClose: () => void;
-  onSubmit: () => void;
 }
 
 interface RecentContentState {
@@ -53,10 +52,10 @@ interface Quiz {
   multiple_choice: Array<string>;
   answer: number;
 }
-type QuizesState = Array<Quiz>;
+// type QuizesState = Array<Quiz>;
 
 // Main component
-const FeedbackModal = ({ onClose, onSubmit }: FeedbackModalProps) => {
+const FeedbackModal = ({ onClose }: FeedbackModalProps) => {
   // 선택된 피드백 번호
   const [feedback, setFeedback] = useState(0);
   // 페이지 (0:피드백, 1:퀴즈, 2:결과)
@@ -72,12 +71,31 @@ const FeedbackModal = ({ onClose, onSubmit }: FeedbackModalProps) => {
     isMarked: false,
     tags: [],
   });
-  // 컨텐츠에 대한 퀴즈
-  const [quizes, setQuizes] = useState<QuizesState>();
+  // // 컨텐츠에 대한 퀴즈
+  // const [quizes, setQuizes] = useState<QuizesState>();
+  // 3가지 퀴즈 각각 저장
+  const [firstQuiz, setFirstQuiz] = useState<Quiz>({
+    quizId: 0,
+    question: '',
+    multiple_choice: [],
+    answer: 0,
+  });
+  const [secondQuiz, setSecondQuiz] = useState<Quiz>({
+    quizId: 0,
+    question: '',
+    multiple_choice: [],
+    answer: 0,
+  });
+  const [thirdQuiz, setThirdQuiz] = useState<Quiz>({
+    quizId: 0,
+    question: '',
+    multiple_choice: [],
+    answer: 0,
+  });
   // 선택한 퀴즈 정답
-  const [selectedOptionForFirst, setSelectedOptionForFirst] = useState(null);
-  const [selectedOptionForSecond, setSelectedOptionForSecond] = useState(null);
-  const [selectedOptionForThird, setSelectedOptionForThird] = useState(null);
+  const [firstAnswer, setFirstAnswer] = useState<null | number>(null);
+  const [secondAnswer, setSecondAnswer] = useState<null | number>(null);
+  const [thirdAnswer, setThirdAnswer] = useState<null | number>(null);
 
   useEffect(() => {
     // API get 요청 : 컨텐츠 조회
@@ -92,27 +110,26 @@ const FeedbackModal = ({ onClose, onSubmit }: FeedbackModalProps) => {
       isMarked: false,
       tags: ['React', 'Zotai'],
     });
+
     // API get 요청 : 퀴즈 제공
-    setQuizes([
-      {
-        quizId: 0,
-        question: '질문0',
-        multiple_choice: ['보기0', '보기1', '보기2'],
-        answer: 0,
-      },
-      {
-        quizId: 1,
-        question: '질문1',
-        multiple_choice: ['보기0', '보기1', '보기2'],
-        answer: 1,
-      },
-      {
-        quizId: 2,
-        question: '질문2',
-        multiple_choice: ['보기0', '보기1', '보기2'],
-        answer: 2,
-      },
-    ]);
+    setFirstQuiz({
+      quizId: 0,
+      question: '질문0',
+      multiple_choice: ['보기0', '보기1', '보기2'],
+      answer: 0,
+    });
+    setSecondQuiz({
+      quizId: 0,
+      question: '질문1',
+      multiple_choice: ['보기0', '보기1', '보기2'],
+      answer: 0,
+    });
+    setThirdQuiz({
+      quizId: 0,
+      question: '질문2',
+      multiple_choice: ['보기0', '보기1', '보기2'],
+      answer: 0,
+    });
   }, []);
 
   let title;
@@ -192,18 +209,25 @@ const FeedbackModal = ({ onClose, onSubmit }: FeedbackModalProps) => {
         {/* 퀴즈 */}
         {page === 1 && (
           <>
-            {quizes &&
-              quizes.map((quiz, index) => (
-                <QuizItem
-                  key={index}
-                  question={quiz.question}
-                  options={quiz.multiple_choice}
-                />
-              ))}
+            <QuizItem
+              question={firstQuiz.question}
+              options={firstQuiz.multiple_choice}
+              onClick={setFirstAnswer}
+            />
+            <QuizItem
+              question={secondQuiz.question}
+              options={secondQuiz.multiple_choice}
+              onClick={setSecondAnswer}
+            />
+            <QuizItem
+              question={thirdQuiz.question}
+              options={thirdQuiz.multiple_choice}
+              onClick={setThirdAnswer}
+            />
             <Button
               title="다 풀었어요"
               status="active"
-              onClick={FeedbackSubmitHandler}
+              onClick={QuizSubmitHandler}
             />
           </>
         )}

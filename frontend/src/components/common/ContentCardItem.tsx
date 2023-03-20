@@ -44,10 +44,10 @@ const ContentInfo = styled.div<{ image: string }>`
 
 // Main component
 interface recentContent {
-  image: string;
+  id: number;
+  title: string;
   url: string;
   channelImg: string;
-  title: string;
   author: string;
   date: string;
   isMarked: boolean;
@@ -64,6 +64,8 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
   // 북마크 버튼 숨김
   const [hideMark, setHideMark] = useState(true);
 
+  const thumbnailImg = '';
+
   return (
     <div id="content-area" className="flex flex-col gap-4">
       <h3 className="text-h3">방금 본 컨텐츠</h3>
@@ -76,7 +78,7 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
       </div>
       <div className="relative">
         <Thumbnail
-          image={recentContent.image}
+          image={thumbnailImg}
           onMouseEnter={() => setHideMark(false)}
           onMouseLeave={() => setHideMark(true)}
         ></Thumbnail>

@@ -5,6 +5,7 @@ import tw from 'twin.macro';
 interface QuizItemProps {
   question: string;
   options: Array<string>;
+  onClick: React.Dispatch<React.SetStateAction<number | null>;
 }
 
 const Question = tw.h4`text-h4 text-white`;
@@ -13,8 +14,8 @@ const QuizItemContainer = tw.div`flex flex-col gap-2 items-center`;
 
 const OptionsContainer = tw.div`flex flex-wrap gap-2`;
 
-const QuizItem = ({ question, options }: QuizItemProps) => {
-  const [clickedOption, setClickedOption] = useState(null);
+const QuizItem = ({ question, options, onClick }: QuizItemProps) => {
+  const [clickedOption, setClickedOption] = useState<null | number>(null);
   return (
     <QuizItemContainer>
       <Question>Q. {question}</Question>
@@ -24,6 +25,7 @@ const QuizItem = ({ question, options }: QuizItemProps) => {
             key={index}
             option={option}
             status={clickedOption === index ? 'selected' : 'default'}
+            onClick={() => setClickedOption(index)}
           />
         ))}
       </OptionsContainer>

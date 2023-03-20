@@ -1,9 +1,12 @@
-import { useRecoilState, useRecoilValue } from "recoil"
-import Button from "../components/common/Button";
-import DropDown from "../components/common/DropDown/DropDown";
-import FilterBar from "../components/common/FilterBar/FilterBar";
-import { functionToggleState } from "../recoils/FuntionToggle/Atoms"
-import { homeFilterBtnState, homeFilterTimeState } from "../recoils/Home/Atoms";
+import { useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import Button from '../components/common/Button';
+import DropDown from '../components/common/DropDown/DropDown';
+import FilterBar from '../components/common/FilterBar/FilterBar';
+import { functionToggleState } from '../recoils/FuntionToggle/Atoms';
+import { homeFilterBtnState, homeFilterTimeState } from '../recoils/Home/Atoms';
+import Modal from '../components/common/Modal';
+import FeedbackModal from '../components/common/FeedbackModal';
 
 export default function Home() {
   const functionToggle = useRecoilValue(functionToggleState);
@@ -15,8 +18,6 @@ export default function Home() {
 
   // 피드백 모달 표시 여부
   const [showContentModal, setShowContentModal] = useState(true);
-  // 퀴즈 모달 표시 여부
-  const [showQuizModal, setShowQuizModal] = useState(false);
   // 유저가 가장 최근에 본 콘텐츠 정보
   const [recentContent, setRecentContent] = useState({});
 
@@ -40,28 +41,40 @@ export default function Home() {
   };
 
   const dropDownList = [
-    { id: 1, content: "Frontend" },
-    { id: 2, content: "Backend" },
-    { id: 3, content: "DevOps" },
-  ]
+    { id: 1, content: 'Frontend' },
+    { id: 2, content: 'Backend' },
+    { id: 3, content: 'DevOps' },
+  ];
 
-  const [filterBtnState, setFilterBtnState] = useRecoilState(homeFilterBtnState);
-  const [filterTimeState, setFilterTimeState] = useRecoilState(homeFilterTimeState);
+  const [filterBtnState, setFilterBtnState] =
+    useRecoilState(homeFilterBtnState);
+  const [filterTimeState, setFilterTimeState] =
+    useRecoilState(homeFilterTimeState);
 
   return (
     <div>
       <h1>Home</h1>
-      { functionToggle.homePageToggle ? <p>Toggle On</p> : <p>Toggle Off</p>}
-      { functionToggle.buttonToggle ? <Button title="퀴즈 풀래요" status="active" onClick={clickBtn}/> : null}
-      { functionToggle.dropDownToggle ? <DropDown itemList={dropDownList} placeHolder="직무 선택" /> : null}
-      { functionToggle.filterBarToggle
-        ? <FilterBar 
+      {showContentModal && recentContent && (
+        <Modal
+          onClose={closeModal}
+          content={<FeedbackModal onClose={closeModal} />}
+        />
+      )}
+      {functionToggle.homePageToggle ? <p>Toggle On</p> : <p>Toggle Off</p>}
+      {functionToggle.buttonToggle ? (
+        <Button title="퀴즈 풀래요" status="active" onClick={clickBtn} />
+      ) : null}
+      {functionToggle.dropDownToggle ? (
+        <DropDown itemList={dropDownList} placeHolder="직무 선택" />
+      ) : null}
+      {functionToggle.filterBarToggle ? (
+        <FilterBar
           filterBtnState={filterBtnState}
           setFilterBtnState={setFilterBtnState}
           filterTimeState={filterTimeState}
           setFilterTimeState={setFilterTimeState}
         />
-        : null}
+      ) : null}
     </div>
   );
 }
