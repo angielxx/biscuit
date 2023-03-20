@@ -13,7 +13,7 @@ interface DropDownListProps {
 }
 
 const DropDownListContainer = tw.div`
-  w-full rounded flex flex-col justify-center items-center p-4 bg-dark-evaluated
+  w-full rounded flex flex-col justify-center items-center p-4 bg-dark-evaluated mt-1
 `
 
 const DropDownList = ({itemList, setSelected, setIsClicked}: DropDownListProps) => {

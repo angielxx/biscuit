@@ -13,7 +13,7 @@ interface FilterTimeProps {
 }
 
 const FilterTimeListContainer = tw.div`
-  w-full rounded-[10px] flex flex-col justify-center items-center p-2 bg-black border-[1px] border-dark-primary
+  w-full rounded-[10px] flex flex-col justify-center items-center mt-1 p-2 bg-black border-[1px] border-dark-primary
 `
 
 const FilterTimeList = ({itemList, setSelected, setIsClicked}: FilterTimeProps) => {
