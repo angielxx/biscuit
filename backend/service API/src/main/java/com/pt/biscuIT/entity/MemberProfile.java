@@ -1,5 +1,7 @@
 package com.pt.biscuIT.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -8,7 +10,7 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
 @Entity
-public class MemberProfile {
+public class MemberProfile implements Serializable {
 	@Id
 	private Long memberId;
 	@MapsId
