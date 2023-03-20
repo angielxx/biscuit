@@ -15,12 +15,17 @@ const Category = styled.div`
   ${tw`flex justify-between items-center w-[298px] h-13 box-border px-3 py-4 text-white self-stretch border-b border-solid border-dark-evaluated`}
 `
 
+type Content = {
+  id: number;
+  subName: string;
+}
+
 interface BigCategoryProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isCategory: boolean;
   title: string;
-  content: string[];
+  content: Content[];
   onClick: React.MouseEventHandler<HTMLDivElement>;
 }
 

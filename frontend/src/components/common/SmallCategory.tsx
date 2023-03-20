@@ -14,10 +14,15 @@ const SmallCate = styled.div`
   ${tw`flex items-center h-6 p-0 gap-[13px]`}
 `
 
+type Content = {
+  id: number;
+  subName: string;
+}
+
 interface SmallProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  content: string[];
+  content: Content[];
 }
 
 const SmallCategory = ({isOpen, setIsOpen, content}: SmallProps) => {
@@ -31,9 +36,9 @@ const SmallCategory = ({isOpen, setIsOpen, content}: SmallProps) => {
       {content.map((item) => {
         return (
           <SmallCateBox>
-            <SmallCate onClick={() => {(isOpen ? setIsOpen(false) : setIsOpen(true)); isClicked(item);}}>
+            <SmallCate onClick={() => {(isOpen ? setIsOpen(false) : setIsOpen(true)); isClicked(item.subName);}}>
               <img src={react}/>
-              <p className='text-h3'>{item}</p>
+              <p className='text-h3'>{item.subName}</p>
             </SmallCate>
           </SmallCateBox>
         )

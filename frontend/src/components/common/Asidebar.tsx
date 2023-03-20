@@ -48,9 +48,34 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
   // const [mainCateList, setMainCateList] = useState<[]>([]);
 
   const mainCateList = [
-    { id: 1, mainName: "FrontEnd", subName: ["React", "TypeScript"] },
-    { id: 2, mainName: "BackEnd", subName: ["Django", "Spring"] },
-    { id: 3, mainName: "DevOps", subName: ["히히", "속았징 ?"] },
+    {
+      id: 0,  //e.g. 03,
+      mainName: "FrontEnd",  //e.g. "Frontend",
+      subCategries: [
+        {
+          id: 0,  //e.g. 123,
+          subName: "React",  //e.g. "React",
+        },
+        {
+          id: 1,  //e.g. 123,
+          subName: "TypeScript",  //e.g. "React",
+        },
+      ],
+    },
+    {
+      id: 1,  //e.g. 03,
+      mainName: "BackEnd",  //e.g. "Frontend",
+      subCategries: [
+        {
+          id: 0,  //e.g. 123,
+          subName: "Django",  //e.g. "React",
+        },
+        {
+          id: 1,  //e.g. 123,
+          subName: "Spring",  //e.g. "React",
+        },
+      ],
+    },
   ]
 
   return (
@@ -72,7 +97,7 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
             setIsOpen={setIsOpen}
             isCategory={page === index ? true : false}
             title={item.mainName}
-            content={item.subName}
+            content={item.subCategries}
             onClick={() => {setPage(index); (isCategory ? setIsCategory(false) : setIsCategory(true));}}
           />
         )
