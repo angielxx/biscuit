@@ -22,5 +22,4 @@ public class QuizController {
 	public ProvideQuizDto provideQuiz(@PathVariable Long contentId) {
 		return quizService.provideQuiz(contentId);
 	}
-
 }
