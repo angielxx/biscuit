@@ -1,11 +1,11 @@
-import { useState, FormEvent } from "react";
+import { useState } from 'react';
 
 // css
 import tw, { styled } from 'twin.macro';
 
 // icons
 import dropdown from '../../assets/icons/arrow_drop_down.svg';
-import SmallCategory from "./SmallCategory";
+import SmallCategory from './SmallCategory';
 
 const CategoryBox = styled.div`
   ${tw`flex flex-col`}
@@ -17,33 +17,23 @@ const Category = styled.div`
 
 interface BigCategoryProps {
   isOpen: boolean;
-  setIsOpen: any;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isCategory: boolean;
+  title: string;
+  content: string[];
+  onClick: React.MouseEventHandler<HTMLDivElement>;
 }
 
-const BigCategory = ({isOpen, setIsOpen}: BigCategoryProps) => {
-  const [isCategory, setIsCategory] = useState<boolean>(false);
-  const [isKey, setIsKey] = useState<number>(0);
-
-  const BigCategoryList = [
-    { name: "FrontEnd" },
-    { name: "BackEnd" },
-    { name: "QA" }
-  ];
+const BigCategory = ({isOpen, setIsOpen, isCategory, title, content, onClick}: BigCategoryProps) => {
 
   return (
-    <CategoryBox>
-      {BigCategoryList.map((category, index) => {
-        return (
-          <>
-            <Category key={index}>
-              <p className="text-h3">{category.name}</p>
-              <img src={dropdown} alt="dropdown" key={index} onClick={() => {(isCategory ? setIsCategory(false) : setIsCategory(true)); setIsKey(index); }} />
-            </Category>
-          </>
-        )
-      })}
+    <CategoryBox onClick={onClick}>
+      <Category>
+        <p className="text-h3">{title}</p>
+        <img src={dropdown} alt="dropdown" />
+      </Category>
       {isCategory ? (
-        <SmallCategory index={isKey} isOpen={isOpen} setIsOpen={setIsOpen} />
+        <SmallCategory isOpen={isOpen} setIsOpen={setIsOpen} content={content} />
       ) : null}
     </CategoryBox>
   )

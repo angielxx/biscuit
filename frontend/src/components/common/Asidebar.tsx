@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BigCategory from "./BigCategory";
 import AsideButton from "./AsideButton";
 
@@ -38,17 +38,25 @@ const AsideBtn = styled.div`
 
 interface AsidebarStatus {
   isOpen: boolean;
-  setIsOpen: any;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
   // const [name, setName] = useState<string>("");
+  const [isCategory, setIsCategory] = useState<boolean>(false);
+  const [page, setPage] = useState<number>();
+  // const [mainCateList, setMainCateList] = useState<[]>([]);
+
+  const mainCateList = [
+    { id: 1, mainName: "FrontEnd", subName: ["React", "TypeScript"] },
+    { id: 2, mainName: "BackEnd", subName: ["Django", "Spring"] },
+    { id: 3, mainName: "DevOps", subName: ["히히", "속았징 ?"] },
+  ]
 
   return (
     <Aside className={isOpen ? 'open' : ''}>
       <Closeicon><img src={close} alt="close" onClick={() => isOpen ? setIsOpen(false) : setIsOpen(true)} /></Closeicon>
       <ProfileBox>
-        {/* <Nickname>{name} 님</Nickname> */}
         <Nickname>유진 님</Nickname>
         <AsideBtn>
           <AsideButton to="/setting" src={setting} alt="setting" title="계정설정" />
@@ -56,7 +64,19 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
           <AsideButton to="/history" src={history} alt="history" title="히스토리" />
         </AsideBtn>
       </ProfileBox>
-      <BigCategory isOpen={isOpen} setIsOpen={setIsOpen} />
+      {mainCateList.map((item, index) => {
+        return (
+          <BigCategory 
+            key={item.id} 
+            isOpen={isOpen} 
+            setIsOpen={setIsOpen}
+            isCategory={page === index ? true : false} 
+            title={item.mainName}
+            content={item.subName}
+            onClick={() => {setPage(index); (isCategory ? setIsCategory(false) : setIsCategory(true));}}
+          />
+        )
+      })}
     </Aside>
   )
 }
