@@ -70,7 +70,7 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
             key={item.id} 
             isOpen={isOpen} 
             setIsOpen={setIsOpen}
-            isCategory={page === index ? true : false} 
+            isCategory={page === index ? true : false}
             title={item.mainName}
             content={item.subName}
             onClick={() => {setPage(index); (isCategory ? setIsCategory(false) : setIsCategory(true));}}

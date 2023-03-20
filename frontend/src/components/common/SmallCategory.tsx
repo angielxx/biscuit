@@ -7,11 +7,11 @@ import tw, { styled } from "twin.macro";
 import react from '../../assets/icons/subCategory.svg';
 
 const SmallCateBox = styled.div`
-  ${tw`flex flex-col order-5 w-[298px] h-13`}
+  ${tw`flex flex-col items-start order-5 w-[298px] px-3 py-4 gap-[10px] text-white border-b border-solid border-dark-grey10`}
 `
 
 const SmallCate = styled.div`
-  ${tw`flex items-center w-[298px] h-13 box-border px-3 py-4 text-white border-b border-solid border-dark-evaluated`}
+  ${tw`flex items-center h-6 p-0 gap-[13px]`}
 `
 
 interface SmallProps {
@@ -27,16 +27,18 @@ const SmallCategory = ({isOpen, setIsOpen, content}: SmallProps) => {
   }
 
   return (
-    <div className="flex flex-col order-5">
+    <>
       {content.map((item) => {
         return (
-          <SmallCate onClick={() => {(isOpen ? setIsOpen(false) : setIsOpen(true)); isClicked(item);}}>
-            <img src={react}/>
-            <p className='text-h3'>{item}</p>
-          </SmallCate>
+          <SmallCateBox>
+            <SmallCate onClick={() => {(isOpen ? setIsOpen(false) : setIsOpen(true)); isClicked(item);}}>
+              <img src={react}/>
+              <p className='text-h3'>{item}</p>
+            </SmallCate>
+          </SmallCateBox>
         )
       })}
-    </div>
+    </>
   )
 }
 
