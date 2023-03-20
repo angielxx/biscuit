@@ -23,15 +23,18 @@ const btnStatus: BtnStatusType = {
 }
 
 const Btn = styled.button((props: { status: StatusType }) => [
-  tw`w-80 h-11 rounded flex justify-center items-center`, 
+  tw`w-80 h-12 rounded-full flex justify-center items-center`, 
   btnStatus[props.status],
 ]);
 
+const Text = tw.span`text-h4`;
 
+/** title : 버튼 내용,
+ * status : "active", "disabled", "danger", "activeHover" */
 const Button = ({title, status, onClick}: ButtonProps) => {
   return (
     <Btn status={status} onClick={onClick}>
-      <span>{title}</span>
+      <Text>{title}</Text>
     </Btn>
   );
 };
