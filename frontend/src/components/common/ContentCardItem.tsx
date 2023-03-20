@@ -54,9 +54,13 @@ interface recentContent {
   tags: Array<string>;
 }
 
-const ContentCardItem = (recentContent: recentContent) => {
+interface contentCardItemProps {
+  recentContent: recentContent;
+}
+
+const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
   // 북마크 저장 여부, false는 임시
-  const [isMarked, setIsMarked] = useState(false);
+  const [isMarked, setIsMarked] = useState(recentContent.isMarked);
   // 북마크 버튼 숨김
   const [hideMark, setHideMark] = useState(true);
 
@@ -64,16 +68,15 @@ const ContentCardItem = (recentContent: recentContent) => {
     <div id="content-area" className="flex flex-col gap-4">
       <h3 className="text-h3">방금 본 컨텐츠</h3>
       <div className="flex gap-2">
-        <Tag>
-          <span>태그 제목</span>
-        </Tag>
-        <Tag>
-          <span>태그 제목</span>
-        </Tag>
+        {recentContent.tags.map((tag, index) => (
+          <Tag key={index}>
+            <span>{tag}</span>
+          </Tag>
+        ))}
       </div>
       <div className="relative">
         <Thumbnail
-          image={`https://content.surfit.io/thumbs/image/5eQZ5/Wknoy/1126431375640856ffc9068.png/cover-center-1x.webp`}
+          image={recentContent.image}
           onMouseEnter={() => setHideMark(false)}
           onMouseLeave={() => setHideMark(true)}
         ></Thumbnail>
@@ -104,14 +107,13 @@ const ContentCardItem = (recentContent: recentContent) => {
           )}
         </MarkBtnArea>
       </div>
-      <ContentInfo image="임시">
+      <ContentInfo image={recentContent.channelImg}>
         <div id="channel"></div>
         <div id="text">
-          <p>
-            컨텐츠의 제목입니다.컨텐츠의 제목입니다.컨텐츠의 제목입니다.컨텐츠의
-            제목입니다.
-          </p>
-          <span>작성자 | 작성일 </span>
+          <p>{recentContent.title}</p>
+          <span>
+            {recentContent.author} | {recentContent.date}{' '}
+          </span>
         </div>
       </ContentInfo>
     </div>
