@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // twin macro
 import tw, { styled, css, TwStyle } from 'twin.macro';
+import { useGetMetaData } from '../../hooks/useGetMetaData';
 
 // Styled component
 const Tag = styled.div`
-  ${tw`rounded-full text-tiny font-thin px-[10px] py-1 bg-dark-grey50 w-fit `}
+  ${tw`rounded-full text-tiny px-[10px] py-1 bg-dark-grey50 w-fit `}
 `;
 
-const Thumbnail = styled.div<{ image: string }>`
+const Thumbnail = styled.div<{ image: string | null }>`
   ${tw`w-full aspect-w-16 aspect-h-9 bg-cover bg-center rounded-10 relative cursor-pointer`}
   ${({ image }) =>
     css`
-      background-image: url(${image});
+      background-image: url('${image}');
     `}
 `;
 
@@ -44,14 +45,16 @@ const ContentInfo = styled.div<{ image: string }>`
 
 // Main component
 interface recentContent {
-  image: string;
-  url: string;
-  channelImg: string;
+  id: number;
   title: string;
-  author: string;
-  date: string;
+  url: string;
+  credit_by: string;
+  created_date: string;
+  time_cost: number;
+  type: string;
   isMarked: boolean;
   tags: Array<string>;
+  channelImg: string;
 }
 
 interface contentCardItemProps {
@@ -59,14 +62,31 @@ interface contentCardItemProps {
 }
 
 const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
-  // 북마크 저장 여부, false는 임시
-  const [isMarked, setIsMarked] = useState(recentContent.isMarked);
+  // 북마크 저장 여부
+  const [isMarked, setIsMarked] = useState<boolean>(recentContent.isMarked);
   // 북마크 버튼 숨김
-  const [hideMark, setHideMark] = useState(true);
+  const [hideMark, setHideMark] = useState<boolean>(true);
+  // 썸네일 이미지
+  const [thumbImg, setThumbImg] = useState<string | null>('');
+  // 요약
+  const [desc, setDesc] = useState<string | null>('');
+
+  // 북마크 버튼 클릭 시
+  const changeMarkHandler = () => {
+    // API 요청 : 북마크 추가 혹은 삭제
+    setIsMarked((prev) => {
+      return !prev;
+    });
+  };
+  useEffect(() => {
+    useGetMetaData(recentContent.url).then((data) => {
+      setThumbImg(data.image);
+      setDesc(data.desc);
+    });
+  }, []);
 
   return (
-    <div id="content-area" className="flex flex-col gap-4">
-      <h3 className="text-h3">방금 본 컨텐츠</h3>
+    <div id="content-area" className="flex flex-col gap-4 text-white">
       <div className="flex gap-2">
         {recentContent.tags.map((tag, index) => (
           <Tag key={index}>
@@ -75,20 +95,18 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
         ))}
       </div>
       <div className="relative">
-        <Thumbnail
-          image={recentContent.image}
-          onMouseEnter={() => setHideMark(false)}
-          onMouseLeave={() => setHideMark(true)}
-        ></Thumbnail>
+        <a href={recentContent.url} target="_blank">
+          <Thumbnail
+            image={thumbImg}
+            onMouseEnter={() => setHideMark(false)}
+            onMouseLeave={() => setHideMark(true)}
+          />
+        </a>
         <MarkBtnArea
           hidden={hideMark ? true : false}
           onMouseEnter={() => setHideMark(false)}
           onMouseLeave={() => setHideMark(true)}
-          onClick={() =>
-            setIsMarked((prev) => {
-              return !prev;
-            })
-          }
+          onClick={changeMarkHandler}
         >
           {isMarked ? (
             <BookmarkSvg
@@ -112,7 +130,7 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
         <div id="text">
           <p>{recentContent.title}</p>
           <span>
-            {recentContent.author} | {recentContent.date}{' '}
+            {recentContent.credit_by} | {recentContent.created_date}{' '}
           </span>
         </div>
       </ContentInfo>

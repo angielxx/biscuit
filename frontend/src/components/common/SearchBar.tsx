@@ -13,7 +13,7 @@ const SearchBar = styled.div`
 `
 
 const Input = styled.input`
-  ${tw`box-border w-[278px] h-9 bg-transparent border-b border-solid border-dark-grey50 text-dark-grey50`}
+  ${tw`box-border w-full h-9 bg-transparent border-b border-solid border-dark-grey50 text-dark-grey50`}
 
   &:focus {
     ${tw`outline-none text-dark-primary border-b border-solid border-dark-primary`}
@@ -52,7 +52,7 @@ const Searchbar = ({ isSearch, setIsSearch }: SearchProps) => {
   return (
     <SearchBar>
       <img src={searchBar} alt='search' />
-      <form>
+      <form className='w-full'>
         <Input 
           type="text"
           value={search}
