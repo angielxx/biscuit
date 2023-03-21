@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+// components
 import Asidebar from "./Asidebar";
 import Searchbar from "./SearchBar";
 
@@ -28,6 +29,7 @@ const Navbar = () => {
 
   const goHome = () => {
     navigate('/');
+    setIsSearch(false);
   }
 
   return (

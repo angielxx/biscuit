@@ -9,20 +9,20 @@ import searchBar from '../../assets/icons/search-bar.svg';
 import close from '../../assets/icons/close.svg';
 
 const SearchBar = styled.div`
-  ${tw`flex items-center p-4 gap-4 left-0 top-[73px]`}
+  ${tw`flex items-center p-4 gap-4 top-18`}
 `
 
 const Input = styled.input`
-  ${tw`box-border w-[278px] h-[35px] bg-transparent border-b border-solid border-dark-grey50`}
+  ${tw`box-border w-[278px] h-9 bg-transparent border-b border-solid border-dark-grey50 text-dark-grey50`}
 
   &:focus {
-    ${tw`outline-none text-primary border-b border-solid border-dark-primary`}
+    ${tw`outline-none text-dark-primary border-b border-solid border-dark-primary`}
   }
 `
 
 interface SearchProps {
   isSearch: boolean;
-  setIsSearch: any;
+  setIsSearch: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Searchbar = ({ isSearch, setIsSearch }: SearchProps) => {
@@ -41,11 +41,11 @@ const Searchbar = ({ isSearch, setIsSearch }: SearchProps) => {
       e.preventDefault();
       console.log(search);
 
+      // /search?q=리액트 같은 쿼리스트링 주소로 이동
       const URLSearch = new URLSearchParams(location.search);
-      URLSearch.set('q', String(search));
+      URLSearch.set('q', search);
       const newParam = URLSearch.toString();
       navigate('/search?' + newParam);
-      // console.log(decodeURI(location.search));  // 한글이 안깨지게 가져오려면 decodeURI 써주어야함
     }
   }
 

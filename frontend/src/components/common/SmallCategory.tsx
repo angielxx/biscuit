@@ -6,7 +6,7 @@ import tw, { styled } from "twin.macro";
 // icons
 import react from '../../assets/icons/subCategory.svg';
 
-const SmallCateBox = styled.div`
+const CategoryBox = styled.div`
   ${tw`flex flex-col items-start order-5 w-[298px] px-3 py-4 gap-[10px] text-white border-b border-solid border-dark-grey10`}
 `
 
@@ -20,27 +20,27 @@ type Content = {
 }
 
 interface SmallProps {
-  isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   content: Content[];
 }
 
-const SmallCategory = ({isOpen, setIsOpen, content}: SmallProps) => {
+const SmallCategory = ({setIsOpen, content}: SmallProps) => {
   const navigate = useNavigate();
   const isClicked = (item: string) => {
-    navigate(`/contents/${item}`)
+    navigate(`/contents/${item}`);
+    setIsOpen(false);
   }
 
   return (
     <>
-      {content.map((item) => {
+      {content.map((item, index) => {
         return (
-          <SmallCateBox>
-            <SmallCate onClick={() => {(isOpen ? setIsOpen(false) : setIsOpen(true)); isClicked(item.subName);}}>
+          <CategoryBox key={index} onClick={() => {isClicked(item.subName);}}>
+            <SmallCate>
               <img src={react}/>
               <p className='text-h3'>{item.subName}</p>
             </SmallCate>
-          </SmallCateBox>
+          </CategoryBox>
         )
       })}
     </>

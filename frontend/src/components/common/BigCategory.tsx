@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 // css
 import tw, { styled } from 'twin.macro';
 
@@ -21,7 +19,6 @@ type Content = {
 }
 
 interface BigCategoryProps {
-  isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isCategory: boolean;
   title: string;
@@ -29,7 +26,7 @@ interface BigCategoryProps {
   onClick: React.MouseEventHandler<HTMLDivElement>;
 }
 
-const BigCategory = ({isOpen, setIsOpen, isCategory, title, content, onClick}: BigCategoryProps) => {
+const BigCategory = ({setIsOpen, isCategory, title, content, onClick}: BigCategoryProps) => {
 
   return (
     <CategoryBox onClick={onClick}>
@@ -38,7 +35,7 @@ const BigCategory = ({isOpen, setIsOpen, isCategory, title, content, onClick}: B
         <img src={dropdown} alt="dropdown" />
       </Category>
       {isCategory ? (
-        <SmallCategory isOpen={isOpen} setIsOpen={setIsOpen} content={content} />
+        <SmallCategory setIsOpen={setIsOpen} content={content} />
       ) : null}
     </CategoryBox>
   )
