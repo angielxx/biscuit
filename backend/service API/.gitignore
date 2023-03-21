@@ -20,6 +20,7 @@ bin/
 
 ### IntelliJ IDEA ###
 service API/.idea
+service API/src/main/resources/application.properties
 *.iws
 *.iml
 *.ipr
