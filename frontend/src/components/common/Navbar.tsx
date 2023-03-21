@@ -15,7 +15,7 @@ import theme from '../../assets/icons/theme.svg';
 import menu from '../../assets/icons/menu.svg';
 
 const Nav = styled.div`
-  ${tw`box-border flex justify-between items-center px-3 py-4 w-[390px] h-[73.23px] left-0 top-0 border-b border-solid border-dark-grey20`}
+  ${tw`box-border flex justify-between items-center px-3 py-4 w-full h-[73.23px] left-0 top-0 border-b border-solid border-dark-grey20`}
 `
 
 const Menus = styled.div`
