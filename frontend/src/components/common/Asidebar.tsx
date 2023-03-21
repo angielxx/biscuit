@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 // components
 import BigCategory from "./BigCategory";
+import SmallCategory from "./SmallCategory";
 import AsideButton from "./AsideButton";
 
 // css
@@ -56,6 +57,8 @@ interface AsidebarStatus {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+type ClickHanlder = (item: string) => void;
+
 const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
   const [isCategory, setIsCategory] = useState<boolean>(false);
   const [page, setPage] = useState<number>();
@@ -65,7 +68,7 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
     {
       id: 0,  //e.g. 03,
       mainName: "FrontEnd",  //e.g. "Frontend",
-      subCategries: [
+      subCategories: [
         {
           id: 0,  //e.g. 123,
           subName: "React",  //e.g. "React",
@@ -79,7 +82,7 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
     {
       id: 1,  //e.g. 03,
       mainName: "BackEnd",  //e.g. "Frontend",
-      subCategries: [
+      subCategories: [
         {
           id: 0,  //e.g. 123,
           subName: "Django",  //e.g. "React",
@@ -94,6 +97,11 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
 
   const goToMypage = () => {
     navigate('/mypage');
+    setIsOpen(false);
+  }
+
+  const isClicked: ClickHanlder = (item: string) => {
+    navigate(`/contents/${item}`);
     setIsOpen(false);
   }
 
@@ -112,12 +120,11 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
         return (
           <BigCategory 
             key={item.id} 
-            setIsOpen={setIsOpen}
             isCategory={page === index ? true : false}
-            title={item.mainName}
-            content={item.subCategries}
+            isClicked={isClicked}
+            item={item}
             onClick={() => {
-              setPage(index); 
+              setPage(index);
               isCategory ? setIsCategory(false) : setIsCategory(true);
             }}
           />
