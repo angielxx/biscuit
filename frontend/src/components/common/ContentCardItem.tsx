@@ -91,10 +91,10 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
           target="_blank"
         >
           <Thumbnail
-            image={
-              'https://toss.tech/wp-content/uploads/2023/03/og-image-1-2048x1024.png'
-            }
-            // image={recentContent.thumbnailImg}
+            // image={
+            //   'https://toss.tech/wp-content/uploads/2023/03/og-image-1-2048x1024.png'
+            // }
+            image={recentContent.thumbnailImg}
             onMouseEnter={() => setHideMark(false)}
             onMouseLeave={() => setHideMark(true)}
           />
