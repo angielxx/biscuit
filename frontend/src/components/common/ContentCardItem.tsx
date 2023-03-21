@@ -5,7 +5,7 @@ import tw, { styled, css, TwStyle } from 'twin.macro';
 
 // Styled component
 const Tag = styled.div`
-  ${tw`rounded-full text-tiny font-thin px-[10px] py-1 bg-dark-grey50 w-fit `}
+  ${tw`rounded-full text-tiny px-[10px] py-1 bg-dark-grey50 w-fit `}
 `;
 
 const Thumbnail = styled.div<{ image: string }>`
@@ -76,8 +76,7 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
   };
 
   return (
-    <div id="content-area" className="flex flex-col gap-4">
-      <h3 className="text-h3">방금 본 컨텐츠</h3>
+    <div id="content-area" className="flex flex-col gap-4 text-white">
       <div className="flex gap-2">
         {recentContent.tags.map((tag, index) => (
           <Tag key={index}>
@@ -93,7 +92,7 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
         >
           <Thumbnail
             // image={
-            //   'https://content.surfit.io/thumbs/image/KbMew/zMDjO/8136867456406dbc49eff3.jpg/cover-top-2x.webp'
+            //   'https://toss.tech/wp-content/uploads/2023/03/og-image-1-2048x1024.png'
             // }
             image={recentContent.thumbnailImg}
             onMouseEnter={() => setHideMark(false)}
