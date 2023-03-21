@@ -10,7 +10,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import lombok.Getter;
+
 @Entity
+@Getter
 public class Quiz implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
