@@ -6,9 +6,11 @@ type BannerProps = {
 }
 
 const BannerContainer = styled.img<{image: string}>`
-  ${tw`w-[300px] h-[200px] bg-cover flex`}
+  ${tw`w-[400px] h-[200px] flex`}
   ${({ image }) =>
     css`
+      background-size: cover;
+      background-repeat: no-repeat;
       background-image: url(${image});
   `};
 `;

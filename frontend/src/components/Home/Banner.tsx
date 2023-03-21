@@ -1,6 +1,8 @@
 import tw, { styled, css } from "twin.macro";
-import Slider from "react-slick";
 import BannerContent from "./BannerContent";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 type BannerObj = {
   uid: number;
@@ -9,7 +11,7 @@ type BannerObj = {
 }
 
 const BannerContainer = tw.div`
-  bg-white
+  bg-white w-[400px] h-[200px]
 `
 
 const Banner = () => {
@@ -32,29 +34,31 @@ const Banner = () => {
   ];
 
   const settings = {
-    dots: true,
+    autoplay: true,
+    dots: false,
     infinite: true,
-    speed: 500,
+    fade: true,
+    speed: 700,
     slidesToShow: 1,
-    slidesToScroll: 1
+    slidesToScroll: 1,
+    arrows: false,
   };
 
   return (
     <BannerContainer>
-      <Slider {...settings}>
-        {bannerList?.map((banner) => {
-          return (
-            <a href={banner.bannerUrl}>
-              <img
+      <div className="carousel">
+        <Slider {...settings}>
+          {bannerList?.map((banner) => {
+            return (
+              <BannerContent
                 key={banner.uid}
-                src={banner.imgUrl}
-                width={100}
-                height={100}
+                bannerUrl={banner.bannerUrl}
+                imgUrl={banner.imgUrl}
               />
-            </a>
-          )
-        })}
-      </Slider>
+            )
+          })}
+        </Slider>
+      </div>
     </BannerContainer>
   )
 }
