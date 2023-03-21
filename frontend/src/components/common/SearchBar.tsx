@@ -1,4 +1,4 @@
-import { useState, FormEvent, KeyboardEvent } from 'react';
+import { useState, FormEvent, KeyboardEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // css
@@ -10,7 +10,7 @@ import close from '../../assets/icons/close.svg';
 
 const SearchBar = styled.div`
   ${tw`flex items-center p-4 gap-4 top-18`}
-`
+`;
 
 const Input = styled.input`
   ${tw`box-border w-full h-9 bg-transparent border-b border-solid border-dark-grey50 text-dark-grey50`}
@@ -18,23 +18,28 @@ const Input = styled.input`
   &:focus {
     ${tw`outline-none text-dark-primary border-b border-solid border-dark-primary`}
   }
-`
+`;
 
 interface SearchProps {
   isSearch: boolean;
-  setIsSearch: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsSearch?: React.Dispatch<React.SetStateAction<boolean>>;
+  searchKey: string | null;
 }
 
-const Searchbar = ({ isSearch, setIsSearch }: SearchProps) => {
-  const [search, setSearch] = useState<string>("");
+const Searchbar = ({ isSearch, setIsSearch, searchKey }: SearchProps) => {
+  const [search, setSearch] = useState<string>('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setSearch(searchKey);
+  }, [searchKey]);
 
   const onChange = (e: FormEvent<HTMLInputElement>) => {
     const {
       currentTarget: { value },
     } = e;
     setSearch(value);
-  }
+  };
 
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -47,22 +52,26 @@ const Searchbar = ({ isSearch, setIsSearch }: SearchProps) => {
       const newParam = URLSearch.toString();
       navigate('/search?' + newParam);
     }
-  }
+  };
 
   return (
     <SearchBar>
-      <img src={searchBar} alt='search' />
-      <form className='w-full'>
-        <Input 
+      <img src={searchBar} alt="search" />
+      <form className="w-full">
+        <Input
           type="text"
           value={search}
           onChange={onChange}
           onKeyPress={handleKeyPress}
         />
       </form>
-      <img src={close} alt='close' onClick={() => isSearch ? setIsSearch(false) : setIsSearch(true)} />
+      <img
+        src={close}
+        alt="close"
+        onClick={() => (isSearch ? setIsSearch(false) : setIsSearch(true))}
+      />
     </SearchBar>
-  )
-}
+  );
+};
 
 export default Searchbar;

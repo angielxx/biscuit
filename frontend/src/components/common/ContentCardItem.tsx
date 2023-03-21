@@ -54,7 +54,7 @@ interface recentContent {
   type: string;
   isMarked: boolean;
   tags: Array<string>;
-  channelImg: string;
+  // channelImg: string;
 }
 
 interface contentCardItemProps {
@@ -125,7 +125,7 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
           )}
         </MarkBtnArea>
       </div>
-      <ContentInfo image={recentContent.channelImg}>
+      <ContentInfo image="">
         <div id="channel"></div>
         <div id="text">
           <p>{recentContent.title}</p>

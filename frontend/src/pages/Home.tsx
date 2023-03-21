@@ -1,9 +1,12 @@
-import { useRecoilState, useRecoilValue } from "recoil"
-import Button from "../components/common/Button";
-import DropDown from "../components/common/DropDown/DropDown";
-import FilterBar from "../components/common/FilterBar/FilterBar";
-import { functionToggleState } from "../recoils/FuntionToggle/Atoms"
-import { homeFilterBtnState, homeFilterTimeState } from "../recoils/Home/Atoms";
+import { useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import Button from '../components/common/Button';
+import ContentCardItem from '../components/common/ContentCardItem';
+import DropDown from '../components/common/DropDown/DropDown';
+import FilterBar from '../components/common/FilterBar/FilterBar';
+import Modal from '../components/common/Modal';
+import { functionToggleState } from '../recoils/FuntionToggle/Atoms';
+import { homeFilterBtnState, homeFilterTimeState } from '../recoils/Home/Atoms';
 
 export default function Home() {
   const functionToggle = useRecoilValue(functionToggleState);
@@ -14,54 +17,60 @@ export default function Home() {
   };
 
   // 피드백 모달 표시 여부
-  const [showContentModal, setShowContentModal] = useState(true);
-  // 퀴즈 모달 표시 여부
-  const [showQuizModal, setShowQuizModal] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(true);
   // 유저가 가장 최근에 본 콘텐츠 정보
   const [recentContent, setRecentContent] = useState({});
 
   // 더미 데이터
   const dummy_content = {
-    image:
-      'https://content.surfit.io/thumbs/image/wnyb5/jlo8J/1004562377641287ed49a24.png/cover-center-1x.webp',
-    url: 'https://blog.tosspayments.com/articles/semo-94',
-    channelImg: 'https://api.surfit.io/v1/channel/logo/wnyb5/1x',
-    title:
-      '[사장님백서] 애플페이가 국내에 도입되면 알아야 할 온오프라인 결제 변화',
-    author: '토스페이먼츠',
-    date: '2023.03.17',
+    id: 0,
+    title: '토스 디자인 원칙 Value first, Cost later',
+    url: 'https://toss.tech/article/value-first-cost-later',
+    credit_by: '이혜인',
+    created_date: '2023.03.20',
+    time_cost: 0,
+    type: '',
     isMarked: false,
-    tags: ['일반 기획', '비즈니스 트렌드'],
+    tags: [],
+    channelImg: '',
+    thumbnailImg: '',
   };
 
   const closeModal = () => {
     console.log('clicked');
-    setShowContentModal(false);
+    setShowFeedbackModal(false);
   };
 
   const dropDownList = [
-    { id: 1, content: "Frontend" },
-    { id: 2, content: "Backend" },
-    { id: 3, content: "DevOps" },
-  ]
+    { id: 1, content: 'Frontend' },
+    { id: 2, content: 'Backend' },
+    { id: 3, content: 'DevOps' },
+  ];
 
-  const [filterBtnState, setFilterBtnState] = useRecoilState(homeFilterBtnState);
-  const [filterTimeState, setFilterTimeState] = useRecoilState(homeFilterTimeState);
+  const [filterBtnState, setFilterBtnState] =
+    useRecoilState(homeFilterBtnState);
+  const [filterTimeState, setFilterTimeState] =
+    useRecoilState(homeFilterTimeState);
 
   return (
     <div>
       <h1>Home</h1>
-      { functionToggle.homePageToggle ? <p>Toggle On</p> : <p>Toggle Off</p>}
-      { functionToggle.buttonToggle ? <Button title="퀴즈 풀래요" status="active" onClick={clickBtn}/> : null}
-      { functionToggle.dropDownToggle ? <DropDown itemList={dropDownList} placeHolder="직무 선택" /> : null}
-      { functionToggle.filterBarToggle
-        ? <FilterBar 
+      <ContentCardItem recentContent={dummy_content} />
+      {functionToggle.homePageToggle ? <p>Toggle On</p> : <p>Toggle Off</p>}
+      {functionToggle.buttonToggle ? (
+        <Button title="퀴즈 풀래요" status="active" onClick={clickBtn} />
+      ) : null}
+      {functionToggle.dropDownToggle ? (
+        <DropDown itemList={dropDownList} placeHolder="직무 선택" />
+      ) : null}
+      {functionToggle.filterBarToggle ? (
+        <FilterBar
           filterBtnState={filterBtnState}
           setFilterBtnState={setFilterBtnState}
           filterTimeState={filterTimeState}
           setFilterTimeState={setFilterTimeState}
         />
-        : null}
+      ) : null}
     </div>
   );
 }
