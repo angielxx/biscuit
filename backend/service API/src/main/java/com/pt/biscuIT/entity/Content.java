@@ -1,5 +1,8 @@
 package com.pt.biscuIT.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -11,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
+@Getter
+@Setter
 public class Content implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
