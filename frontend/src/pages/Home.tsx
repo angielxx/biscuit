@@ -4,6 +4,13 @@ import DropDown from "../components/common/DropDown/DropDown";
 import FilterBar from "../components/common/FilterBar/FilterBar";
 import { functionToggleState } from "../recoils/FuntionToggle/Atoms"
 import { homeFilterBtnState, homeFilterTimeState } from "../recoils/Home/Atoms";
+import { useState } from "react";
+import Banner from "../components/Home/Banner";
+import tw from "twin.macro";
+
+const HomeContainer = tw.div`
+  flex w-screen
+`
 
 export default function Home() {
   const functionToggle = useRecoilValue(functionToggleState);
@@ -49,9 +56,7 @@ export default function Home() {
   const [filterTimeState, setFilterTimeState] = useRecoilState(homeFilterTimeState);
 
   return (
-    <div>
-      <h1>Home</h1>
-      { functionToggle.homePageToggle ? <p>Toggle On</p> : <p>Toggle Off</p>}
+    <HomeContainer>
       { functionToggle.buttonToggle ? <Button title="퀴즈 풀래요" status="active" onClick={clickBtn}/> : null}
       { functionToggle.dropDownToggle ? <DropDown itemList={dropDownList} placeHolder="직무 선택" /> : null}
       { functionToggle.filterBarToggle
@@ -62,6 +67,8 @@ export default function Home() {
           setFilterTimeState={setFilterTimeState}
         />
         : null}
-    </div>
+      
+      <Banner />
+    </HomeContainer>
   );
 }
