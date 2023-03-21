@@ -26,7 +26,7 @@ function scrap(doc: Document, url: string) {
     }
   }
 
-  // 글요약본
+  // 글요약
   let descEl = doc.querySelector("meta[property='og:description']");
   let desc = descEl ? descEl.getAttribute('content') : '';
   return { image, desc };

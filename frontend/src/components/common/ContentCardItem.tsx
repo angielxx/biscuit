@@ -68,7 +68,7 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
   const [hideMark, setHideMark] = useState<boolean>(true);
   // 썸네일 이미지
   const [thumbImg, setThumbImg] = useState<string | null>('');
-  // 글 요약
+  // 요약
   const [desc, setDesc] = useState<string | null>('');
 
   // 북마크 버튼 클릭 시
