@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // twin macro
 import tw, { styled, css, TwStyle } from 'twin.macro';
+import { useGetMetaData } from '../../hooks/useGetMetaData';
 
 // Styled component
 const Tag = styled.div`
   ${tw`rounded-full text-tiny px-[10px] py-1 bg-dark-grey50 w-fit `}
 `;
 
-const Thumbnail = styled.div<{ image: string }>`
+const Thumbnail = styled.div<{ image: string | null }>`
   ${tw`w-full aspect-w-16 aspect-h-9 bg-cover bg-center rounded-10 relative cursor-pointer`}
   ${({ image }) =>
     css`
-      background-image: url(${image});
+      background-image: url('${image}');
     `}
 `;
 
@@ -52,9 +53,8 @@ interface recentContent {
   time_cost: number;
   type: string;
   isMarked: boolean;
-  tags: Array<number>;
+  tags: Array<string>;
   channelImg: string;
-  thumbnailImg: string;
 }
 
 interface contentCardItemProps {
@@ -63,9 +63,13 @@ interface contentCardItemProps {
 
 const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
   // 북마크 저장 여부
-  const [isMarked, setIsMarked] = useState(recentContent.isMarked);
+  const [isMarked, setIsMarked] = useState<boolean>(recentContent.isMarked);
   // 북마크 버튼 숨김
-  const [hideMark, setHideMark] = useState(true);
+  const [hideMark, setHideMark] = useState<boolean>(true);
+  // 썸네일 이미지
+  const [thumbImg, setThumbImg] = useState<string | null>('');
+  // 요약
+  const [desc, setDesc] = useState<string | null>('');
 
   // 북마크 버튼 클릭 시
   const changeMarkHandler = () => {
@@ -74,6 +78,12 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
       return !prev;
     });
   };
+  useEffect(() => {
+    useGetMetaData(recentContent.url).then((data) => {
+      setThumbImg(data.image);
+      setDesc(data.desc);
+    });
+  }, []);
 
   return (
     <div id="content-area" className="flex flex-col gap-4 text-white">
@@ -85,16 +95,9 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
         ))}
       </div>
       <div className="relative">
-        <a
-          // href={'https://surfit.io/link/zMDjO'}
-          href={recentContent.url}
-          target="_blank"
-        >
+        <a href={recentContent.url} target="_blank">
           <Thumbnail
-            // image={
-            //   'https://toss.tech/wp-content/uploads/2023/03/og-image-1-2048x1024.png'
-            // }
-            image={recentContent.thumbnailImg}
+            image={thumbImg}
             onMouseEnter={() => setHideMark(false)}
             onMouseLeave={() => setHideMark(true)}
           />
