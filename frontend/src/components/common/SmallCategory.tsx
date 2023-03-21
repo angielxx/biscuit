@@ -14,36 +14,21 @@ const SmallCate = styled.div`
   ${tw`flex items-center h-6 p-0 gap-[13px]`}
 `
 
-type Content = {
-  id: number;
-  subName: string;
-}
-
 interface SmallProps {
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  content: Content[];
+  // setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isClick: React.MouseEventHandler<HTMLDivElement>;
+  title: string;
 }
 
-const SmallCategory = ({setIsOpen, content}: SmallProps) => {
-  const navigate = useNavigate();
-  const isClicked = (item: string) => {
-    navigate(`/contents/${item}`);
-    setIsOpen(false);
-  }
+const SmallCategory = ({isClick, title}: SmallProps) => {
 
   return (
-    <>
-      {content.map((item, index) => {
-        return (
-          <CategoryBox key={index} onClick={() => {isClicked(item.subName);}}>
-            <SmallCate>
-              <img src={react}/>
-              <p className='text-h3'>{item.subName}</p>
-            </SmallCate>
-          </CategoryBox>
-        )
-      })}
-    </>
+    <CategoryBox onClick={isClick}>
+      <SmallCate>
+        <img src={react}/>
+        <p className='text-h3'>{title}</p>
+      </SmallCate>
+    </CategoryBox>
   )
 }
 

@@ -15,27 +15,44 @@ const Category = styled.div`
 
 type Content = {
   id: number;
-  subName: string;
+  mainName: string;
+  subCategories: {
+    id: number;
+    subName: string;
+  }[]
 }
+
+type ClickHanlder = (item: string) => void;
 
 interface BigCategoryProps {
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  isCategory: boolean;
-  title: string;
-  content: Content[];
+  // setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  item: Content;
   onClick: React.MouseEventHandler<HTMLDivElement>;
+  isClicked: ClickHanlder;
+  isCategory: boolean;
 }
 
-const BigCategory = ({setIsOpen, isCategory, title, content, onClick}: BigCategoryProps) => {
+// 한별 수정
+const BigCategory = ({item, onClick, isClicked, isCategory}: BigCategoryProps) => {
+// const BigCategory = ({title, onClick}: BigCategoryProps) => {
 
   return (
     <CategoryBox onClick={onClick}>
       <Category>
-        <p className="text-h3">{title}</p>
+        <p className="text-h3">{item.mainName}</p>
         <img src={dropdown} alt="dropdown" />
       </Category>
       {isCategory ? (
-        <SmallCategory setIsOpen={setIsOpen} content={content} />
+        <>
+          {item.subCategories.map((content, idx) => {
+            return (
+              <SmallCategory 
+                key={idx} 
+                // setIsOpen={setIsOpen} 
+                isClick={() => isClicked(content.subName)} title={content.subName} />
+            )
+          })}
+        </>
       ) : null}
     </CategoryBox>
   )
