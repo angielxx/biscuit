@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 
 import com.pt.biscuIT.dto.quiz.ProvideQuizDetailDto;
 import com.pt.biscuIT.dto.quiz.ProvideQuizDto;
-import com.pt.biscuIT.entity.Content;
-import com.pt.biscuIT.entity.Quiz;
-import com.pt.biscuIT.repository.ContentRepository;
-import com.pt.biscuIT.repository.QuizRepository;
+import com.pt.biscuIT.db.entity.Content;
+import com.pt.biscuIT.db.entity.Quiz;
+import com.pt.biscuIT.db.repository.ContentRepository;
+import com.pt.biscuIT.db.repository.QuizRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

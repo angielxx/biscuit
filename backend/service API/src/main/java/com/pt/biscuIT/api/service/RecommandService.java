@@ -1,9 +1,8 @@
 package com.pt.biscuIT.service;
 
 import com.pt.biscuIT.dto.content.ContentInfoDto;
-import com.pt.biscuIT.dto.response.RandomRecentContentRes;
-import com.pt.biscuIT.entity.Content;
-import com.pt.biscuIT.repository.ContentRepositorySupport;
+import com.pt.biscuIT.db.entity.Content;
+import com.pt.biscuIT.db.repository.ContentRepositorySupport;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

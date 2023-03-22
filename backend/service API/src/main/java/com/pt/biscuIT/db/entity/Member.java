@@ -1,5 +1,7 @@
 package com.pt.biscuIT.entity;
 
+import lombok.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -11,12 +13,18 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 @Entity
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class Member implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String email;
 	private SocialDomain socialDomain;
+	private String nickname;
 	private Role role;
 	private LocalDateTime signupDate;
 	private LocalDateTime withdrawDate;

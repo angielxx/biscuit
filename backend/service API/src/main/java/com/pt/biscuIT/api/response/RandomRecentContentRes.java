@@ -3,7 +3,6 @@ package com.pt.biscuIT.dto.response;
 import com.pt.biscuIT.common.model.response.BaseResponseBody;
 import com.pt.biscuIT.common.model.response.PageMetaData;
 import com.pt.biscuIT.dto.content.ContentInfoDto;
-import com.pt.biscuIT.entity.Category;
 import lombok.Builder;
 import lombok.Data;
 
