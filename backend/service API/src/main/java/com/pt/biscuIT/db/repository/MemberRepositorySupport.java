@@ -2,7 +2,7 @@ package com.pt.biscuIT.db.repository;
 
 
 import com.pt.biscuIT.db.entity.Member;
-import com.pt.biscuIT.entity.QMember;
+import com.pt.biscuIT.db.entity.QMember;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

@@ -1,10 +1,14 @@
 package com.pt.biscuIT.db.repository;
 
 import com.pt.biscuIT.db.entity.Content;
-import com.pt.biscuIT.entity.QContent;
+import com.pt.biscuIT.db.entity.QContent;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -16,6 +20,7 @@ import java.util.List;
  */
 @Repository
 @RequiredArgsConstructor
+@Transactional
 public class ContentRepositorySupport {
     private final EntityManager em;
 
@@ -23,12 +28,16 @@ public class ContentRepositorySupport {
 
     QContent qContent = QContent.content;
 
-    public List<Content> getRandomRecentContent(String option, int offset, int limit) {
-        return jpaQueryFactory
-                .selectFrom(qContent)
-                .offset(offset)
-                .limit(limit)
+    /**
+     * 최근 등록된 컨텐츠를 랜덤으로 가져온다.
+     * @param pageable
+     * @return
+     */
+    public Page<Content> findRecentContentByRandom(Pageable pageable) {
+        return new PageImpl<>(jpaQueryFactory.selectFrom(qContent)
                 .orderBy(qContent.createdDate.desc())
-                .fetch();
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch(), pageable, jpaQueryFactory.selectFrom(qContent).fetchCount());
     }
 }
