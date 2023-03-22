@@ -5,6 +5,12 @@ import FilterBar from "../components/common/FilterBar/FilterBar";
 import { functionToggleState } from "../recoils/FuntionToggle/Atoms"
 import { homeFilterBtnState, homeFilterTimeState } from "../recoils/Home/Atoms";
 
+// 유진
+import Modal from "../components/common/Modal";
+import Nickname from "../components/OnBoarding/Nickname";
+import TextInput from "../components/OnBoarding/TextInput";
+import AboutUser from "../components/OnBoarding/AboutUser";
+
 export default function Home() {
   const functionToggle = useRecoilValue(functionToggleState);
 
@@ -14,11 +20,11 @@ export default function Home() {
   };
 
   // 피드백 모달 표시 여부
-  const [showContentModal, setShowContentModal] = useState(true);
-  // 퀴즈 모달 표시 여부
-  const [showQuizModal, setShowQuizModal] = useState(false);
-  // 유저가 가장 최근에 본 콘텐츠 정보
-  const [recentContent, setRecentContent] = useState({});
+  // const [showContentModal, setShowContentModal] = useState(true);
+  // // 퀴즈 모달 표시 여부
+  // const [showQuizModal, setShowQuizModal] = useState(false);
+  // // 유저가 가장 최근에 본 콘텐츠 정보
+  // const [recentContent, setRecentContent] = useState({});
 
   // 더미 데이터
   const dummy_content = {
@@ -33,11 +39,11 @@ export default function Home() {
     isMarked: false,
     tags: ['일반 기획', '비즈니스 트렌드'],
   };
-
-  const closeModal = () => {
-    console.log('clicked');
-    setShowContentModal(false);
-  };
+  
+  // const closeModal = () => {
+  //   console.log('clicked');
+  //   setShowContentModal(false);
+  // };
 
   const dropDownList = [
     { id: 1, content: "Frontend" },
@@ -53,7 +59,7 @@ export default function Home() {
       <h1>Home</h1>
       { functionToggle.homePageToggle ? <p>Toggle On</p> : <p>Toggle Off</p>}
       { functionToggle.buttonToggle ? <Button title="퀴즈 풀래요" status="active" onClick={clickBtn}/> : null}
-      { functionToggle.dropDownToggle ? <DropDown itemList={dropDownList} placeHolder="직무 선택" /> : null}
+      {/* { functionToggle.dropDownToggle ? <DropDown itemList={dropDownList} placeHolder="직무 선택" /> : null} */}
       { functionToggle.filterBarToggle
         ? <FilterBar 
           filterBtnState={filterBtnState}
@@ -62,6 +68,8 @@ export default function Home() {
           setFilterTimeState={setFilterTimeState}
         />
         : null}
+      {/* <Modal content={<Nickname />} /> */}
+      {/* <Modal content={<AboutUser />} /> */}
     </div>
   );
 }
