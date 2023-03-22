@@ -4,7 +4,7 @@ import FilterTimeItem from './FilterTimeItem';
 type ItemObj = {
   id: number;
   content: string;
-}
+};
 
 interface FilterTimeProps {
   itemList: ItemObj[];
@@ -13,10 +13,14 @@ interface FilterTimeProps {
 }
 
 const FilterTimeListContainer = tw.div`
-  w-full rounded-[10px] flex flex-col justify-center items-center mt-1 p-2 bg-black border-[1px] border-dark-primary
-`
+  relative z-10 w-full rounded-[10px] flex flex-col justify-center items-center mt-1 p-2 bg-black border-[1px] border-dark-primary
+`;
 
-const FilterTimeList = ({itemList, setSelected, setIsClicked}: FilterTimeProps) => {
+const FilterTimeList = ({
+  itemList,
+  setSelected,
+  setIsClicked,
+}: FilterTimeProps) => {
   return (
     <FilterTimeListContainer>
       {itemList?.map((item: ItemObj) => {
@@ -24,13 +28,13 @@ const FilterTimeList = ({itemList, setSelected, setIsClicked}: FilterTimeProps) 
           <FilterTimeItem
             key={item.id}
             content={item.content}
-            setSelected={setSelected} 
+            setSelected={setSelected}
             setIsClicked={setIsClicked}
           />
-        )
+        );
       })}
     </FilterTimeListContainer>
-  )
-}
+  );
+};
 
 export default FilterTimeList;

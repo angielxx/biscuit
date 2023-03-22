@@ -42,7 +42,7 @@ interface SearchProps {
   searchKey: string | null;
 }
 
-const Searchbar = ({ isSearch, setIsSearch, searchKey }: SearchProps) => {
+const SearchbarAtPage = ({ isSearch, setIsSearch, searchKey }: SearchProps) => {
   const [search, setSearch] = useState<string>('');
   const navigate = useNavigate();
 
@@ -71,32 +71,18 @@ const Searchbar = ({ isSearch, setIsSearch, searchKey }: SearchProps) => {
   };
 
   return (
-    <React.Fragment>
-      {ReactDOM.createPortal(
-        <Backdrop onClose={() => setIsSearch(false)} />,
-        document.getElementById('backdrop-root') as HTMLElement
-      )}
-      {ReactDOM.createPortal(
-        <SearchBar>
-          <img src={searchBar} alt="search" />
-          <form className="w-full">
-            <Input
-              type="text"
-              value={search}
-              onChange={onChange}
-              onKeyPress={handleKeyPress}
-            />
-          </form>
-          <img
-            src={close}
-            alt="close"
-            onClick={() => (isSearch ? setIsSearch(false) : setIsSearch(true))}
-          />
-        </SearchBar>,
-        document.getElementById('overlay-root') as HTMLElement
-      )}
-    </React.Fragment>
+    <SearchBar>
+      <img src={searchBar} alt="search" />
+      <form className="w-full">
+        <Input
+          type="text"
+          value={search}
+          onChange={onChange}
+          onKeyPress={handleKeyPress}
+        />
+      </form>
+    </SearchBar>
   );
 };
 
-export default Searchbar;
+export default SearchbarAtPage;

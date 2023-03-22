@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 // Component
 import FeedBackButton from './FeedBackButton';
-import Button from './Button';
+import Button from '../Button';
 
 // twin macro
 import tw, { styled, css, TwStyle } from 'twin.macro';
