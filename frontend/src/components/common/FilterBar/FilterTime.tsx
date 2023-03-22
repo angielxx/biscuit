@@ -22,7 +22,7 @@ interface FilterTimeProps {
 }
 
 const FilterTimeContainer = tw.div`
-  h-14 flex-col justify-between py-4 px-4 bg-black
+  h-14 flex-col justify-between py-4 bg-black
 `;
 
 const ArrowDropDown = styled.div
