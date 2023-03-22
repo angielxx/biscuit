@@ -2,28 +2,56 @@ import tw, { styled, css } from "twin.macro";
 import ContentCardItem from "../common/ContentCardItem";
 
 const ContentListContainer = tw.div`
-  flex-col
+  flex-col p-4 w-full overflow-scroll snap-x mx-4 mb-4
 `;
 
 const ListTitleContatiner = tw.div`
-  flex
+  flex mx-4 mt-2
 `;
 
-const Logo = styled.div``;
+const Logo = tw.img`w-9 h-9 mr-2`
 
-const Title = tw.span`text-white text-main mb-2`;
+const MyLogo = ({ category }: { category: string }) => {
+  return <Logo src={`src/assets/icons/${category}.svg`} />;
+};
 
-const RowListContainer = tw.div`
-  flex flex-row w-fit h-fit gap-x-4 flex-nowrap
+// const Logo = styled.img((props: { category: string }) => [
+//   tw`w-9 h-9`,
+//   css`
+//     background-size: cover;
+//     background-image: url("../../assets/icons/${props.category}.svg")
+//   `
+// ]);
+
+const Title = tw.span`text-white text-h2 mb-2`;
+
+const RowListContainer = styled.div`
+  ${tw`flex flex-row h-fit w-fit gap-x-4 flex-nowrap`}
+  ${css`width: calc(100vw - 32px)`}
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
-const ContentContainer = styled.span`
-  ${tw`flex h-[310px]`}
+const ContentContainer = styled.div`
+  ${tw`flex h-fit snap-start`}
   ${css`width: 85vw`}
 `
 
 interface HomeComentListProps {
   category: string;
+}
+
+type CategoryObjType = {
+  [index: string]: string;
+  popular: string;
+  recent: string;
+}
+
+const CategoryObj: CategoryObjType = {
+  popular: "가장 인기 있는",
+  recent: "최근 업로드 된",
 }
 
 const HomeContentList = ({category}: HomeComentListProps) => {
@@ -39,9 +67,9 @@ const HomeContentList = ({category}: HomeComentListProps) => {
       time_cost: 0,
       type: "타입",
       isMarked: false,
-      tags: [1, 2, 3],
+      tags: ["Typescript", "Redux-saga", "Redux-persist"],
       channelImg: "",
-      thumbnailImg: "https://velog.velcdn.com/images/94applekoo/post/5b147a23-0e76-4abc-9280-6fce0fc98289/image.png",
+      thumbnailImg: "",
     },
     {
       id: 2,
@@ -52,9 +80,9 @@ const HomeContentList = ({category}: HomeComentListProps) => {
       time_cost: 0,
       type: "타입",
       isMarked: false,
-      tags: [1, 2, 3],
+      tags: ["Typescript", "Recoil", "Zustand"],
       channelImg: "",
-      thumbnailImg: "https://velog.velcdn.com/images/94applekoo/post/89000717-2e9b-4748-986a-a36f35dbe1a2/image.png",
+      thumbnailImg: "",
     },
     {
       id: 3,
@@ -65,30 +93,32 @@ const HomeContentList = ({category}: HomeComentListProps) => {
       time_cost: 0,
       type: "타입",
       isMarked: false,
-      tags: [1, 2, 3],
+      tags: ["Redux-saga", "Redux-persist", "Zustand"],
       channelImg: "",
-      thumbnailImg: "https://velog.velcdn.com/images/94applekoo/post/9bd49db5-bbae-4cfc-9af1-e0e130a73bbe/image.png",
+      thumbnailImg: "",
     },
   ];
 
   return (
-    <ContentListContainer>
+    <>
       <ListTitleContatiner>
-        <Logo />
-        <Title>{category}</Title>
+        <MyLogo category={category} />
+        <Title>{CategoryObj[category]}</Title>
       </ListTitleContatiner>
-      <RowListContainer>
-        {
-          dummyContents?.map((content) => {
-            return (
-              <ContentContainer>
-                <ContentCardItem recentContent={content} />
-              </ContentContainer>
-            )
-          })
-        }
-      </RowListContainer>
-    </ContentListContainer>
+      <ContentListContainer>
+        <RowListContainer>
+          {
+            dummyContents?.map((content) => {
+              return (
+                <ContentContainer>
+                  <ContentCardItem recentContent={content} />
+                </ContentContainer>
+              )
+            })
+          }
+        </RowListContainer>
+      </ContentListContainer>
+    </>
   );
 }
 
