@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.pt.biscuIT.db.entity.Content;
+
 /**
  * @author 7unho
  * @since 2020-11-23
