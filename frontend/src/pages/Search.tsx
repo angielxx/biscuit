@@ -5,9 +5,17 @@ import ContentCardItem from '../components/common/ContentCardItem';
 import FilterBar from '../components/common/FilterBar/FilterBar';
 import Searchbar from '../components/common/SearchBar';
 import SearchbarAtPage from '../components/common/SearchBarAtPage';
+import tw, { styled, css } from 'twin.macro';
 
 // Recoil
 import { homeFilterBtnState, homeFilterTimeState } from '../recoils/Home/Atoms';
+
+const ResultContainer = styled.div`
+  ${tw`flex flex-col px-4 gap-10 overflow-scroll pt-4 mt-20`}
+  ${css`
+    height: calc(100vh - 148px);
+  `}
+`;
 
 interface content {
   id: number;
@@ -90,12 +98,12 @@ const Search = () => {
         filterTimeState={filterTimeState}
         setFilterTimeState={setFilterTimeState}
       />
-      <div className="flex flex-col px-4 gap-10">
+      <ResultContainer>
         {searchResult &&
           searchResult.map((content) => (
             <ContentCardItem recentContent={content} />
           ))}
-      </div>
+      </ResultContainer>
     </div>
   );
 };

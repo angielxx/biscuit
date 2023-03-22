@@ -15,11 +15,11 @@ import theme from '../../assets/icons/theme.svg';
 import menu from '../../assets/icons/menu.svg';
 
 const Nav = styled.div`
-  ${tw`relative z-20 box-border flex justify-between items-center px-3 py-4 w-full h-[73.23px] left-0 top-0 border-b border-solid border-dark-grey20 bg-black`}
+  ${tw`fixed z-20 box-border flex justify-between items-center px-3 py-4 w-full h-20 left-0 top-0 border-b border-solid border-dark-grey20 bg-black`}
 `;
 
 const Menus = styled.div`
-  ${tw`flex items-start p-0 gap-3 w-[94.99px] h-[24.82px]`}
+  ${tw`flex items-start p-0 gap-3 w-fit h-fit`}
 `;
 
 const Navbar = () => {
