@@ -1,6 +1,7 @@
 package com.pt.biscuIT.db.repository;
 
 import com.pt.biscuIT.db.entity.Content;
+import com.pt.biscuIT.db.entity.QCategory;
 import com.pt.biscuIT.db.entity.QContent;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -27,17 +28,40 @@ public class ContentRepositorySupport {
     private final JPAQueryFactory jpaQueryFactory;
 
     QContent qContent = QContent.content;
+    QCategory qCategory = QCategory.category;
 
     /**
      * 최근 등록된 컨텐츠를 랜덤으로 가져온다.
+     *
      * @param pageable
      * @return
      */
     public Page<Content> findRecentContentByRandom(Pageable pageable) {
-        return new PageImpl<>(jpaQueryFactory.selectFrom(qContent)
-                .orderBy(qContent.createdDate.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch(), pageable, jpaQueryFactory.selectFrom(qContent).fetchCount());
+        return new PageImpl<>(
+                jpaQueryFactory
+                        .selectFrom(qContent)
+                        .orderBy(qContent.createdDate.desc())
+                        .offset(pageable.getOffset())
+                        .limit(pageable.getPageSize())
+                        .fetch(),
+                pageable,
+                jpaQueryFactory.selectFrom(qContent).fetch().size()
+        );
+    }
+
+    public Page<Content> findContentByCategory(String category, Pageable pageable) {
+        return new PageImpl<>(
+                jpaQueryFactory
+                        .selectFrom(qContent)
+                        .join(qContent.category, qCategory)
+                        .where(
+                                qCategory.mainName.like(category).or(qCategory.subName.like(category))
+                        )
+                        .orderBy(qContent.createdDate.desc())
+                        .offset(pageable.getOffset())
+                        .limit(pageable.getPageSize())
+                        .fetch(),
+                pageable,
+                jpaQueryFactory.selectFrom(qContent).fetch().size());
     }
 }
