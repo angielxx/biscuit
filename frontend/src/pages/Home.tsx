@@ -23,17 +23,17 @@ export default function Home() {
 
   // 더미 데이터
   const dummy_content = {
-    id: 0,
-    title: '토스 디자인 원칙 Value first, Cost later',
-    url: 'https://toss.tech/article/value-first-cost-later',
-    credit_by: '이혜인',
-    created_date: '2023.03.20',
+    id: 3,
+    title: '이은지의 CS',
+    url: 'https://velog.io/@94applekoo/CS-프로세스와-스레드',
+    credit_by: '이은지',
+    created_date: '2023-03-21',
     time_cost: 0,
-    type: '',
+    type: '타입',
     isMarked: false,
-    tags: [],
-    channelImg: '',
-    thumbnailImg: '',
+    tags: ['Typescript', 'Javascript', 'Redux-saga'],
+    // channelImg: "",
+    // thumbnailImg: "https://velog.velcdn.com/images/94applekoo/post/9bd49db5-bbae-4cfc-9af1-e0e130a73bbe/image.png",
   };
 
   const closeModal = () => {
