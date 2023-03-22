@@ -31,6 +31,7 @@ public class ContentInfoDto {
     private String type;
     private boolean isMarked;
     private List<String> tags;
+    private Integer hit;
 
     public ContentInfoDto(Content content) {
         this.id = content.getId();
@@ -41,5 +42,6 @@ public class ContentInfoDto {
 //        this.timeCost = content.getTimeCost();
         this.type = Type.POST.toString();
         this.isMarked = false;
+        this.hit = content.getHit();
     }
 }

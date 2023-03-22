@@ -13,6 +13,7 @@ import com.pt.biscuIT.api.dto.content.ContentInfoDto;
 import com.pt.biscuIT.api.response.SearchContentRes;
 import com.pt.biscuIT.common.model.response.PageMetaData;
 import com.pt.biscuIT.db.entity.Content;
+import com.pt.biscuIT.db.entity.Type;
 import com.pt.biscuIT.db.repository.ContentRepository;
 import com.pt.biscuIT.db.repository.ContentRepositorySupport;
 
@@ -35,11 +36,12 @@ public class SearchServiceImpl implements SearchService {
 			.title(c.getTitle())
 			.url(c.getUrl())
 			.creditBy(c.getCreditBy())
-			.createdAt(c.getCreatedDate().toString())
-			.timeCost(c.getTimeCost().toString())
-			.type(c.getType().name())
+			.createdDate(c.getCreatedDate())
+			.timeCost(c.getTimeCost())
+			.type(Type.POST.toString())
 			.isMarked(false)
 			.tags(null)
+			.hit(c.getHit())
 			.build());
 
 		PageMetaData pageMetaData = PageMetaData.builder()

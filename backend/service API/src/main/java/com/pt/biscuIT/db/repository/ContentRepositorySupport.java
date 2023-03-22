@@ -76,22 +76,21 @@ public class ContentRepositorySupport {
                 jpaQueryFactory.selectFrom(qContent).fetch().size());
     }
 
-    public Page<Content> findContentByTitle(Long lastContentId, String title, PageRequest pageRequest) {
+    public Page<Content> findContentByTitle(Long lastContentId, String keyword, PageRequest pageRequest) {
         List<Content> contents = jpaQueryFactory
             .selectFrom(qContent)
-            .where(containTitle(title),
-                qContent.id.lt(lastContentId))
-            .offset(pageRequest.getOffset())
+            .where(containTitle(keyword))
+            .offset(lastContentId)
             .limit(pageRequest.getPageSize() + 1)
             .orderBy(qContent.hit.desc())
             .fetch();
         return new PageImpl<>(contents, pageRequest, contents.size());
     }
 
-    private BooleanExpression containTitle(String title) {
-        if(title == null || title.isEmpty()) {
+    private BooleanExpression containTitle(String keyword) {
+        if(keyword == null || keyword.isEmpty()) {
             return null;
         }
-        return qContent.title.containsIgnoreCase(title);
+        return qContent.title.containsIgnoreCase(keyword);
     }
 }
