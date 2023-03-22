@@ -18,7 +18,7 @@ import java.util.List;
  * @since 2020-11-23
  */
 @RestController
-@RequestMapping("/api/v1/recommands")
+@RequestMapping("/api/recommands")
 @Slf4j
 public class RecommandController {
 
