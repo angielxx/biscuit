@@ -1,8 +1,7 @@
-package com.pt.biscuIT.service;
+package com.pt.biscuIT.api.service;
 
+import com.pt.biscuIT.api.dto.quiz.ProvideQuizDto;
 import org.springframework.stereotype.Service;
-
-import com.pt.biscuIT.dto.quiz.ProvideQuizDto;
 
 @Service
 public interface QuizService {

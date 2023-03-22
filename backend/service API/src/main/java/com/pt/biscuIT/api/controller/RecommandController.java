@@ -1,11 +1,10 @@
-package com.pt.biscuIT.controller;
+package com.pt.biscuIT.api.controller;
 
 import com.pt.biscuIT.common.model.response.BaseResponseBody;
 import com.pt.biscuIT.common.model.response.PageMetaData;
-import com.pt.biscuIT.dto.content.ContentInfoDto;
-import com.pt.biscuIT.dto.quiz.ProvideQuizDto;
-import com.pt.biscuIT.dto.response.RandomRecentContentRes;
-import com.pt.biscuIT.service.RecommandService;
+import com.pt.biscuIT.api.dto.content.ContentInfoDto;
+import com.pt.biscuIT.api.response.RandomRecentContentRes;
+import com.pt.biscuIT.api.service.RecommandService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

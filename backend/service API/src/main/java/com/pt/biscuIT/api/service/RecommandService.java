@@ -1,6 +1,6 @@
-package com.pt.biscuIT.service;
+package com.pt.biscuIT.api.service;
 
-import com.pt.biscuIT.dto.content.ContentInfoDto;
+import com.pt.biscuIT.api.dto.content.ContentInfoDto;
 import com.pt.biscuIT.db.entity.Content;
 import com.pt.biscuIT.db.repository.ContentRepositorySupport;
 import lombok.extern.slf4j.Slf4j;

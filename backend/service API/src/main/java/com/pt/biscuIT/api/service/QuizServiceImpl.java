@@ -1,14 +1,14 @@
-package com.pt.biscuIT.service;
+package com.pt.biscuIT.api.service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import com.pt.biscuIT.api.dto.quiz.ProvideQuizDetailDto;
+import com.pt.biscuIT.api.dto.quiz.ProvideQuizDto;
 import org.springframework.stereotype.Service;
 
-import com.pt.biscuIT.dto.quiz.ProvideQuizDetailDto;
-import com.pt.biscuIT.dto.quiz.ProvideQuizDto;
 import com.pt.biscuIT.db.entity.Content;
 import com.pt.biscuIT.db.entity.Quiz;
 import com.pt.biscuIT.db.repository.ContentRepository;

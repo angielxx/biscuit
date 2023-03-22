@@ -1,4 +1,4 @@
-package com.pt.biscuIT.dto.content;
+package com.pt.biscuIT.api.dto.content;
 
 import lombok.Builder;
 import lombok.Data;

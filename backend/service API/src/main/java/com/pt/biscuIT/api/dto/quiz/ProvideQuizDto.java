@@ -1,4 +1,4 @@
-package com.pt.biscuIT.dto.quiz;
+package com.pt.biscuIT.api.dto.quiz;
 
 import java.util.List;
 

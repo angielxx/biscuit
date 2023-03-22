@@ -1,8 +1,7 @@
-package com.pt.biscuIT.repository;
+package com.pt.biscuIT.db.repository;
 
-import com.pt.biscuIT.entity.Content;
+import com.pt.biscuIT.db.entity.Content;
 import com.pt.biscuIT.entity.QContent;
-import com.pt.biscuIT.dto.content.ContentInfoDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

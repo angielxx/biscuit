@@ -1,8 +1,8 @@
-package com.pt.biscuIT.dto.response;
+package com.pt.biscuIT.api.response;
 
+import com.pt.biscuIT.api.dto.content.ContentInfoDto;
 import com.pt.biscuIT.common.model.response.BaseResponseBody;
 import com.pt.biscuIT.common.model.response.PageMetaData;
-import com.pt.biscuIT.dto.content.ContentInfoDto;
 import lombok.Builder;
 import lombok.Data;
 

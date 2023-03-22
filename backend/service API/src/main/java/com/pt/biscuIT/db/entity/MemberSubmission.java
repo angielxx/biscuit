@@ -1,4 +1,4 @@
-package com.pt.biscuIT.entity;
+package com.pt.biscuIT.db.entity;
 
 import java.io.Serializable;
 

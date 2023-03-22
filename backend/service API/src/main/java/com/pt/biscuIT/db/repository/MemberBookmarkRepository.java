@@ -1,10 +1,8 @@
-package com.pt.biscuIT.repository;
+package com.pt.biscuIT.db.repository;
 
+import com.pt.biscuIT.db.entity.MemberBookmark;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import com.pt.biscuIT.entity.MemberBookmark;
-import com.pt.biscuIT.entity.MemberInterest;
 
 @Repository
 public interface MemberBookmarkRepository extends JpaRepository<MemberBookmark, Long> {

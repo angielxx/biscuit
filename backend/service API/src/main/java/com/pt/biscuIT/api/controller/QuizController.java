@@ -1,12 +1,12 @@
-package com.pt.biscuIT.controller;
+package com.pt.biscuIT.api.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pt.biscuIT.dto.quiz.ProvideQuizDto;
-import com.pt.biscuIT.service.QuizService;
+import com.pt.biscuIT.api.dto.quiz.ProvideQuizDto;
+import com.pt.biscuIT.api.service.QuizService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
