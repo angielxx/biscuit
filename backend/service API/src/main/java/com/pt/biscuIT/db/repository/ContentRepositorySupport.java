@@ -2,8 +2,19 @@ package com.pt.biscuIT.db.repository;
 
 import com.pt.biscuIT.db.entity.Content;
 import com.pt.biscuIT.db.entity.QContent;
+import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPQLQuery;
+import com.pt.biscuIT.db.entity.QContent;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -39,5 +50,24 @@ public class ContentRepositorySupport {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch(), pageable, jpaQueryFactory.selectFrom(qContent).fetchCount());
+    }
+
+    public Page<Content> findContentByTitle(Long lastContentId, String title, PageRequest pageRequest) {
+        List<Content> contents = jpaQueryFactory
+            .selectFrom(qContent)
+            .where(containTitle(title),
+                qContent.id.lt(lastContentId))
+            .offset(pageRequest.getOffset())
+            .limit(pageRequest.getPageSize() + 1)
+            .orderBy(qContent.hit.desc())
+            .fetch();
+        return new PageImpl<>(contents, pageRequest, contents.size());
+    }
+
+    private BooleanExpression containTitle(String title) {
+        if(title == null || title.isEmpty()) {
+            return null;
+        }
+        return qContent.title.containsIgnoreCase(title);
     }
 }

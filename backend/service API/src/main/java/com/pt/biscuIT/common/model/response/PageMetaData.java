@@ -5,11 +5,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 /*
-    * PageMetaData
-    * @author 7unho
-    * @since 2020-11-23
-    *
-*/
+ * PageMetaData
+ * @author 7unho
+ * @since 2020-11-23
+ *
+ */
 @Getter
 @Setter
 @Builder
@@ -22,8 +22,8 @@ public class PageMetaData {
     int totalPageCnt;
     // 현재 dto 개수 : Page<Entity>.getTotalElements()
     long itemCnt;
-    // 처음 페이지인지 확인 : Page<Entity>.isFirst()
+    // 처음 페이지인지 확인 : pageable.isFirst()
     boolean first;
-    // 마지막 페이지인지 확인 : Page<Entity>.isLast()
+    // 마지막 페이지인지 확인 : pageable.isLast()
     boolean last;
 }
