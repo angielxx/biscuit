@@ -1,10 +1,10 @@
-import { BrowserRouter } from "react-router-dom";
-import { RecoilRoot } from "recoil";
-import Routers from "./Routers";
-import Navbar from "./components/common/Navbar";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { BrowserRouter } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
+import Routers from './Routers';
+import Navbar from './components/common/Navbar';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import "./styles/App.css";
+import './styles/App.css';
 
 const queryClient = new QueryClient();
 
