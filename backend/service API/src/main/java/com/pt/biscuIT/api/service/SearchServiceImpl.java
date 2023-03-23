@@ -1,10 +1,6 @@
 package com.pt.biscuIT.api.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,7 +10,6 @@ import com.pt.biscuIT.api.response.SearchContentRes;
 import com.pt.biscuIT.common.model.response.PageMetaData;
 import com.pt.biscuIT.db.entity.Content;
 import com.pt.biscuIT.db.entity.Type;
-import com.pt.biscuIT.db.repository.ContentRepository;
 import com.pt.biscuIT.db.repository.ContentRepositorySupport;
 
 import lombok.RequiredArgsConstructor;
