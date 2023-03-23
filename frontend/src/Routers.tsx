@@ -9,7 +9,7 @@ export default function Routers() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/search" element={<Search />} />
-      <Route path="/category/:id" element={<Category />} />
+      <Route path="/category/:name" element={<Category />} />
       <Route path="admin" element={<Admin />} />
     </Routes>
   );
