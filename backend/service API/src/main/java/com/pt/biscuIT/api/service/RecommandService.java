@@ -30,31 +30,31 @@ public class RecommandService {
     @Autowired
     ContentRepositorySupport contentRepositorySupport;
 
-    public Page<?> getRandomContent(String option, Pageable pageable, int categoryCount) {
+    public Page<ContentInfoDto> getRandomContent(String option, Pageable pageable) {
         Page<ContentInfoDto> res = new PageImpl<>(new ArrayList<>(), pageable, 0);
         if("recent".equals(option)){
             Page<Content> contentList = contentRepositorySupport.findRecentContentByRandom(pageable);
             res = contentList.map(ContentInfoDto::new);
         } else if("popular".equals(option)) {
             return null;
-        } else if("category".equals(option)) {
-            List<String> categories = contentRepository.findRandomCategoryByCount(categoryCount);
-            List<ContentInfoListCategoryDto> contentCategoryList = new ArrayList<>();
-
-            categories.forEach((category -> {
-                ContentInfoListCategoryDto content = new ContentInfoListCategoryDto().builder()
-                        .category(category)
-                        .build();
-                Page<Content> contentList = contentRepositorySupport.findContentByCategory(category, pageable);
-
-                content.setItems(contentList.map(ContentInfoDto::new).getContent());
-
-                contentCategoryList.add(content);
-            }));
-            return new PageImpl<>(contentCategoryList, pageable, contentCategoryList.size());
         }
-
-
         return res;
+    }
+
+    public Page<ContentInfoListCategoryDto> getRandomCategoryContent(int categoryCount, Pageable pageable) {
+        List<String> categories = contentRepository.findRandomCategoryByCount(categoryCount);
+        List<ContentInfoListCategoryDto> contentCategoryList = new ArrayList<>();
+
+        categories.forEach((category -> {
+            ContentInfoListCategoryDto content = new ContentInfoListCategoryDto().builder()
+                                                                                 .category(category)
+                                                                                 .build();
+            Page<Content> contentList = contentRepositorySupport.findContentByCategory(category, pageable);
+
+            content.setItems(contentList.map(ContentInfoDto::new).getContent());
+
+            contentCategoryList.add(content);
+        }));
+        return new PageImpl<>(contentCategoryList, pageable, contentCategoryList.size());
     }
 }

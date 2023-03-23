@@ -43,14 +43,40 @@ public class RecommandController {
     public ResponseEntity<? extends BaseResponseBody> getRandomRecentContent(
             @PathVariable String option,
             Pageable pageable,
-            int categoryCount
+            Integer categoryCount
     ) {
-        Page<ContentInfoListCategoryDto> contentList = (Page<ContentInfoListCategoryDto>) recommandService.getRandomContent(option, pageable, categoryCount);
+        if("category".equals(option)) {
+            Page<ContentInfoListCategoryDto> contentList = recommandService.getRandomCategoryContent(categoryCount, pageable);
 
-        RandomCategoryContentRes res = RandomCategoryContentRes.builder()
-                                                            .results(contentList.getContent())
-                                                            .build();
+            return ResponseEntity.status(200).body(RandomCategoryContentRes.of(
+                    200,
+                    "SUCCESS",
+                    RandomCategoryContentRes.builder()
+                                            .results(contentList.getContent())
+                                            .build())
+            );
+        } else if("recent".equals(option) || "popular".equals(option)){
+            Page<ContentInfoDto> contentList = recommandService.getRandomContent(option, pageable);
 
-        return ResponseEntity.status(200).body(RandomCategoryContentRes.of(200, "SUCCESS", res));
+            PageMetaData metaData = PageMetaData.builder()
+                    .first(contentList.isFirst())
+                    .last(contentList.isLast())
+                    .size(contentList.getSize())
+                    .page(contentList.getNumber())
+                    .itemCnt(contentList.getTotalElements())
+                    .totalPageCnt(contentList.getTotalPages())
+                    .build();
+
+            return ResponseEntity.status(200).body(RandomRecentContentRes.of(
+                    200,
+                    "SUCCESS",
+                    RandomRecentContentRes.builder()
+                            .metaData(metaData)
+                            .results(contentList.getContent())
+                            .build())
+            );
+        }
+
+        return ResponseEntity.status(400).body(BaseResponseBody.of(400, "BAD_REQUEST"));
     }
 }
