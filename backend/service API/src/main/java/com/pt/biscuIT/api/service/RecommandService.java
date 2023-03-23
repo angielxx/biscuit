@@ -1,6 +1,7 @@
 package com.pt.biscuIT.api.service;
 
 import com.pt.biscuIT.api.dto.content.ContentInfoDto;
+import com.pt.biscuIT.api.dto.content.ContentInfoListCategoryDto;
 import com.pt.biscuIT.db.entity.Category;
 import com.pt.biscuIT.db.entity.Content;
 import com.pt.biscuIT.db.repository.ContentRepository;
@@ -29,23 +30,29 @@ public class RecommandService {
     @Autowired
     ContentRepositorySupport contentRepositorySupport;
 
-    public Page<ContentInfoDto> getRandomContent(String option, Pageable pageable, int categoryCount) {
-        Page<Content> contentList;
+    public Page<?> getRandomContent(String option, Pageable pageable, int categoryCount) {
         Page<ContentInfoDto> res = new PageImpl<>(new ArrayList<>(), pageable, 0);
         if("recent".equals(option)){
-            contentList = contentRepositorySupport.findRecentContentByRandom(pageable);
+            Page<Content> contentList = contentRepositorySupport.findRecentContentByRandom(pageable);
             res = contentList.map(ContentInfoDto::new);
 //            res = new PageImpl<>(contentList, pageable, contentList.size());
         } else if("popular".equals(option)) {
             return null;
         } else if("category".equals(option)) {
             List<String> categories = contentRepository.findRandomCategoryByCount(categoryCount);
+            List<ContentInfoListCategoryDto> contentCategoryList = new ArrayList<>();
 
             categories.forEach((category -> {
-                System.out.println("CATEGORY >>>>>> " + category.toString());
+                ContentInfoListCategoryDto content = new ContentInfoListCategoryDto().builder()
+                        .category(category)
+                        .build();
+                Page<Content> contentList = contentRepositorySupport.findContentByCategory(category, pageable);
+
+                content.setItems(contentList.map(ContentInfoDto::new).getContent());
+
+                contentCategoryList.add(content);
             }));
-            contentList = contentRepositorySupport.findRecentContentByRandom(pageable);
-            res = contentList.map(ContentInfoDto::new);
+            return new PageImpl<>(contentCategoryList, pageable, contentCategoryList.size());
         }
 
 

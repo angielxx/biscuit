@@ -1,5 +1,7 @@
 package com.pt.biscuIT.api.controller;
 
+import com.pt.biscuIT.api.dto.content.ContentInfoListCategoryDto;
+import com.pt.biscuIT.api.response.RandomCategoryContentRes;
 import com.pt.biscuIT.common.model.response.BaseResponseBody;
 import com.pt.biscuIT.common.model.response.PageMetaData;
 import com.pt.biscuIT.api.dto.content.ContentInfoDto;
@@ -43,22 +45,12 @@ public class RecommandController {
             Pageable pageable,
             int categoryCount
     ) {
-        Page<ContentInfoDto> contentList = recommandService.getRandomContent(option, pageable, categoryCount);
+        Page<ContentInfoListCategoryDto> contentList = (Page<ContentInfoListCategoryDto>) recommandService.getRandomContent(option, pageable, categoryCount);
 
-        PageMetaData metaData = PageMetaData.builder()
-                                            .first(contentList.isFirst())
-                                            .last(contentList.isLast())
-                                            .size(contentList.getSize())
-                                            .page(contentList.getNumber())
-                                            .itemCnt(contentList.getNumberOfElements())
-                                            .totalPageCnt(contentList.getTotalPages())
-                                            .build();
-
-        RandomRecentContentRes res = RandomRecentContentRes.builder()
-                                                            .metaData(metaData)
+        RandomCategoryContentRes res = RandomCategoryContentRes.builder()
                                                             .results(contentList.getContent())
                                                             .build();
 
-        return ResponseEntity.status(200).body(RandomRecentContentRes.of(200, "SUCCESS", res));
+        return ResponseEntity.status(200).body(RandomCategoryContentRes.of(200, "SUCCESS", res));
     }
 }
