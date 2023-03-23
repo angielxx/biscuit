@@ -5,6 +5,7 @@ import com.pt.biscuIT.db.entity.QCategory;
 import com.pt.biscuIT.db.entity.QContent;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.pt.biscuIT.db.entity.QContent;
 import com.querydsl.core.QueryResults;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.Collections;
 import java.util.List;
 
 /*
@@ -83,12 +85,12 @@ public class ContentRepositorySupport {
 
     public Page<Content> findContentByTitle(Long lastContentId, String keyword, PageRequest pageRequest) {
         List<Content> contents = jpaQueryFactory
-            .selectFrom(qContent)
-            .where(containTitle(keyword))
-            .offset(lastContentId)
-            .limit(pageRequest.getPageSize() + 1)
-            .orderBy(qContent.hit.desc())
-            .fetch();
+                .selectFrom(qContent)
+                .where(containTitle(keyword))
+                .offset(lastContentId)
+                .limit(pageRequest.getPageSize() + 1)
+                .orderBy(qContent.hit.desc())
+                .fetch();
         return new PageImpl<>(contents, pageRequest, contents.size());
     }
 
@@ -97,5 +99,26 @@ public class ContentRepositorySupport {
             return null;
         }
         return qContent.title.containsIgnoreCase(keyword);
+    }
+
+    public Page<Content> findPopularContentByRandom(Pageable pageable) {
+        List<Content> contentList = jpaQueryFactory
+                                                    .selectFrom(qContent)
+                                                    .orderBy(qContent.hit.desc())
+                                                    .offset(pageable.getOffset())
+                                                    .limit(pageable.getPageSize())
+                                                    .fetch();
+        Collections.shuffle(contentList);
+        return new PageImpl<>(
+                contentList,
+                pageable,
+                jpaQueryFactory
+                        .selectFrom(qContent)
+                        .orderBy(qContent.hit.desc())
+                        .offset(pageable.getOffset())
+                        .limit(pageable.getPageSize())
+                        .fetch()
+                        .size()
+        );
     }
 }
