@@ -40,3 +40,5 @@
 - 2023.03.14. ERD 추가
 
 ### API 명세서
+
+- [API 명세 보러가기](https://www.notion.so/randallkk/Service-API-5b4a94ac47614feaa169a4db5cd4e5bc?pvs=4)
