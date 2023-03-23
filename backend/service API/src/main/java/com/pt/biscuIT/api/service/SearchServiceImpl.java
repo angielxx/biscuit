@@ -1,5 +1,7 @@
 package com.pt.biscuIT.api.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +26,8 @@ public class SearchServiceImpl implements SearchService {
 
 	@Override
 	public SearchContentRes search(String keyword, Long lastContentId, Pageable pageable) {
+		//태그 용 빈배열
+		String[] tags = {};
 		PageRequest pageRequest = PageRequest.of(0, pageable.getPageSize());
 		Page<Content> contents = contentRepositorySupport.findContentByTitle(lastContentId, keyword, pageRequest);
 		Page<ContentInfoDto> dtos = contents.map(c -> ContentInfoDto.builder()
@@ -35,7 +39,7 @@ public class SearchServiceImpl implements SearchService {
 			.timeCost(c.getTimeCost())
 			.type(Type.POST.toString())
 			.isMarked(false)
-			.tags(null)
+			.tags(List.of(tags))
 			.hit(c.getHit())
 			.build());
 
