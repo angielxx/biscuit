@@ -38,8 +38,12 @@ public class RecommandController {
     */
 
     @GetMapping("/random/{option}")
-    public ResponseEntity<? extends BaseResponseBody> getRandomRecentContent(@PathVariable String option, Pageable pageable) {
-        Page<ContentInfoDto> contentList = recommandService.getRandomContent(option, pageable);
+    public ResponseEntity<? extends BaseResponseBody> getRandomRecentContent(
+            @PathVariable String option,
+            Pageable pageable,
+            int categoryCount
+    ) {
+        Page<ContentInfoDto> contentList = recommandService.getRandomContent(option, pageable, categoryCount);
 
         PageMetaData metaData = PageMetaData.builder()
                                             .first(contentList.isFirst())
