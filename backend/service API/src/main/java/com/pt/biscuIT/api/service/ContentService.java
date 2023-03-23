@@ -20,12 +20,7 @@ public class ContentService {
     ContentRepositorySupport contentRepositorySupport;
 
     public Page<ContentInfoDto> getCategoryContent(String category, Pageable pageable) {
-        Page<Content> contentList;
-        Page<ContentInfoDto> res = new PageImpl<>(new ArrayList<>(), pageable, 0);
-
-        contentList = contentRepositorySupport.findContentByCategory(category, pageable);
-        res = contentList.map(ContentInfoDto::new);
-
-        return res;
+        Page<Content> contentList = contentRepositorySupport.findContentByCategory(category, pageable);
+        return contentList.map(ContentInfoDto::new);
     }
 }
