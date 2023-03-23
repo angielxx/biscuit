@@ -19,5 +19,6 @@ public class MemberBookmark implements Serializable {
 	private Member member;
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Content content;
+	// TODO: content 삭제 시 MemberBookmark도 삭제시키기
 	private LocalDateTime createdDate;
 }

@@ -18,6 +18,7 @@ public class Content implements Serializable {
 	private Long id;
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Category category;
+	@Column(unique = true)
 	private String url;
 	private String title;
 	private String writer;

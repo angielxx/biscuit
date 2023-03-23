@@ -18,4 +18,5 @@ public class MemberInterest implements Serializable {
 	private Member member;
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Category category;
+	// TODO: category 삭제 시 MemberInterest도 삭제시키기
 }
