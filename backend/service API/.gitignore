@@ -19,6 +19,7 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
+backend/.idea
 service API/.idea
 service API/src/main/resources/*.properties
 *.iws
