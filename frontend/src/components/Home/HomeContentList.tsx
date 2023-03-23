@@ -26,7 +26,7 @@ const MyLogo = ({ category }: { category: string }) => {
 const Title = tw.span`text-white text-h2 mb-2`;
 
 const RowListContainer = styled.div`
-  ${tw`flex flex-row h-fit w-fit gap-x-4 flex-nowrap`}
+  ${tw`flex flex-row h-fit w-fit gap-x-4 flex-nowrap mr-4`}
   ${css`width: calc(100vw - 32px)`}
 
   &::-webkit-scrollbar {
@@ -73,6 +73,19 @@ const HomeContentList = ({category}: HomeComentListProps) => {
     },
     {
       id: 2,
+      title: ".",
+      url: "https://velog.io/@94applekoo/CS-프로세스와-스레드",
+      credit_by: ".",
+      created_date: ".",
+      time_cost: 0,
+      type: "타입",
+      isMarked: false,
+      tags: [".",],
+      channelImg: "",
+      thumbnailImg: "",
+    },
+    {
+      id: 3,
       title: "이은지의 리액트",
       url: "https://velog.io/@94applekoo/React-createPortal",
       credit_by: "이은지",
@@ -85,7 +98,7 @@ const HomeContentList = ({category}: HomeComentListProps) => {
       thumbnailImg: "",
     },
     {
-      id: 3,
+      id: 4,
       title: "이은지의 CS",
       url: "https://velog.io/@94applekoo/CS-프로세스와-스레드",
       credit_by: "이은지",
