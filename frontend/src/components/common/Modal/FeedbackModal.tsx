@@ -44,9 +44,7 @@ interface RecentContentState {
   time_cost: number;
   type: string;
   isMarked: boolean;
-  tags: Array<number>;
-  channelImg: string;
-  thumbnailImg: string;
+  tags: Array<string>;
 }
 
 interface Quiz {
@@ -74,8 +72,6 @@ const FeedbackModal = ({ onClose }: FeedbackModalProps) => {
     type: '',
     isMarked: false,
     tags: [],
-    channelImg: '',
-    thumbnailImg: '',
   });
   // // 컨텐츠에 대한 퀴즈
   // const [quizes, setQuizes] = useState<QuizesState>();
@@ -106,15 +102,15 @@ const FeedbackModal = ({ onClose }: FeedbackModalProps) => {
   useEffect(() => {
     // API get 요청 : 컨텐츠 조회
     setRecentContent({
-      image:
-        'https://content.surfit.io/thumbs/image/5eQZ5/Wknoy/1126431375640856ffc9068.png/cover-center-1x.webp',
-      url: 'https://content.surfit.io/thumbs/image/5eQZ5/Wknoy/1126431375640856ffc9068.png/cover-center-1x.webp',
-      channelImg: '',
-      title: '리액트와 관련한 콘텐츠의 제목입니다.',
-      author: '작성자',
-      date: '2022.11.25',
+      id: 3,
+      title: '이은지의 CS',
+      url: 'https://velog.io/@94applekoo/CS-프로세스와-스레드',
+      credit_by: '이은지',
+      created_date: '2023-03-21',
+      time_cost: 0,
+      type: '타입',
       isMarked: false,
-      tags: ['React', 'Zotai'],
+      tags: ['Typescript', 'Javascript', 'Redux-saga'],
     });
 
     // API get 요청 : 퀴즈 제공
