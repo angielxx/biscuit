@@ -1,5 +1,7 @@
 package com.pt.biscuIT.db.entity;
 
+import org.springframework.data.annotation.CreatedDate;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -19,5 +21,6 @@ public class MemberHistory implements Serializable {
 	private Member member;
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Content content;
+	@CreatedDate
 	private LocalDateTime createdDate;
 }
