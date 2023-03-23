@@ -35,7 +35,6 @@ public class RecommandService {
         if("recent".equals(option)){
             Page<Content> contentList = contentRepositorySupport.findRecentContentByRandom(pageable);
             res = contentList.map(ContentInfoDto::new);
-//            res = new PageImpl<>(contentList, pageable, contentList.size());
         } else if("popular".equals(option)) {
             return null;
         } else if("category".equals(option)) {
