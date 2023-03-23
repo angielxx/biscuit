@@ -39,7 +39,7 @@ public class ContentInfoDto {
         this.url = content.getUrl();
         this.creditBy = content.getCreditBy();
         this.createdDate = content.getCreatedDate();
-//        this.timeCost = content.getTimeCost();
+        this.timeCost = content.getTimeCost();
         this.type = Type.POST.toString();
         this.isMarked = false;
         this.hit = content.getHit();
