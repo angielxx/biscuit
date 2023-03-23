@@ -11,9 +11,17 @@ import java.util.List;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query(
-            value = "SELECT distinct main_name, code" +
-                    "FROM category",
-            nativeQuery = true
+            value = "SELECT mainName, code " +
+                    "FROM Category " +
+                    "GROUP BY mainName, substring(code, 0, 2) "
     )
-    List<Category> findCodeAndMainNameList();
+    List<String> findCodeAndMainNameList();
+
+//    @Query(
+//            value = "SELECT sub_name, substring(code, 3, 5) " +
+//                    "FROM category " +
+//                    "WHERE code LIKE :code% ",
+//            nativeQuery = true
+//    )
+//    List<String> findSubCategoryList(String code);
 }

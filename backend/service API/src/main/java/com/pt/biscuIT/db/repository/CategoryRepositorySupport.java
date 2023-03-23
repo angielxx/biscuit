@@ -18,4 +18,11 @@ public class CategoryRepositorySupport {
     private final EntityManager em;
     private final JPAQueryFactory jpaQueryFactory;
     QCategory qCategory = QCategory.category;
+
+    public List<Category> findSubCategoryList(String code) {
+        return jpaQueryFactory
+                .selectFrom(qCategory)
+                .where(qCategory.code.like(code + "%"))
+                .fetch();
+    }
 }

@@ -1,5 +1,6 @@
 package com.pt.biscuIT.api.controller;
 
+import com.pt.biscuIT.api.dto.category.CategoryInfoDto;
 import com.pt.biscuIT.api.response.CategoryInfoListRes;
 import com.pt.biscuIT.api.response.SearchContentRes;
 import com.pt.biscuIT.api.service.CategoryService;
@@ -24,7 +25,11 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<? extends BaseResponseBody> getCategories() {
-        List<CategoryInfoListRes> res = categoryService.getCategoryItemList();
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "SUCCESS"));
+        List<CategoryInfoDto> categoryItemList = categoryService.getCategoryItemList();
+
+        CategoryInfoListRes res = CategoryInfoListRes.builder()
+                                                     .categories(categoryItemList)
+                                                     .build();
+        return ResponseEntity.status(200).body(CategoryInfoListRes.of(200, "SUCCESS", res));
     }
 }

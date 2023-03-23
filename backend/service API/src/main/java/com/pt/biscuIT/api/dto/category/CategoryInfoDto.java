@@ -1,5 +1,6 @@
 package com.pt.biscuIT.api.dto.category;
 
+import com.pt.biscuIT.db.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +13,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CategoryInfoDto {
-    private Long id;
-    private String mainName;
-    List<CategoryIdNameDto> subCategories;
+    Integer code;
+    String mainName;
+    List<CategoryCodeNameDto> subCategories;
+
+    public CategoryInfoDto(Category category) {
+        this.code = category.getCode();
+        this.mainName = category.getMainName();
+    }
 }

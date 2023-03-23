@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryIdNameDto {
-    private Long id;
-    private String name;
+public class CategoryCodeNameDto {
+    private Integer code;
+    private String subName;
 }
