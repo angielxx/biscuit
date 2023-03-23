@@ -2,16 +2,12 @@ package com.pt.biscuIT.db.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -27,7 +23,9 @@ public class Content implements Serializable {
 	private String writer;
 	private String creditBy;
 	private LocalDateTime createdDate;
+	@ColumnDefault("0")
 	private Integer hit;
+	@ColumnDefault("0")
 	private Integer timeCost;
 	private Type type;
 

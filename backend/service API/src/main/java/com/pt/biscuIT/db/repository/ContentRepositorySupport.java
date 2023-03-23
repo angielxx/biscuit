@@ -77,7 +77,8 @@ public class ContentRepositorySupport {
                         .limit(pageable.getPageSize())
                         .fetch(),
                 pageable,
-                jpaQueryFactory.selectFrom(qContent).fetch().size());
+                jpaQueryFactory.selectFrom(qContent).fetch().size()
+        );
     }
 
     public Page<Content> findContentByTitle(Long lastContentId, String keyword, PageRequest pageRequest) {

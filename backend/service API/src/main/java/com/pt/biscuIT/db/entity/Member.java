@@ -1,6 +1,7 @@
 package com.pt.biscuIT.db.entity;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ public class Member implements Serializable {
 	private SocialDomain socialDomain;
 	private String nickname;
 	private Role role;
+	@CreatedDate
 	private LocalDateTime signupDate;
 	private LocalDateTime withdrawDate;
 	@OneToOne(fetch = FetchType.LAZY)
