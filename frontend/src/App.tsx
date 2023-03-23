@@ -15,7 +15,9 @@ function App() {
         <RecoilRoot>
           <BrowserRouter>
             <Navbar />
-            <Routers />
+            <div className="mt-20">
+              <Routers />
+            </div>
           </BrowserRouter>
         </RecoilRoot>
       </QueryClientProvider>

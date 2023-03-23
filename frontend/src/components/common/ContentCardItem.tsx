@@ -86,7 +86,7 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
   }, []);
 
   return (
-    <div id="content-area" className="flex flex-col gap-4 text-white">
+    <div id="content-area" className="flex flex-col gap-4 text-white w-full">
       <div className="flex gap-2">
         {recentContent.tags.map((tag, index) => (
           <Tag key={index}>
