@@ -17,13 +17,13 @@ const Img = styled.img`
   &.open {
     ${css`
       transform: rotate(180deg);
-      animation: open-rotate 0.8s;    
+      animation: open-rotate 0.5s;    
     `}
   }
 
   &.close {
     ${css`
-      animation: close-rotate 0.8s;    
+      animation: close-rotate 0.5s;    
     `}
   }
 
