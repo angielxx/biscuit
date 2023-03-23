@@ -59,8 +59,8 @@ export default function Home() {
 
   return (
     <HomeContainer>
-      { functionToggle.buttonToggle ? <Button title="퀴즈 풀래요" status="active" onClick={clickBtn}/> : null}
-      { functionToggle.dropDownToggle ? <DropDown itemList={dropDownList} placeHolder="직무 선택" /> : null}
+      {/* { functionToggle.buttonToggle ? <Button title="퀴즈 풀래요" status="active" onClick={clickBtn}/> : null} */}
+      {/* { functionToggle.dropDownToggle ? <DropDown itemList={dropDownList} placeHolder="직무 선택" /> : null} */}
       { functionToggle.bannerToggle ? <Banner /> : null}
       { functionToggle.filterBarToggle
         ? <FilterBar 
