@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // components
 import BigCategory from './BigCategory';
-import SmallCategory from './SmallCategory';
 import AsideButton from './AsideButton';
 
 // css
@@ -115,7 +114,7 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
         />
       </Closeicon>
       <ProfileBox>
-        <Nickname onClick={goToMypage}>유진 님</Nickname>
+        <Nickname onClick={goToMypage}>유저네임 님</Nickname>
         <AsideBtn>
           <AsideButton
             to="/setting"
@@ -141,12 +140,17 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
         return (
           <BigCategory
             key={item.id}
-            isCategory={page === index ? true : false}
+            isCategory={page === index ? isCategory : false}
             isClicked={isClicked}
             item={item}
             onClick={() => {
               setPage(index);
-              isCategory ? setIsCategory(false) : setIsCategory(true);
+              // page !== index 일 경우, isCategory가 true면, 걍 true로 냅둬야한다.
+              isCategory
+                ? page === index
+                  ? setIsCategory(false)
+                  : setIsCategory(true)
+                : setIsCategory(true);
             }}
           />
         );

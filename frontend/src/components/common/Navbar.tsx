@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+
+import useOnClickOutside from '../../hooks/useOnClickOutside';
 
 // components
 import Asidebar from './Asidebar';
@@ -27,6 +29,10 @@ const Navbar = () => {
   const [isSearch, setIsSearch] = useState<boolean>(false);
   const navigate = useNavigate();
 
+  const ref = useRef<HTMLDivElement>(null);
+
+  useOnClickOutside(ref, () => setIsOpen(false));
+
   const goHome = () => {
     navigate('/');
     setIsSearch(false);
@@ -41,7 +47,7 @@ const Navbar = () => {
   }, [location]);
 
   return (
-    <>
+    <div ref={ref}>
       <Nav>
         <img src={biscuit} alt="biscuit" onClick={goHome} />
         <Menus>
@@ -62,11 +68,13 @@ const Navbar = () => {
           />
         </Menus>
       </Nav>
-      {isSearch ? (
-        <Searchbar isSearch={isSearch} setIsSearch={setIsSearch} searchKey="" />
-      ) : null}
-      {isOpen ? <Asidebar isOpen={isOpen} setIsOpen={setIsOpen} /> : null}
-    </>
+      {isSearch 
+        ? <Searchbar isSearch={isSearch} setIsSearch={setIsSearch} searchKey="" />
+        : null}
+      {isOpen 
+        ? <Asidebar isOpen={isOpen} setIsOpen={setIsOpen} /> 
+        : null}
+    </div>
   );
 };
 
