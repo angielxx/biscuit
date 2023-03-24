@@ -6,6 +6,7 @@ import com.pt.biscuIT.common.model.response.PageMetaData;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
@@ -22,9 +23,9 @@ public class RandomRecentContentRes extends BaseResponseBody {
     PageMetaData metaData;
     List<ContentInfoDto> results;
 
-    public static RandomRecentContentRes of(Integer statusCode, String message, RandomRecentContentRes randomRecentContentRes) {
+    public static RandomRecentContentRes of(Integer status, String message, RandomRecentContentRes randomRecentContentRes) {
         randomRecentContentRes.setMessage(message);
-        randomRecentContentRes.setStatusCode(statusCode);
+        randomRecentContentRes.setStatus(status);
         return randomRecentContentRes;
     }
 }

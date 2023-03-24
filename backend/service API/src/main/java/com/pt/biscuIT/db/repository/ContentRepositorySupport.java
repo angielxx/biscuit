@@ -125,23 +125,4 @@ public class ContentRepositorySupport {
                         .size()
         );
     }
-
-    public Page<Content> findContentByTitle(Long lastContentId, String title, PageRequest pageRequest) {
-        List<Content> contents = jpaQueryFactory
-            .selectFrom(qContent)
-            .where(containTitle(title),
-                qContent.id.lt(lastContentId))
-            .offset(pageRequest.getOffset())
-            .limit(pageRequest.getPageSize() + 1)
-            .orderBy(qContent.hit.desc())
-            .fetch();
-        return new PageImpl<>(contents, pageRequest, contents.size());
-    }
-
-    private BooleanExpression containTitle(String title) {
-        if(title == null || title.isEmpty()) {
-            return null;
-        }
-        return qContent.title.containsIgnoreCase(title);
-    }
 }

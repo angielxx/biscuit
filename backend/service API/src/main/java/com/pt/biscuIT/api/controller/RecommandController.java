@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,7 +50,7 @@ public class RecommandController {
             Page<ContentInfoListCategoryDto> contentList = recommandService.getRandomCategoryContent(categoryCount, pageable);
 
             return ResponseEntity.status(200).body(RandomCategoryContentRes.of(
-                    200,
+                    HttpStatus.OK.value(),
                     "SUCCESS",
                     RandomCategoryContentRes.builder()
                                             .results(contentList.getContent())
@@ -68,7 +69,7 @@ public class RecommandController {
                     .build();
 
             return ResponseEntity.status(200).body(RandomRecentContentRes.of(
-                    200,
+                    HttpStatus.OK.value(),
                     "SUCCESS",
                     RandomRecentContentRes.builder()
                             .metaData(metaData)
@@ -77,6 +78,6 @@ public class RecommandController {
             );
         }
 
-        return ResponseEntity.status(400).body(BaseResponseBody.of(400, "BAD_REQUEST"));
+        return ResponseEntity.status(400).body(BaseResponseBody.of(HttpStatus.BAD_REQUEST.value(), "BAD_REQUEST"));
     }
 }
