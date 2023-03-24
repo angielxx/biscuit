@@ -4,29 +4,16 @@ import com.pt.biscuIT.db.entity.Content;
 import com.pt.biscuIT.db.entity.QCategory;
 import com.pt.biscuIT.db.entity.QContent;
 import com.pt.biscuIT.db.entity.QContentTag;
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.*;
-import com.querydsl.jpa.JPQLQuery;
-import com.pt.biscuIT.db.entity.QContent;
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPQLQuery;
-import com.pt.biscuIT.db.entity.QContent;
-import com.querydsl.core.QueryResults;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPQLQuery;
-import com.pt.biscuIT.db.entity.QContent;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.*;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,6 +95,7 @@ public class ContentRepositorySupport {
                 .offset(lastContentId)
                 .limit(pageable.getPageSize())
                 .fetch();
+
         return new PageImpl<>(contents, pageable, contents.size());
     }
 

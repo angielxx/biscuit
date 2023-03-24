@@ -9,4 +9,5 @@ import com.pt.biscuIT.api.response.SearchContentRes;
 public interface SearchService {
 
 	SearchContentRes search(String keyword, Integer time,  Long lastContentId, Pageable pageable);
+
 }

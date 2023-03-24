@@ -31,6 +31,7 @@ public class SearchServiceImpl implements SearchService {
 		String[] tags = {};
 		Pageable page = PageRequest.of(0, pageable.getPageSize(), pageable.getSort());
 		Page<Content> contents = contentRepositorySupport.findContentByTitleAndTag(keyword, time, lastContentId, page);
+
 		Page<ContentInfoDto> dtos = contents.map(c -> ContentInfoDto.builder()
 			.id(c.getId())
 			.title(c.getTitle())
