@@ -7,7 +7,7 @@ const HomeContentsContainer = tw.div`
 
 
 const HomeContents = ({}: Object) => {
-  const unAuthContents = ["popular", "recent"];
+  const unAuthContents = ["popular", "recent", "category"];
   const authContent = ["fit", "favor_category", "bookmarked", "similar_member"];
   const isAuth = false;
   

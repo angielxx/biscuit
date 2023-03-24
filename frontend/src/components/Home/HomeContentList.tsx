@@ -2,6 +2,7 @@ import tw, { styled, css } from "twin.macro";
 import ContentCardItem from "../common/ContentCardItem";
 import { useQuery } from "@tanstack/react-query";
 import { get_home_contents } from "../../api/contents";
+import { useState } from "react";
 
 const ContentListContainer = tw.div`
   flex-col p-4 w-full overflow-scroll snap-x mx-4 mb-4
@@ -14,7 +15,25 @@ const ListTitleContatiner = tw.div`
 const Logo = tw.img`w-9 h-9 mr-2`
 
 const MyLogo = ({ category }: { category: string }) => {
-  return <Logo src={`src/assets/icons/${category}.svg`} />;
+  
+  const imgSrc = `src/assets/icons/${category}.svg`;
+  const [isExists, setIsExists] = useState(false);
+
+  function checkLocalImgFileExists(imgSrc: string) {
+    let img = new Image();
+    img.src = imgSrc;
+    img.onload = function() {
+      setIsExists(true);
+    };
+    img.onerror = function() {
+      setIsExists(false);
+    };
+  }
+  checkLocalImgFileExists(imgSrc);
+
+  return isExists === true
+    ? <Logo src={imgSrc} />
+    : <Logo />;
 };
 
 const Title = tw.span`text-white text-h2 mb-2`;
@@ -48,32 +67,88 @@ const CategoryObj: CategoryObjType = {
   recent: "최근 업로드 된",
 }
 
+interface content {
+  id: number;
+  title: string;
+  url: string;
+  creditBy: string;
+  createdDate: string;
+  timeCost: number;
+  type: string;
+  isMarked: boolean;
+  tags: Array<string>;
+}
+
+interface randomContent {
+  category: string;
+  items: content[];
+}
+
 const HomeContentList = ({category}: HomeComentListProps) => {
   // 해당 카테고리에 맞는 글들 불러오기
   const { data, isLoading, error } = useQuery(
     ['get_home_contents', category],
-    () => get_home_contents(category, 0),
+    () => get_home_contents(category, category === "category" ? 5 : 0),
+    {
+      staleTime: 60*60*1000,
+      cacheTime: Infinity,
+    }
   );
 
   return (
     <>
-      <ListTitleContatiner>
-        <MyLogo category={category} />
-        <Title>{CategoryObj[category]}</Title>
-      </ListTitleContatiner>
-      <ContentListContainer>
-        <RowListContainer>
-          {
-            data?.map((content, idx) => {
-              return (
-                <ContentContainer key={idx}>
-                  <ContentCardItem recentContent={content} />
-                </ContentContainer>
-              )
-            })
-          }
-        </RowListContainer>
-      </ContentListContainer>
+    {category === "category" 
+      ? (
+        <>
+          { data?.map((result) => {
+            return (
+              <>
+                <ListTitleContatiner>
+                  <MyLogo category={"items" in result ? result.category : ""} />
+                  <Title>{"items" in result ? result.category : ""}</Title>
+                </ListTitleContatiner>
+                <ContentListContainer>
+                  <RowListContainer>
+                    {
+                      "items" in result ? result.items?.map((content, idx) => {
+                        return (
+                          <ContentContainer key={idx}>
+                            <ContentCardItem recentContent={content} />
+                          </ContentContainer>
+                        )
+                      }) : null
+                    }
+                  </RowListContainer>
+                </ContentListContainer>
+              </>
+            )
+          })}
+        </>
+      )
+      : (
+        <>
+          <ListTitleContatiner>
+            <MyLogo category={category} />
+            <Title>{CategoryObj[category]}</Title>
+          </ListTitleContatiner>
+          <ContentListContainer>
+            <RowListContainer>
+              {
+                data?.map((content, idx) => {
+                  return (
+                    <ContentContainer key={idx}>
+                      {!("items" in content)
+                        ? <ContentCardItem recentContent={content} />
+                        : null}
+                    </ContentContainer>
+                  )
+                })
+              }
+            </RowListContainer>
+          </ContentListContainer>
+        </>
+      )
+    }
     </>
   );
 }
