@@ -1,8 +1,8 @@
 package com.pt.biscuIT.config;
-import com.pt.biscuIT.common.auth.BiscuitMemberDetailsService;
-import com.pt.biscuIT.api.service.MemberService;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.pt.biscuIT.api.service.MemberService;
+import com.pt.biscuIT.common.auth.BiscuitMemberDetailsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -16,48 +16,30 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
- * 인증(authentication) 와 인가(authorization) 처리를 위한 스프링 시큐리티 설정 정의.
+ * Spring Security 설정
  */
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private static String[] SWAGGER_PATH = new String[] {
-            "/v2/api-docs/**",
-            "/swagger-ui/**",
-            "/swagger-resources/**",
-            "/webjars/**"
-    };
+
+    // 인증이 필요없는 API 목록
     private static String[] OPEN_API_GET = new String[] {
-            "/api/v1/auth/**",
-            "/api/v1/lessons/**",
-            "/api/v1/mails/**",
-            "/api/v1/notice/**",
-            "/api/v1/photocard/list",
-            "/api/v1/review/list/**",
-            "/api/v1/users/duplicate/**",
-            "/api/v1/users/**/check",
-            "/api/v1/article/**"
+            "/api/auth/**",
+            "/api/contents/**",
+            "/api/search",
+            "/api/categories",
+            "/api/recommends/random/**",
     };
 
     private static String[] OPEN_API_POST = new String[] {
-            "/api/v1/auth/login",
-            "/api/v1/users",
-            "/api/v1/photocard"
+            "/api/auth/signin/**",
     };
 
-    private static String[] OPEN_API_PUT = new String[] {
-            "/api/v1/users/**/password"
-    };
-
-    @Autowired
     private BiscuitMemberDetailsService biscuitMemberDetailsService;
 
-    @Autowired
     private MemberService memberService;
-
-//    @Autowired
-//    private RedisTemplate redisTemplate;
 
     // Password 인코딩 방식에 BCrypt 암호화 방식 사용
     @Bean
@@ -104,7 +86,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), memberService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
                 .authorizeRequests()
-                .antMatchers(SWAGGER_PATH).permitAll()
                 .anyRequest().permitAll()
                 .and().cors();
 
