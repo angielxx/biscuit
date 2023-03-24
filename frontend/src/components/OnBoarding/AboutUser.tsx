@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import DropDown from '../common/DropDown/DropDown';
 import Button from '../common/Button';
 
 // icons
 import backspace from '../../assets/icons/backspace.svg';
-import { useState } from 'react';
+
+// css
 import tw, { styled } from 'twin.macro';
 
 const ChooseContent = styled.div`
@@ -35,6 +37,10 @@ const AboutUser = () => {
     { id: 10, content: "10년 이상" },
   ]
 
+  const goBack = () => {
+    console.log("뒤로 가기");
+  }
+
   const isClicked = () => {
     console.log("선택 완료");
   }
@@ -45,7 +51,7 @@ const AboutUser = () => {
   return (
     <>
       <div className='flex items-start'>
-        <img src={backspace} />
+        <img src={backspace} onClick={goBack} />
       </div>
       <div className='flex flex-col gap-2'>
         <span className='text-h3'>OO님에 대해 알고 싶어요!</span>

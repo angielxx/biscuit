@@ -59,7 +59,7 @@ const DropDown = ({itemList, placeHolder, selected, setSelected}: DropDownProps)
       </DropDownBtn>
       {isClicked
         ? 
-        <div className="h-[200px] w-[304px] overflow-scroll overflow-x-hidden z-20 absolute">
+        <div className="h-[210px] w-[304px] overflow-scroll overflow-x-hidden z-20 absolute">
           <DropDownList 
             itemList={itemList}
             setSelected={setSelected}
