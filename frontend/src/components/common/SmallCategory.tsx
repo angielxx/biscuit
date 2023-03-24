@@ -4,7 +4,7 @@ import tw, { styled } from 'twin.macro';
 // icons
 
 const Category = ({ category }: { category: string }) => {
-  return <img src={`src/assets/icons/category/${category}.svg`} />;
+  return <img src={`/src/assets/icons/category/${category}.svg`} />;
 };
 
 const CategoryBox = styled.div`

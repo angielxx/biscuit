@@ -10,7 +10,7 @@ import searchBar from '../../assets/icons/search-bar.svg';
 import close from '../../assets/icons/close.svg';
 
 const SearchBar = styled.div`
-  ${tw`flex items-center p-4 gap-4 top-18 absolute bg-black w-full z-10`}
+  ${tw`flex items-center p-4 gap-4 top-20 absolute bg-black w-full z-10`}
 `;
 
 const Input = styled.input`
