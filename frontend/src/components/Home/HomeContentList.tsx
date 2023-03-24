@@ -88,7 +88,11 @@ const HomeContentList = ({category}: HomeComentListProps) => {
   // 해당 카테고리에 맞는 글들 불러오기
   const { data, isLoading, error } = useQuery(
     ['get_home_contents', category],
-    () => get_home_contents(category, category === "category" ? 5 : 0)
+    () => get_home_contents(category, category === "category" ? 5 : 0),
+    {
+      staleTime: 60*60*1000,
+      cacheTime: Infinity,
+    }
   );
 
   return (
