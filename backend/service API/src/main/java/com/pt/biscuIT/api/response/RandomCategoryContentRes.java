@@ -4,6 +4,7 @@ import com.pt.biscuIT.api.dto.content.ContentInfoListCategoryDto;
 import com.pt.biscuIT.common.model.response.BaseResponseBody;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
@@ -12,9 +13,9 @@ import java.util.List;
 public class RandomCategoryContentRes extends BaseResponseBody {
     List<ContentInfoListCategoryDto> results;
 
-    public static RandomCategoryContentRes of(Integer statusCode, String message, RandomCategoryContentRes randomCategoryContentRes) {
+    public static RandomCategoryContentRes of(Integer status, String message, RandomCategoryContentRes randomCategoryContentRes) {
         randomCategoryContentRes.setMessage(message);
-        randomCategoryContentRes.setStatusCode(statusCode);
+        randomCategoryContentRes.setStatus(status);
         return randomCategoryContentRes;
     }
 

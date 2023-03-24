@@ -11,6 +11,7 @@ import com.pt.biscuIT.db.repository.ContentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +31,6 @@ public class CategoryController {
         CategoryInfoListRes res = CategoryInfoListRes.builder()
                                                      .categories(categoryItemList)
                                                      .build();
-        return ResponseEntity.status(200).body(CategoryInfoListRes.of(200, "SUCCESS", res));
+        return ResponseEntity.status(200).body(CategoryInfoListRes.of(HttpStatus.OK.value(), "SUCCESS", res));
     }
 }

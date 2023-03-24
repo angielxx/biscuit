@@ -4,8 +4,9 @@ import com.pt.biscuIT.db.entity.Content;
 import com.pt.biscuIT.db.entity.QCategory;
 import com.pt.biscuIT.db.entity.QContent;
 import com.querydsl.core.QueryResults;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.JPQLQuery;
 import com.pt.biscuIT.db.entity.QContent;
 import com.querydsl.core.QueryResults;
@@ -19,12 +20,7 @@ import com.pt.biscuIT.db.entity.QContent;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
+import org.springframework.data.domain.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +28,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -71,6 +68,7 @@ public class ContentRepositorySupport {
     }
 
     public Page<Content> findContentByCategory(String category, Pageable pageable) {
+        List<OrderSpecifier> ORDERS = getOrderSpecifiers(pageable.getSort());
         return new PageImpl<>(
                 jpaQueryFactory
                         .selectFrom(qContent)
@@ -78,7 +76,9 @@ public class ContentRepositorySupport {
                         .where(
                                 qCategory.mainName.like(category).or(qCategory.subName.like(category))
                         )
-                        .orderBy(qContent.createdDate.desc())
+                        .orderBy(
+                                ORDERS.stream().toArray(OrderSpecifier[]::new)
+                        )
                         .offset(pageable.getOffset())
                         .limit(pageable.getPageSize())
                         .fetch(),
@@ -126,22 +126,14 @@ public class ContentRepositorySupport {
         );
     }
 
-    public Page<Content> findContentByTitle(Long lastContentId, String title, PageRequest pageRequest) {
-        List<Content> contents = jpaQueryFactory
-            .selectFrom(qContent)
-            .where(containTitle(title),
-                qContent.id.lt(lastContentId))
-            .offset(pageRequest.getOffset())
-            .limit(pageRequest.getPageSize() + 1)
-            .orderBy(qContent.hit.desc())
-            .fetch();
-        return new PageImpl<>(contents, pageRequest, contents.size());
-    }
+    private List<OrderSpecifier> getOrderSpecifiers(Sort sort) {
+        List<OrderSpecifier> orderSpecifiers = new ArrayList<>();
 
-    private BooleanExpression containTitle(String title) {
-        if(title == null || title.isEmpty()) {
-            return null;
-        }
-        return qContent.title.containsIgnoreCase(title);
+        sort.stream().forEach(order -> {
+            String prop = order.getProperty();
+            PathBuilder orderByExpression = new PathBuilder(Content.class, "content");
+            orderSpecifiers.add(new OrderSpecifier<>(Order.DESC, orderByExpression.get(prop)));
+        });
+        return orderSpecifiers;
     }
 }
