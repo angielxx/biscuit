@@ -3,19 +3,19 @@ import ReactDOM from 'react-dom';
 
 // Component
 import FeedBackButton from './FeedBackButton';
-import Button from './Button';
+import Button from '../Button';
 
 // twin macro
 import tw, { styled, css, TwStyle } from 'twin.macro';
 
 // icons
-import Close from '../../assets/icons/close.svg';
-import ContentCardItem from './ContentCardItem';
+import Close from '../../../assets/icons/close.svg';
+import ContentCardItem from '../ContentCardItem';
 import QuizItem from './QuizItem';
 
 // Styled component
 const Container = styled.div`
-  ${tw`flex flex-col gap-4 cursor-pointer`}
+  ${tw`flex flex-col gap-4`}
   & {
     h3 {
       ${tw`text-h3`}
@@ -33,16 +33,16 @@ const FeedbackBtns = styled.div`
 // interface
 interface FeedbackModalProps {
   onClose: () => void;
-  onSubmit: () => void;
 }
 
 interface RecentContentState {
-  image: string;
-  url: string;
-  channelImg: string;
+  id: number;
   title: string;
-  author: string;
-  date: string;
+  url: string;
+  credit_by: string;
+  created_date: string;
+  time_cost: number;
+  type: string;
   isMarked: boolean;
   tags: Array<string>;
 }
@@ -53,66 +53,85 @@ interface Quiz {
   multiple_choice: Array<string>;
   answer: number;
 }
-type QuizesState = Array<Quiz>;
+// type QuizesState = Array<Quiz>;
 
 // Main component
-const FeedbackModal = ({ onClose, onSubmit }: FeedbackModalProps) => {
+const FeedbackModal = ({ onClose }: FeedbackModalProps) => {
   // 선택된 피드백 번호
   const [feedback, setFeedback] = useState(0);
   // 페이지 (0:피드백, 1:퀴즈, 2:결과)
   const [page, setPage] = useState(1);
   // 방금 본 컨텐츠
   const [recentContent, setRecentContent] = useState<RecentContentState>({
-    image: '',
-    url: '',
-    channelImg: '',
+    id: 0,
     title: '',
-    author: '',
-    date: '',
+    url: '',
+    credit_by: '',
+    created_date: '',
+    time_cost: 0,
+    type: '',
     isMarked: false,
     tags: [],
   });
-  // 컨텐츠에 대한 퀴즈
-  const [quizes, setQuizes] = useState<QuizesState>();
+  // // 컨텐츠에 대한 퀴즈
+  // const [quizes, setQuizes] = useState<QuizesState>();
+  // 3가지 퀴즈 각각 저장
+  const [firstQuiz, setFirstQuiz] = useState<Quiz>({
+    quizId: 0,
+    question: '',
+    multiple_choice: [],
+    answer: 0,
+  });
+  const [secondQuiz, setSecondQuiz] = useState<Quiz>({
+    quizId: 0,
+    question: '',
+    multiple_choice: [],
+    answer: 0,
+  });
+  const [thirdQuiz, setThirdQuiz] = useState<Quiz>({
+    quizId: 0,
+    question: '',
+    multiple_choice: [],
+    answer: 0,
+  });
   // 선택한 퀴즈 정답
-  const [selectedOptionForFirst, setSelectedOptionForFirst] = useState(null);
-  const [selectedOptionForSecond, setSelectedOptionForSecond] = useState(null);
-  const [selectedOptionForThird, setSelectedOptionForThird] = useState(null);
+  const [firstAnswer, setFirstAnswer] = useState<null | number>(null);
+  const [secondAnswer, setSecondAnswer] = useState<null | number>(null);
+  const [thirdAnswer, setThirdAnswer] = useState<null | number>(null);
 
   useEffect(() => {
     // API get 요청 : 컨텐츠 조회
     setRecentContent({
-      image:
-        'https://content.surfit.io/thumbs/image/5eQZ5/Wknoy/1126431375640856ffc9068.png/cover-center-1x.webp',
-      url: 'https://content.surfit.io/thumbs/image/5eQZ5/Wknoy/1126431375640856ffc9068.png/cover-center-1x.webp',
-      channelImg: '',
-      title: '리액트와 관련한 콘텐츠의 제목입니다.',
-      author: '작성자',
-      date: '2022.11.25',
+      id: 3,
+      title: '이은지의 CS',
+      url: 'https://velog.io/@94applekoo/CS-프로세스와-스레드',
+      credit_by: '이은지',
+      created_date: '2023-03-21',
+      time_cost: 0,
+      type: '타입',
       isMarked: false,
-      tags: ['React', 'Zotai'],
+      tags: ['Typescript', 'Javascript', 'Redux-saga'],
     });
+
     // API get 요청 : 퀴즈 제공
-    setQuizes([
-      {
-        quizId: 0,
-        question: '질문0',
-        multiple_choice: ['보기0', '보기1', '보기2'],
-        answer: 0,
-      },
-      {
-        quizId: 1,
-        question: '질문1',
-        multiple_choice: ['보기0', '보기1', '보기2'],
-        answer: 1,
-      },
-      {
-        quizId: 2,
-        question: '질문2',
-        multiple_choice: ['보기0', '보기1', '보기2'],
-        answer: 2,
-      },
-    ]);
+    setFirstQuiz({
+      quizId: 0,
+      question: '질문0',
+      multiple_choice: ['보기0', '보기1', '보기2'],
+      answer: 0,
+    });
+    setSecondQuiz({
+      quizId: 0,
+      question: '질문1',
+      multiple_choice: ['보기0', '보기1', '보기2'],
+      answer: 0,
+    });
+    setThirdQuiz({
+      quizId: 0,
+      question: '질문2',
+      multiple_choice: ['보기0', '보기1', '보기2'],
+      answer: 0,
+    });
   }, []);
 
   let title;
@@ -155,6 +174,7 @@ const FeedbackModal = ({ onClose, onSubmit }: FeedbackModalProps) => {
       <div id="close-row" className="flex justify-end" onClick={onClose}>
         <img src={Close} alt="" />
       </div>
+      <h3 className="text-h3">방금 본 컨텐츠</h3>
       {recentContent && <ContentCardItem recentContent={recentContent} />}
       <hr className="bg-dark-grey-20" />
 
@@ -192,18 +212,25 @@ const FeedbackModal = ({ onClose, onSubmit }: FeedbackModalProps) => {
         {/* 퀴즈 */}
         {page === 1 && (
           <>
-            {quizes &&
-              quizes.map((quiz, index) => (
-                <QuizItem
-                  key={index}
-                  question={quiz.question}
-                  options={quiz.multiple_choice}
-                />
-              ))}
+            <QuizItem
+              question={firstQuiz.question}
+              options={firstQuiz.multiple_choice}
+              onClick={setFirstAnswer}
+            />
+            <QuizItem
+              question={secondQuiz.question}
+              options={secondQuiz.multiple_choice}
+              onClick={setSecondAnswer}
+            />
+            <QuizItem
+              question={thirdQuiz.question}
+              options={thirdQuiz.multiple_choice}
+              onClick={setThirdAnswer}
+            />
             <Button
               title="다 풀었어요"
               status="active"
-              onClick={FeedbackSubmitHandler}
+              onClick={QuizSubmitHandler}
             />
           </>
         )}

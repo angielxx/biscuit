@@ -6,7 +6,7 @@ type ItemObj = {
   id: number;
   content: string;
   status: boolean;
-}
+};
 
 interface FilterBarProps {
   filterBtnState: boolean[];
@@ -19,7 +19,12 @@ const FilterBarContainer = tw.div`
   w-full h-17 flex justify-between items-start px-4 bg-black
 `;
 
-const FilterBar = ({filterBtnState, setFilterBtnState, filterTimeState, setFilterTimeState}: FilterBarProps) => {
+const FilterBar = ({
+  filterBtnState,
+  setFilterBtnState,
+  filterTimeState,
+  setFilterTimeState,
+}: FilterBarProps) => {
   return (
     <FilterBarContainer>
       <FilterBtnList
@@ -31,7 +36,7 @@ const FilterBar = ({filterBtnState, setFilterBtnState, filterTimeState, setFilte
         setFilterTimeState={setFilterTimeState}
       />
     </FilterBarContainer>
-  )
-}
+  );
+};
 
 export default FilterBar;
