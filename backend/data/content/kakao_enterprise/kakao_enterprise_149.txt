@@ -1,0 +1,491 @@
+
+
+
+
+
+
+Tech Log
+
+2022. 7. 11.
+
+
+실전 Infinite Scroll with React
+
+
+
+
+
+
+
+
+시작하며
+안녕하세요. 카카오엔터프라이즈 워크코어개발셀에서 프론트엔드 개발을 담당하고 있는 Denis(배형진) 입니다.
+약 1년 전, 저는 프레임워크의 선택, React vs Angular 이라는 포스팅을 통해 제가 시작한 프로젝트가 전설의 시작이 될지도 모르겠다(?)고 언급한 바 있는데요. 이 프로젝트를 진행한 지 벌써 1년이 지났는데,  바쁘게 지내다 보니 이제야 이렇게 다시 인사를 드리게 되었습니다. 프로젝트는 현재 첫 번째 버전을 사내에 배포하여 사용성을 개선하고 있으며, 더 나은 기능들을 추가하여 외부 배포를 준비하고 있는 상황입니다. 
+저번 포스팅을 재미있게 읽어주신 분들이 의외로 많아, 프로젝트를 진행하면서 또 어떤 주제로 포스팅하면 좋을지 자주 고민했는데요. 잘 알려지지 않은 내용을 깊이 있게 다루어 포스팅의 희소성을 가져가는 것도 좋겠다고 생각했지만, 결과적으로는 보다 많은 개발자가 공감할 수 있으면서도 프론트엔드 입문자에게 도움이 될만한 주제를 선정하게 되었습니다. 
+그렇게 선정한 이번 포스팅 주제는 무한 스크롤(Infinite Scroll) 입니다. 개발 과정에서 무한 스크롤을 구현하면서 구글링을 통해 관련된 글을 많이 참고하였지만, 내용이 조금 부족하다는 느낌을 받았습니다. 그래서 이번 기회에 ‘React에서 무한 스크롤을 구현하는데 이 포스팅만으로 충분하다’고 느낄 수 있도록 실제 프로젝트에서 작성한 코드를 각색하여 공유하려고 합니다.
+ 
+무한 스크롤 구현하기
+무한 스크롤(Infinite Scroll)이란 사용자가 특정 페이지 하단에 도달했을 때, API가 호출되며 콘텐츠가 끊기지 않고 계속 로드되는 사용자 경험 방식입니다. 페이지를 클릭하면 다음 페이지 주소로 이동하는 페이지네이션(Pagination)과 달리, 한 페이지에서 스크롤만으로 새로운 콘텐츠를 보여주게 되므로, 많은 양의 콘텐츠를 스크롤하여 볼 수 있는 장점이 있습니다. 그렇다면 React에서 무한 스크롤을 구현하기 위해서는 어떤 과정이 필요하고, 무엇을 고려해야 할까요? 무한 스크롤을 구현하는데는 여러 방법이 존재하겠지만, 오늘은 제가 많은 고민과 자료 수집을 통해 실제 프로젝트에 적용했던 구현 과정을 공개하도록 하겠습니다.
+ 
+Scroll Event
+개인적으로 코드 품질이 다소 떨어지더라도 먼저 돌아가는 코드를 빠르게 작성한 후 리팩토링하는 방식을 선호하는데요. 그래서 먼저 가장 간단한 방법인 스크롤 이벤트(Scroll Event)를 이용하여 무한 스크롤을 구현해 보았습니다.
+개발 당시 아직 서버 API가 나오지 않은 상태여서 MSW(Mock Service Worker)를 이용한 모킹 API를 구축한 후에 작업하였습니다. MSW를 처음 들어보신 분도 있을 것 같은데요. 서비스 워커를 이용하여 API 모킹을 하는 라이브러리로, 사용법도 간단하고 무엇보다 모킹 서버를 따로 띄울 필요가 없다는 장점을 가지고 있습니다.
+// [코드 1] 무한스크롤 응답 인터페이스
+export interface PaginationResponse<T> {
+ contents: T[];
+ pageNumber: number;
+ pageSize: number;
+ totalPages: number;
+ totalCount: number;
+ isLastPage: boolean;
+ isFirstPage: boolean;
+}
+ㅤ
+// [코드 2] MSW 유저 목록 모킹 API
+const users = Array.from(Array(1024).keys()).map(
+ (id): User => ({
+   id,
+   name: `denis${id}`,
+ })
+)
+ 
+const handlers = [
+ rest.get('/users', async (req, res, ctx) => {
+   const { searchParams } = req.url
+   const size = Number(searchParams.get('size'))
+   const page = Number(searchParams.get('page'))
+   const totalCount = users.length
+   const totalPages = Math.round(totalCount / size)
+ 
+   return res(
+     ctx.status(200),
+     ctx.json<PaginationResponse<User>>({
+       contents: users.slice(page * size, (page + 1) * size),
+       pageNumber: page,
+       pageSize: size,
+       totalPages,
+       totalCount,
+       isLastPage: totalPages <= page,
+       isFirstPage: page === 0,
+     }),
+     ctx.delay(500)
+   )
+ }),
+]
+위 코드는 무한 스크롤에 필요한 모킹 API입니다. page, size 값에 따라 데이터를 분리하고, 페이징 처리에 필요한 데이터를 응답할 수 있도록 구성하였습니다. 실제 응답 인터페이스는 제가 작성한 것과 다를 것으로 예상하여 최대한 간단하게 작성했는데요. 참고로 해당 코드는 클라이언트 측에서 동작하므로 프론트엔드에서 선언한 인터페이스들을 그대로 사용할 수 있는 장점이 있습니다. 다음은 프론트엔드 React 코드입니다.
+// [코드 3] Scroll event를 이용한 무한스크롤 예시
+const PAGE_SIZE = 10 * Math.ceil(visualViewport.width / CARD_SIZE)
+ 
+function UsersPage() {
+ const [page, setPage] = useState(0)
+ const [users, setUsers] = useState<User[]>([])
+ const [isFetching, setFetching] = useState(false)
+ const [hasNextPage, setNextPage] = useState(true)
+ 
+ const fetchUsers = useCallback(async () => {
+   const { data } = await axios.get<PaginationResponse<User>>('/users', {
+     params: { page, size: PAGE_SIZE },
+   })
+   setUsers(users.concat(data.contents))
+   setPage(data.pageNumber + 1)
+   setNextPage(!data.isLastPage)
+   setFetching(false)
+ }, [page])
+ 
+ useEffect(() => {
+   const handleScroll = () => {
+     const { scrollTop, offsetHeight } = document.documentElement
+     if (window.innerHeight + scrollTop >= offsetHeight) {
+       setFetching(true)
+     }
+   }
+   setFetching(true)
+   window.addEventListener('scroll', handleScroll)
+   return () => window.removeEventListener('scroll', handleScroll)
+ }, [])
+ 
+ useEffect(() => {
+   if (isFetching && hasNextPage) fetchUsers()
+   else if (!hasNextPage) setFetching(false)
+ }, [isFetching])
+ 
+ return (
+   <Container>
+     {users.map((user) => (
+       <Card key={user.id} name={user.name} />
+     ))}
+     {isFetching && <Loading />}
+   </Container>
+ )
+}
+서버 측에서 받은 유저 수만큼 카드를 무한으로 생성하여 유저 이름을 드러내고, 추가 데이터 페칭(fetching) 중에는 Loading 컴포넌트가 노출되는 예제입니다. 이때는 Loading 컴포넌트를 임시로 넣어두었는데 추후에 스켈레톤 컴포넌트로 대체하여 더 나은 UX가 되도록 수정하였습니다.
+여기서 첫 페칭 데이터 사이즈가 충분하지 않으면 스크롤바가 노출되지 않아 스크롤 이벤트가 발생할 수 없게 됩니다. 이때 충분한 데이터 사이즈를 페칭하거나 스크롤바가 노출될 때까지 연속 페칭하는 방법이 있을 텐데요. 저는 화면 크기에 비례해서 충분한 데이터 사이즈를 페칭할 수 있도록 PAGE_SIZE를 만들어서 활용하였습니다.
+ 
+Throttle
+이렇게 기능 구현을 완료하고 바로 리팩토링 작업을 진행하였습니다. 스크롤 이벤트 핸들러에 콘솔 로그를 넣고 확인해보니 아래와 같이 호출이 여러 번 되는 것을 볼 수 있었습니다. if 문 조건에 충족할 때마다 API 콜이 발생하여 개선의 필요성을 못 느낄 수도 있지만 documentElement.scrollTop과 documentElement.offsetHeight는 리플로우(Reflow)가 발생하는 참조이므로 개선해야 하는 부분이라고 생각하였습니다.
+[그림 1] Throttle 적용 전 콘솔창
+
+
+이때 적용할 수 있는 방안으로 Debounce(디바운스)와 Throttle(스로틀)이 떠올랐습니다. Debounce는 이벤트를 그룹화하여 특정 시간이 지난 후 하나의 이벤트만 발생하도록 하는 기술이고 Throttle은 일정 주기마다 이벤트를 모아서 한 번씩 이벤트가 발생하도록 하는 기술입니다. 
+Debounce의 경우 특정 시간 안에 이벤트가 계속 발생하면 타임아웃이 계속 갱신되므로 이벤트 발생이 무한히 지연될 수 있지만 Throttle은 일정 주기마다 이벤트 발생을 보장하므로 무한 스크롤에는 Throttle을 사용하는 것이 더 적절해 보였습니다.
+관련 모듈로는 Lodash의 Throttle이 가장 유명할 텐데요. 개인적으로 간단한 모듈은 직접 구현하여 외부 모듈 의존성을 낮추는 것을 선호하기 때문에 직접 구현해보았습니다.
+// [코드 4] 직접 구현한 Throttle 함수
+const throttle = (handler: (...args: any[]) => void, timeout = 300) => {
+ let invokedTime: number
+ let timer: number
+ return function (this: any, ...args: any[]) {
+   if (!invokedTime) {
+     handler.apply(this, args)
+     invokedTime = Date.now()
+   } else {
+     clearTimeout(timer)
+     timer = window.setTimeout(() => {
+       if (Date.now() - invokedTime >= timeout) {
+         handler.apply(this, args)
+         invokedTime = Date.now()
+       }
+     }, Math.max(timeout - (Date.now() - invokedTime), 0))
+   }
+ }
+}
+위 코드를 간단히 설명하면 첫 이벤트 발생 시 핸들러를 실행하고 실행된 시간을 저장한 후 다음 이벤트부터는 timeout으로 지정한 시간이 지나기 전까지 계속 timer를 초기화하여 이벤트 발생을 무효로 합니다. 그리고 이전 이벤트가 발생하고 나서부터 timeout만큼 시간이 지나면 handler를 실행하여 결과적으로 timeout 시간 동안 단 한 번의 이벤트가 발생하도록 제어합니다. 다음은 처음 작성한 코드에 throttle을 적용한 후 Custom Hook 형태로 분리한 모습입니다.
+// [코드 5] Throttle 적용한 Custom Hook
+interface InfiniteScrollOptions {
+ size: number
+ onSuccess?: () => void
+ onError?: (err: unknown) => void
+}
+ 
+const useInfiniteScroll = <T> (
+ fetcher: (
+   params: PaginationParams
+ ) => Promise<AxiosResponse<PaginationResponse<T>>>,
+ { size, onSuccess, onError }: InfiniteScrollOptions
+) => {
+ const [page, setPage] = useState(0)
+ const [data, setData] = useState<T[]>([])
+ const [isFetching, setFetching] = useState(false)
+ const [hasNextPage, setNextPage] = useState(true)
+ 
+ const executeFetch = useCallback(async () => {
+   try {
+     const {
+       data: { contents, pageNumber, isLastPage },
+     } = await fetcher({ page, size })
+     setData((prev) => prev.concat(contents))
+     setPage(pageNumber + 1)
+     setNextPage(!isLastPage)
+     setFetching(false)
+     onSuccess?.()
+   } catch (err) {
+     onError?.(err)
+   }
+ }, [page])
+ 
+ useEffect(() => {
+   const handleScroll = throttle(() => {
+     const { scrollTop, offsetHeight } = document.documentElement
+     if (window.innerHeight + scrollTop >= offsetHeight) {
+       setFetching(true)
+     }
+   })
+ 
+   setFetching(true)
+   window.addEventListener('scroll', handleScroll)
+   return () => window.removeEventListener('scroll', handleScroll)
+ }, [])
+ 
+ useEffect(() => {
+   if (isFetching && hasNextPage) executeFetch()
+   else if (!hasNextPage) setFetching(false)
+ }, [isFetching])
+ 
+ return { page, data, isFetching, hasNextPage }
+}
+ㅤ
+// [코드 6] 유저 목록 API 호출 함수
+export const fetchUsers = (params: PaginationParams) =>
+ axios.get<PaginationResponse<User>>('/users', {
+   params,
+ })
+ㅤ
+// [코드 7] 코드 5와 코드 6 적용 예시
+function UsersPage() {
+ const { data: users, isFetching } = useInfiniteScroll(fetchUsers, {
+   size: PAGE_SIZE,
+ })
+ 
+ return (
+   <Container>
+     {users.map((user) => (
+       <Card key={user.id} name={user.name} />
+     ))}
+     {isFetching && <Loading />}
+   </Container>
+ )
+}
+Custom Hook 형태로 분리하면서 try-catch 문을 추가하여 페칭 성공 또는 실패했을 때 로직을 삽입할 수 있도록 옵션값을 추가하였고 API를 호출하는 부분도 함수로 분리하였습니다. Throttle을 적용한 후 콘솔 로그를 확인한 결과 아래와 같이 적용 전과 비교해서 확실히 적은 호출 빈도를 볼 수 있었습니다.
+[그림 2] Throttle 적용 후 콘솔창
+
+
+requestAnimationFrame
+이렇게 스크롤 이벤트를 통해 무한 스크롤 구현을 완료하였다고 생각할 수 있는데요. 여기서 하나 짚고 넘어가야 할 것이 있습니다. Throttle이 setTimeout 기반으로 동작하기 때문에 콜 스택 상태에 따라 기대한 대로 동작하지 않을 수 있습니다. 이때 고려해볼 수 있는 방안으로 rAF(requestAnimationFrame)가 있습니다.
+[그림 3] Javascript 비동기 태스크 처리 과정
+
+
+rAF의 콜백은 setTimeout이 처리되는 Task Queue보다 우선순위가 높은 Animation Frames에서 처리되며 브라우저가 렌더링하는 빈도인 60pfs에 맞춰서 실행됩니다. 따라서 setTimeout을 사용한 것보다 실행 시간을 더 보장할 수 있습니다. 참고로 Lodash의 Throttle에서는 timeout 값을 주지않으면 rAF 기반으로 동작하도록 되어있습니다. 다음은 rAF를 이용한 Throttle 코드입니다.
+// [코드 8] requestAnimationFrame을 이용한 Throttle 함수
+const throttleByAnimationFrame = (handler: (...args: any[]) => void) => {
+ let ticking = false
+ return function (this: any, ...args: any[]) {
+   if (!ticking) {
+     window.requestAnimationFrame(() => {
+       handler.apply(this, args)
+       ticking = false
+     })
+     ticking = true
+   }
+ }
+}
+위 코드를 간단히 설명하면 이벤트가 발생할 때 requestAnimationFrame 콜백이 Animation Frame으로 들어갑니다. 그리고 실제로 처리되기 전까지 ticking은 true이므로 아무리 이벤트가 다시 발생하더라도 무시됩니다. 그 후 Animation Frame이 처리되면 콜백이 실행되고 ticking을 false로 바꿔줍니다. 이를 반복하여 이벤트 발생을 제어하게 됩니다.
+ 
+그런데 스크롤 이벤트에 rAF를 적용했을 때와 적용하지 않았을 때의 성능 차이가 거의 없다는 것을 발견하였습니다.  스크롤 이벤트는 브라우저가 스크롤 위치 변경을 렌더링할 때마다 트리거 되는 것이므로 자체적으로 rAF 적용한 것과 동일한 결과를 갖게 된다는 것입니다. 따라서 위 코드에서 ticking은 true가 되는 일이 없으므로 다음과 같이 수정할 수 있습니다.
+// [코드 9] 코드 8을 개선한 함수
+const throttleByAnimationFrame = (handler: (...args: any[]) => void) =>
+ function (this: any, ...args: any[]) {
+   window.requestAnimationFrame(() => {
+     handler.apply(this, args)
+   })
+ }
+그렇다면 스크롤 이벤트에 rAF를 따로 적용할 필요가 없는 것이 아니냐는 의문이 들 수 있는데요. 단순히 documentElement.scrollTop 또는 documentElement.offsetHeight를 호출하는 것은 별 차이가 없을 수 있지만 상황에 따라 강제 동기식 레이아웃이 발생하게 된다면 빈번한 리플로우로 이어질 수 있습니다. 따라서 이벤트 핸들러에서 리플로우가 발생할 수 있는 로직이 포함되어 있다면 rAF 또는 Throttle을 이용한 최적화가 불가피하다고 생각하였습니다.
+ 
+Intersection Observer API
+스크롤 이벤트로 무한 스크롤을 구현하면 리플로우에 의해 좋지 않은 렌더링 성능과 상황에 따라 기대한 대로 동작하지 않을 수 있는 문제점이 있었습니다. 최근에 이를 해결하기 위해 주로 사용하는 것이 바로 Intersection Observer API입니다. Intersection Observer API는 기본적으로 브라우저 Viewport와 Target으로 설정한 요소의 교차점을 관찰하여 그 Target이 Viewport에 포함되는지 구별하는 기능을 제공합니다. 이를 통해 성능적으로 더 나은 무한 스크롤을 구현할 수 있게 되었습니다.
+[그림 4] Viewport와 Target
+
+
+이번에는 Intersection Observer API를 사용하는 부분을 custom hook으로 만들어 분리하고 인기 많은 데이터 페칭 라이브러리인 React Query를 활용한 코드를 살펴보고자 합니다. 먼저 옵션값인 IntersectionObserverInit 인터페이스를 살펴보겠습니다.
+// [코드 10] IntersectionObserver 옵션 인터페이스
+interface IntersectionObserverInit {
+   root?: Element | Document | null;
+   rootMargin?: string;
+   threshold?: number | number[];
+}
+
+
+
+속성 이름
+설명
+
+
+root
+target의 가시성을 확인할 때 사용되는 상위 속성 이름- null 입력 시, 기본값으로 브라우저의 Viewport가 설정됨
+
+
+
+[그림 5] IntersectionObserver root
+
+
+
+
+
+속성 이름
+설명
+
+
+rootMargin
+root에 마진값을 주어 범위를 확장 가능- 기본값은 0px 0px 0px 0px이며, 반드시 단위 입력 필요
+
+
+
+[그림 6] IntersectionObserver rootMargin
+
+
+
+
+
+속성 이름
+설명
+
+
+threshold
+콜백이 실행되기 위해 target의 가시성이 얼마나 필요한지 백분율로 표시- 기본값은 배열 [0] 이며, Number 타입의 단일 값으로도 작성 가능
+
+
+
+[그림 7] IntersectionObserver threshold
+
+
+다음은 Intersection Observer API 사용하는 부분을 Custom Hook으로 분리한 모습입니다.
+// [코드 11] IntersectionObserver custom hook
+type IntersectHandler = (
+ entry: IntersectionObserverEntry,
+ observer: IntersectionObserver
+) => void
+ 
+const useIntersect = (
+ onIntersect: IntersectHandler,
+ options?: IntersectionObserverInit
+) => {
+ const ref = useRef<HTMLDivElement>(null)
+ const callback = useCallback(
+   (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+     entries.forEach((entry) => {
+       if (entry.isIntersecting) onIntersect(entry, observer)
+     })
+   },
+   [onIntersect]
+ )
+ 
+ useEffect(() => {
+   if (!ref.current) return
+   const observer = new IntersectionObserver(callback, options)
+   observer.observe(ref.current)
+   return () => observer.disconnect()
+ }, [ref, options, callback])
+ 
+ return ref
+}
+먼저 target 요소를 저장하기 위한 ref를 선언하고 root와 target이 교차 상태인지 확인하는 isIntersecting 값이 true이면 콜백을 실행하는 함수를 useCallback으로 선언합니다. 그리고 useEffect 콜백에서 IntersectionObserver 객체를 생성하고 observe 호출을 통해 target 요소의 관찰을 시작합니다. 컴포넌트가 언마운트될 때는 cleanup을 통해 disconnect를 호출하여 모든 요소의 관찰을 중지하도록 합니다. 다음은 React Query API를 요청 별 함수로 분리한 모습입니다.
+// [코드 12] React Query를 이용한 유저 목록 API 호출 함수
+const userKeys = {
+ all: ['users'] as const,
+ lists: () => [...userKeys.all, 'list'] as const,
+ list: (filters: string) => [...userKeys.lists(), { filters }] as const,
+ details: () => [...userKeys.all, 'detail'] as const,
+ detail: (id: number) => [...userKeys.details(), id] as const,
+}
+ 
+const useFetchUsers = ({ size }: PaginationParams) =>
+ useInfiniteQuery(
+   userKeys.lists(),
+   ({ pageParam = 0 }: QueryFunctionContext) =>
+     axios.get<PaginationResponse<User>>('/users', {
+       params: { page: pageParam, size },
+     }),
+   {
+     getNextPageParam: ({ data: { isLastPage, pageNumber } }) =>
+       isLastPage ? undefined : pageNumber + 1,
+   }
+ )
+React Query는 각 API 요청별로 캐시를 관리하기 위해 useQuery 또는 useInfiniteQuery 함수의 첫 번째 인자로 queryKey라는 값을 주입해야 합니다. 여기서 queryKey값을 그냥 하드 코딩하여 넣어줄 수도 있지만 위처럼 객체로 관리하여 유지보수성을 높여주는 것이 좋다고 생각하였습니다.
+무한 스크롤을 구현하기 위해서 useInfiniteQuery를 사용하였습니다. 옵션값 중에 getNextPageParam 반환 값이 다음 API 호출할 때의 pageParam으로 들어가며 getNextPageParam에서 undefined를 반환하면 마지막 page라는 것을 의미하며 더 이상 API 호출을 하지 않게 됩니다. 다음은 최종적으로 위 함수들을 종합한 예제 코드입니다.
+// [코드 13] IntersectionObserver 적용한 최종 예시
+function UsersPage() {
+ const { data, hasNextPage, isFetching, fetchNextPage } = useFetchUsers({
+   size: PAGE_SIZE,
+ })
+ const users = useMemo(
+   () => (data ? data.pages.flatMap(({ data }) => data.contents) : []),
+   [data]
+ )
+ 
+ const ref = useIntersect(async (entry, observer) => {
+   observer.unobserve(entry.target)
+   if (hasNextPage && !isFetching) {
+     fetchNextPage()
+   }
+ })
+ 
+ return (
+   <Container>
+     {users.map((user) => (
+       <Card key={user.id} name={user.name} />
+     ))}
+     {isFetching && <Loading />}
+     <Target ref={ref} />
+   </Container>
+ )
+}
+ 
+const Target = styled.div`
+ height: 1px;
+`
+useInfiniteQuery의 반환 값에서 data는 page 별로 응답 데이터가 누적되는 형태이기 때문에 useMemo를 통해 평탄화 작업을 할 수 있도록 작성하였습니다. 참고로 위 코드에서는 useInfiniteQuery의 기능 중 극히 일부만 사용한 것으로 이외에도 다양한 기능들을 제공합니다. 이를 통해 여러 페칭 모듈 중에 React Query가 널리 쓰이는 이유를 알 수 있었습니다.
+가장 밑에 있는 Target 컴포넌트가 Intersection Observer API의 관찰 대상으로써 useIntersect의 반환 값을 Target ref에 할당합니다. 결과적으로 스크롤 하여 가장 밑에 위치하는 Target 컴포넌트가 Viewport와 교차하여 보이면 콜백이 호출되면서 다음 페이지를 페칭하게 됩니다.
+ 
+마치며
+이번 포스팅을 통해 무한 스크롤을 구현하면서 겪었던 과정들 공유해보았습니다. 예제 코드가 다소 많다고 느낄 수 있지만 제가 무한 스크롤을 구현하기 위해 구글링하여 찾아본 예제 코드들의 내용이 아쉬운 경우가 많아서 최대한 제가 실제 작성한 코드와 유사한 코드로 제시해보려고 노력하였습니다.
+실제 프로젝트에서는 Intersection Observer API와 React Query를 이용하여 무한 스크롤을 구현한 상태입니다. 즉 무한 스크롤을 구현하기 위해서 Intersection Observer API 부분만 참고해도 무방합니다. 하지만 개인적으로 최종 코드까지 도달하는 과정에서 배운 것이 많았다고 생각하고 프론트엔드 개발을 시작하시는 분들에게는 React 코드 작성에 도움이 될 수 있을 것으로 생각합니다.
+이 포스팅이 React에서 무한 스크롤을 구현하는데 바이블이 됐으면 하는 작은 바람을 가지며 이만 포스팅을 마치도록 하겠습니다. 부족하지만 앞으로도 흥미로운 주제로 연재할 생각이니 많은 관심 부탁드립니다. 감사합니다.
+ 
+
+
+
+
+Denis (배형진)
+어제보다 더 나은 코드를 작성하기 위해 노력하는 프론트엔드 개발자입니다.
+
+
+
+
+
+
+
+공유하기
+
+게시글 관리
+
+
+구독하기카카오엔터프라이즈 기술블로그 Tech&(테크앤)
+
+
+저작자표시 비영리 변경금지
+
+
+
+
+
+
+Tag
+Front-end, Intersection Observer API, Kakao Enterprise, react, React Query, Scroll Event, 리액트, 카카오엔터프라이즈, 카카오엔터프라이즈 기술블로그
+
+
+관련글
+
+
+
+
+
+
+카카오워크 음성채팅 웹 개발기
+
+
+
+
+
+
+
+대화 속에 드러나는 감정을 분석해드립니다!
+
+
+
+
+
+
+
+카카오엔터프라이즈 탐방기! (비전편)
+
+
+
+
+
+
+
+우리는 클라우드 개발에 진심입니다! - SmartNIC 편
+
+
+
+
+
+댓글0
+
+
+
+
+
+
+
+
+
+

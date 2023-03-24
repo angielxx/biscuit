@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -18,6 +21,7 @@ public class Content implements Serializable {
 	private Long id;
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Category category;
+	@Column(unique = true)
 	private String url;
 	private String title;
 	private String writer;

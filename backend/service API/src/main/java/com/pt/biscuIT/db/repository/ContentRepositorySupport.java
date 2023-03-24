@@ -12,6 +12,10 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.pt.biscuIT.db.entity.QContent;
+import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPQLQuery;
+import com.pt.biscuIT.db.entity.QContent;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -120,5 +124,24 @@ public class ContentRepositorySupport {
                         .fetch()
                         .size()
         );
+    }
+
+    public Page<Content> findContentByTitle(Long lastContentId, String title, PageRequest pageRequest) {
+        List<Content> contents = jpaQueryFactory
+            .selectFrom(qContent)
+            .where(containTitle(title),
+                qContent.id.lt(lastContentId))
+            .offset(pageRequest.getOffset())
+            .limit(pageRequest.getPageSize() + 1)
+            .orderBy(qContent.hit.desc())
+            .fetch();
+        return new PageImpl<>(contents, pageRequest, contents.size());
+    }
+
+    private BooleanExpression containTitle(String title) {
+        if(title == null || title.isEmpty()) {
+            return null;
+        }
+        return qContent.title.containsIgnoreCase(title);
     }
 }

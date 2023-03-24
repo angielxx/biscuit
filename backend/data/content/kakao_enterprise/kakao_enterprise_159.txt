@@ -1,0 +1,213 @@
+
+
+
+
+
+
+Krew Insight
+
+2022. 10. 20.
+
+
+Troubleshooting TURN 사용기
+
+
+
+
+
+
+
+
+시작하며
+안녕하세요. 저는 카카오엔터프라이즈 WebRTC CPaaS인 커넥트라이브의 서버 개발/인프라를 담당하고 있는 hans(한현섭)이라고 합니다. WebRTC에 관한 일을 하게 되면서, 기존에는 몰랐던 생소한 기술들을 많이 경험하게 됩니다. 그중에서도 개념적으로는 참 간단한 것 같은데, 보면 볼수록 모르는 것 투성이인 기술이 하나 있으니, 바로 TURN(Traversal Using Relays around NAT)이 되겠습니다.
+TURN을 간단하게 설명하자면 A에서 B로 직접 통신을 하지 못할 때, A와 B가 모두 접근할 수 있는 위치에 중계기 C를 두고 A가 C에 보낸 통신을 B로, B가 C로 보낸 통신은 A로 전달하는 기술입니다. 동료들과 점심식사를 하는 데 제 손(A)이 닿지 않는 식탁 끝에 있는 물병(B)을 가운데 사람(C)이 집어주는 것도 훌륭한 릴레이(=중계)의 예입니다.
+[그림 1] 릴레이 예시 사진
+
+
+TURN은 NAT(Network Address Translation)라고 하는, 정말 정말 축약해서 말하자면 인터넷 공유기 때문에 개발되었습니다. NAT를 이용하는 네트워크 환경(쉽게 말하면 WiFi에 접속한 스마트폰 환경)에서는 스마트폰끼리 직접 통신할 수 있는 가능성이 낮습니다. 때문에 두 단말이 직접 통신하는 기술인 WebRTC를 사용하기 위해서 어쩔 수 없이 공인 IP를 가진 서버를 두고 통신을 릴레이할 수 있는 TURN 기술이 활용됩니다. TURN은 초기 버전 RFC5766부터  최신 버전 RFC8656까지 십수 년간 지속적으로 새로운 네트워크 환경에서도 잘 작동할 수 있도록 진화해나가고 있는 기술입니다.
+ 
+상식이 무너지는 곳, 인트라넷
+if ain't what you don't know that gets you into trouble. It's what you know for sure that just ain't so.- Mark Twain
+개인적인 생각이지만 서버 개발자로서 주니어 개발자를 졸업하기 위한 요건이 있다면, 바로 네트워크에서 패킷의 이동을 제대로 시뮬레이션할 수 있는 능력이라고 생각합니다. 
+몇 년 전 WebRTC 업무를 시작하면서 제가 네트워크와 TURN에 대해 어느 정도 알고 있다는 생각 때문에 크게 낭패를 본 적이 있었습니다. 어떤 기술과 그 기반 기술의 정확한 작동 원리를 알고 있어야 제대로 시뮬레이션할 수 있었는데, 어설프게 아는 것이 오히려 문제 해결을 방해했던 것이죠.
+제가 낭패를 봤던 네트워크는 바로 인트라넷이었습니다. 우리가 쉽게 사용하는 인터넷 공유기나, 클라우드에서 제공하는 기본 네트워크 수준을 아득히 넘어선, 빡빡한 보안 요구사항을 모두 만족시키는 전문가들이 구축한, 나아가 각 파트 담당자들도 전체 그림을 그리지 못할 정도로 복잡한 망분리 환경의 인트라넷이었습니다.
+클라우드에서 기본으로 제공하는 단순한 네트워크를 사용하면 너무나 쉽게 공인 IP를 가진 서버를 생성할 수 있고, 여기에 TURN 서버를 기본 옵션으로 실행하면 대부분 릴레이는 성공적으로 작동합니다. 이렇다 보니 TURN 서버가 작동하는 원리에 대해서 대략적으로 알고 넘어갔고, 막연한 지식으로 인트라넷에 네트워크 설정 문서를 전달했었습니다. 당연히 서비스는 제대로 작동하지 않았고, 덕분에 일주일 내내 해당 인트라넷을 운영하는 곳에 직접 찾아가 문제를 해결해야 했습니다. 인터넷은 당연히 되지 않아 온갖 문서를 폰으로 찾아봐야 했고, 결국 위에 언급한 TURN의 스펙 문서인 RFC5766을 찾아서 읽고 나서야 제가 무엇을 잘못했는지 알게 되었습니다. 이후 네트워크 담당자분들께 죄송하다는 말씀을 드리며 새롭게 설정을 하고 나서야 원래 사무실로 출근할 수 있게 되었습니다.
+이때의 경험을 통해 저는 TURN 작동 원리와 네트워크에 대해 이해도를 높일 수 있었고, 이후에도 인트라넷에서 TURN과 관련된 여러 문제들을 해결해오면서 제법 이해도를 갖추게 되었습니다. 그러다 최근 WebRTC Weekly 뉴스레터에서 Troubleshooting TURN이라는 제목의 글을 읽게 되었습니다. TURN을 활용하는 법을 단계별로 상세히 설명하고, 문제가 발생할 때 어떻게 해결하면 좋을지 트러블슈팅 포인트를 함께 안내하는 유익한 글이었습니다.
+ 
+'지금 알고 있는 걸 그때도 알았더라면...'
+ 
+이 글을 보는 순간 문득 고생했던 그 기억이 되살아나 지금도 어딘가에서 TURN 때문에 어려움을 겪고 있을 개발자들에게 도움이 될까 싶어 원문을 번역해 보았습니다. 이 글은 TURN이 작동하기까지의 과정을 상세하게 다루고 있어, 읽고 나서 다시 한번 RFC 문서를 본다면 TURN에 대해 더 깊이 이해할 수 있게 될 것입니다.
+ 
+Troubleshooting TURN
+다음의 Troubleshooting TURN 콘텐츠는 WebRTC Weekly 431호에 실렸던 Troubleshooting TURN의 원문을 번역한 글임을 밝힙니다.
+👉🏻 WebRTC Weekly 431호 보러가기
+👉🏻 원문보러가기
+ 
+WebRTC 앱은 상대방과 연결할 때 최적의 연결 방법을 찾기 위해 ICE Negotiation을 사용합니다. ICE Negotiation은 미디어와 데이터를 교환할 때 적합한 ICE candidate를 동적으로 찾아내는 프로세스입니다. ICE candidate는 IP와 Port, 그리고 TCP/UDP 등의 프로토콜로 이뤄져 있는 transport address를 의미합니다.
+ICE negotiation에서 가장 중요한 요소는 candidate 쌍을 '동적으로' 찾아낸다는 사실입니다. 이는 세션이 수립된 시점의 네트워크 상태를 기준으로 나(local)와 상대방(remote)의 transport address를 찾는 것을 의미합니다. 예를 들어, WebRTC 클라이언트가 집에서 SFU(Selective Forward Unit)와 통신하는 경우, 일반적으로 server reflective transport address를 사용합니다. 하지만 사무실에서 SFU와 통신하려 할 경우, 대개 회사 네트워크에서 리모트 UDP 통신을 제한하는 경우가 많으므로, TCP를 경유하는 relay transport address를 사용할 것입니다. 즉, RTCPeerConnection을 생성할 때 iceServers 프로퍼티를 동일하게 설정했더라도, 방금 설명한 두 케이스에서처럼 결과물은 완전히 다를 수 있습니다.
+이는 WebRTC 세션의 일정 부분이 TURN 서버를 통해 이뤄진다는 것을 의미합니다. 다시 말해, 클라이언트에게 TURN 서버 외 다른 선택지가 없으면, TURN 서비스를 통해 WebRTC 세션이 중계된다는 뜻입니다. 이 과정에서 'host', 'server reflective', 'relay' candidate는 서로 경쟁하게 되고, 경쟁에서 가장 적합한 candidate가 승리하게 됩니다. 단, 이 경쟁에는 host가 가장 높은 우선순위를 갖고, relay가 낮은 우선순위를 갖는다는 규칙이 존재합니다. 우선순위와 관련된 이 규칙은 중계된 relayed connection이 direct connection 보다 성능이 떨어질 수 있다는 논리적인 추정에서 나왔습니다.
+한편 RTCPeerConfiguration의 'iceTransportPolicy' 항목을 이용해 TURN 서비스를 선택이 아니라 필수로 지정할 수 있도록 하는 경우도 있습니다. 어떤 경우가 됐든, TURN을 사용할 때는 트러블슈팅을 위해 세션이 수립되었는지 확인하는 것이 중요합니다. 이번 아티클에서 TURN 서비스의 트러블슈팅과 관련한 중요한 가이드라인을 살펴보도록 하겠습니다.
+ 
+TURN 세팅 확인하기
+STUN 서버는 대개 별다른 인증 없이 사용할 수 있는 반면, TURN 서비스는 대부분 인증이 필요합니다. 특히 고가용성을 갖고 있는 분산화된 시스템에서 TURN 서비스와 관련된 리소스는 매우 비싸기 때문에  인증받은 고객만 사용할 수 있습니다. TURN을 이용하기 위해 필요한 설정은 다음과 같습니다. RTCPeerConnection를 생성할 때 이 설정을 iceServers 객체에 입력하면 TURN을 설정할 수 있습니다.
+const pc = new RTCPeerConnection({
+	iceServers:[{ urls:["..."], username:"...", credentials:"..."}]
+})
+
+urls (ex. turn:{FQDN or IP address}:port)
+username
+password(또는 credential)
+
+💡 트러블슈팅 포인트TURN이 제대로 설정되었는지 확인이 필요합니다. 크롬 개발자 도구의 자바스크립트 코드에서 iceServers 객체가 유효값으로 설정되었는지 확인하고, 의도한 대로 iceTransportPolicy(기본값은 all)가 설정되어있는지 확인하시길 바랍니다.
+ 
+TURN 서버에 요청이 도달하는지 확인하기
+ICE candidate gathering 단계가 시작되면, ICE 클라이언트는 TURN URL이 접근할 수 있는 서비스를 가리키는지 확인하기 위해, STUN Binding Request를 이용해 iceServer 세팅에서 추출한 ip, port에 해당 요청이 도착하는지 검증합니다. 이 요청은 TURN 서비스에 접근할 로컬의 IP address와 port를 이용해 발송되며, 이 IP와 port가 TURN 서비스와 통신하기에 적합한지 확인할 것입니다.
+STUN Binding Request가 TURN 서버에 도착했다면, TURN 서버는 STUN Binding Success를 응답으로 돌려줄 것입니다. 이때 TURN 서버에서 받은 Source IP와 port를 알려주는 XOR-MAPPED-ADDRESS attribute가 함께 전달됩니다. 이렇게 클라이언트가 STUN Binding Success를 응답으로 받게 되면, TURN 서버에 해당 요청이 도달 가능한지가 증명됩니다. 이 작업이 완료되면, relay allocation을 협상할 수 있게 됩니다.
+
+
+💡 트러블슈팅 포인트WebRTC 클라이언트를 실행하는 호스트에서 네트워크 패킷을 확인하여, STUN Binding Request가 예상된 목적지로 향하는지 확인이 필요합니다. 특히 TURN URL이 도메인이어서 DNS를 조회해야 하는 경우에는 다수의 IP 주소가 사용될 수 있습니다. 네트워크 패킷을 확인할 때, STUN Binding Success 응답을 수신했는지 확인하시기 바랍니다.
+ 
+TURN 서버에 relay allocation 생성하기
+클라이언트는 TURN 서버에 자신을 대신해 릴레이 할 것을 요청하며, 바로 이 부분이 핵심입니다.  TURN 프로토콜이 사용될 때, 클라이언트는 TURN 서버에 Relay Allocation Request를 전송합니다. 앞서 설명했듯이, 이 요청은 반드시 인증이 필요하므로, realm과 nonce를 포함한 401 Unauthenticated Response가 표시되면 이를 해결해야 합니다. 이때, 클라이언트는 제공된 credentials(username과 credential)과 realm, nonce를 함께 사용하여 MESSAGE-INTEGRITY attribute을 계산하고, 이 속성값을 이용하여 Relay Allocate Request를 재전송합니다.
+credentials가 올바르다면, TURN 서비스는 이 allocation에 대한 transport address를 예약하게 되는데, 바로 이 주소가 relay transport address가 됩니다. Allocate Success Response에는 XOR-RELAYED-ADDRESS attribute가 함께 반환됩니다. 이때, 클라이언트는 relay candidate를 획득하며, 사용 중인 시그널링 시스템을 사용하여 통신 상대에게 이를 전송합니다. (시그널링 시스템은 표준화된 시스템은  아니며, 서비스마다 다른 방식을 사용할 수 있습니다.) 성공적인 allocation 예시는 다음과 같습니다.
+
+
+여기서 기억해야 할 점은 클라이언트는 동일한 세션에 하나 이상의 allocation을 생성할 수 있다는 점입니다. 하지만, 각 allocation은  다른 source port로 구분되며, 쉽게 식별할 수 있습니다. 또한 (Wireshark에서) 'stun and udp.port==PORT' 등을 사용하여 필터를 적용할 수도 있습니다. 필터를 적용 할 때, ‘PORT’에 확인할 트랜잭션의 client source port를 적으면 됩니다.
+💡 트러블슈팅 포인트WebRTC 클라이언트가 실행 중인 호스트에서 네트워크 패킷을 확인하여 Allocate Success Response가 반환되었는지 확인합니다. 이때 트러블슈팅은 다음으로 구분됩니다.
+Case 1. credentials가 잘못된 경우credentials가 잘못되면 Allocate Success Response가 아닌 401 Unauthenticated Response가 표시됩니다. 이 경우, credentials를 확인하고 사용자가 서비스에 접근할 수 있도록 권한을 부여해야 합니다.
+
+
+Case 2. 기타 에러가 발생할 경우Allocate Request와 관련하여 기타 에러가 발생할 수 있으며, 상세 에러 정보는 Allocate Request에 포함된 Error code에서 확인할 수 있습니다. 에러 코드를 참고하여, 원인을 찾아 해결하시기 바랍니다.
+ 
+생성된 allocation에 권한 부여하기
+릴레이를 통해 미디어와 데이터를 교환하기 전에, 클라이언트는 보안을 위해 상대방에 대해 특정 권한을 설정해야 합니다. 클라이언트가 올바른 relay allocation을 가지게 되면, 상대방으로부터 매번 ICE Candidate를 받을 때마다 상대방의 IP 주소에 대한 권한을 매번 설정해야 합니다.
+생성된 allocation에 권한을 부여하기 위해서는 TURN CreatePermission Request를 전송해야 합니다. 권한이 설정될 allocation은 클라이언트의 source IP와 port에 따라 암시적으로 결정됩니다. Request가 받아들여질 경우 TURN 서버는 CreatePermission Success를 응답합니다. 종종 클라이언트는 사설 IP나 예약된 IP가 담긴 ICE Candidate를 받기도 하는데, 이 경우 TURN 서버는 403 Forbidden Response를 통해 해당 요청을 거부합니다.
+
+
+💡 트러블슈팅 포인트WebRTC 클라이언트가 실행 중인 호스트에서 네트워크 패킷을 확인하여 여러 remote Candidate 중 적어도 하나 이상에서 CreatePermission Success Response가 있는지 확인하시기 바랍니다. 만약 CreatePermission request가 전송되지 않았다면, remote candidate 중에서 성공적으로 적용된 것이 없다는 뜻으로, 릴레이가 불가능하게 됩니다.
+ 
+TURN을 통해 ICE 연결 확인하기
+TURN 서버에 도달하고, relay allocation이 예약되고, 권한이 생성되었다면 ICE 연결을 체크하기 위한 준비가 완료된 것입니다. TURN을 통해 ICE 연결을 확인하기 위해서는 short term credentials과 함께 STUN Binding Request를 전송하면 됩니다. 이때 STUN Binding Request는 TURN에서 상대방(remote)으로 보내는 Send Indication 내 캡슐화되어 있는데, 이는 TURN 만의 특이점이라고 볼 수 있습니다.
+캡슐화는 Wireshark를 활용하여 쉽게 처리할 수 있으며, Send Indication 대신 그 안에 콘텐츠인 Binding Request를 보여줄 것입니다. TURN 서버는 Binding Request를 상대방에게 릴레이하면서 첫 번째 릴레이를 수행합니다. 예상된 결과는 상대방이 Binding Success Response를 주는 것입니다. TURN 서버는 이 응답을 Data Indication에 캡슐화하여 클라이언트에게 전달하게 됩니다.
+여기까지 왔다면 클라이언트는 remote candidate가 실제로 TURN을 통해 자신에게 도달할 수 있다는 것을 알게 되며, 이 candidate 쌍이 미디어와 데이터를 교환할 수 있는 적합한 쌍이라는 것을 알게 됩니다.
+💡 트러블슈팅 포인트WebRTC 클라이언트가 실행되고 있는 호스트에서, 네트워크 패킷을 확인하여 TURN에 Binding Request가 제대로 전달되었는지, Binding Success Response를 받았는지 확인합니다.만약 Binding Success Response를 받지 못했다면, 무언가 이 통신을 막고 있다는 뜻이며 이를 알아보는 가장 좋은 방법은 TURN server host에서 네트워크 패킷을 확인하는 것입니다. 이를 통해 TURN 서버가 상대방에게 Binding Request를 전송하고, Binding Success Response를 수신했는지 여부를 확인할 수 있습니다. 단순히 TURN 서비스에서 상대방에게 접근이 안 되는 경우도 있을 수 있는데, 이때 ICE Candidate 쌍은 unusable로 표시됩니다.
+ 
+TURN을 통해 미디어/데이터가 교환되는지 확인하기
+마지막 단계는 실제 릴레이를 통해 패킷이 교환되는지 확인하는 것입니다. 교환되는 패킷은 보통 RTP 패킷입니다. 일단 연결성 체크가 성공하면, 클라이언트는 한번 사용했던 relay candidate를 선별하고, 곧  RTP flowing이 시작됩니다. RTP flowing에서 RTP 패킷들은 비디오와 오디오가 멀티플렉싱 된 채로 양 방향으로 흐르게 됩니다. 데이터 전송 방식에는 Indications와 Channels가 있습니다.
+ 
+Indications
+먼저, Send Indication은 클라이언트로부터 TURN 서버로 RTP 데이터를 전달합니다. Allocation이 존재하고 권한이 허용되면, TURN 서버는 추출한 데이터를 할당된 relay transport address에서 목적지로 전송합니다. 반대로 상대방이 데이터를 relay transport address로 보내게 되면, TURN 서버는 해당 데이터를 Data Indication에 캡슐화하여 클라이언트로 전송합니다.
+ 
+Channels
+Channels 방식은 Indications 데이터 전송 방식보다 효율적으로 데이터를 교환합니다. 이 방식은 클라이언트가 ChannelBind Request를 통해 channel ID와 상대방을 연결하는 channel을 정의합니다. 이 때, 클라이언트와 TURN 서버는 remote transport address를 생략하고 Channel ID와 데이터만 전달하는 ChannelData 메시지를 통해 데이터를 교환할 수 있습니다. Channels 방식은 네트워크와 컴퓨팅 부하를 감소시키기 때문에 Indications 방식에 비해 더 많이 사용됩니다.
+💡 트러블슈팅 포인트WebRTC 클라이언트가 실행 중인 호스트에서 네트워크 패킷을 확인하여 클라이언트로부터 데이터가 Send Indication과 ChannelData 메시지로 송신되는지, 그리고 Data Indication과 ChannelData 메시지로 수신되는지 확인합니다. 단방향 전송 미디어의 경우, TURN 서버 호스트에서 네트워크 패킷을 확인하여 미디어가 릴레이 측에서 상대방으로 제대로 전송되는지 확인하시기 바랍니다.
+ 
+암호화된 TURN
+'TURN over TLS'을 통해 TURN을  사용할 경우, 전송되는 모든 데이터는 암호화로 처리됩니다. 이 때문에 Wireshark를 이용하더라도 요청과 응답을 볼 수 없고, 트러블슈팅이 더 어려워지게 됩니다. 트러블슈팅 시 시도해볼 수 있는 방법은 암호화되지 않은 최초 TURN(over UDP 또는 TCP)을 사용하여 앞서 설명한 모든 절차를 하나씩 적용해 보면서 확인하는 것입니다. 대개 TURN 서비스는 암호화되지 않은 UDP로 접근할 수 있는 가능성이 매우 큽니다. 따라서 TLS로 변경하기 전에 UDP에서 제대로 동작하는지 확인해 볼 수 있습니다.
+Wireshark는 서버와 연결된 TLS 커넥션을 보여주기 때문에, 연결이 성공했는지, TLS 세션이 수립되었는지, 앱에서 데이터들이 교환되는지 여부를 확인할 수 있습니다.
+ 
+유용한 툴
+TURN을 트러블슈팅할 때 유용한 툴은 다음과 같습니다.
+ 
+① Wireshark
+Wireshark는 여러 OS에서 사용할 수 있으며, 로컬 WebRTC 클라이언트와 remote 서버 사이에 무엇이 일어나고 있는지 알 수 있는 기본적인 툴입니다. 필터를 사용해 특정 종류의 패킷을 찾을 수 있는데, STUN과 TURN 패킷들은 ‘stun’ 키워드로 필터링할 수 있습니다. 또한 Allocate Request와 Allocate Response를 보기 위해 특정 종류의 TURN 트랜잭션(ex. stun.type.method==0x003)을 선택할 수도 있습니다. 추적한 내용들은 pcap 파일로 저장할 수 있어, 다른 사람들과 공유할 수 있습니다.
+또한 Wireshark는 패킷을 캡처할 수 있을 뿐만 아니라 캡처한 내용을 확인할 수도 있습니다. 간혹 패킷분석기(dissectors)가 TURN 트랜잭션을 제대로 인식하지 못할 때가 있습니다.  UDP/TCP의 경우 3478, TLS의 경우 5349처럼 TURN의 기본 포트를 사용하지 않는 경우 발생합니다. 이때는 Wireshark의 help에서 패킷을 우클릭하고 Decode As...를 선택하여 ‘STUN’ 프로토콜로 변경하면 됩니다. 이후, Wireshark는 기본 포트를 사용하지 않은 패킷을 다시 해석하게 됩니다.
+RTP 역시 마찬가지입니다. Wireshark에서 시그널링을 이용할 수 없을 때, RTP를 담은 UDP 패킷이 제대로 해석되지 못할 수 있습니다. 위와 동일하게 Decode As...로 해결할 수 있습니다.
+ 
+② tcpdump
+서버 쪽에서 패킷을 캡처하는 툴로 대체로 tcpdump를 사용합니다. 캡처한 내용을 pcap 파일로 저장하려면 -w 옵션을 활용하면 됩니다. 로컬 머신으로 pcap 파일을 복사한 뒤, Wireshark를 이용해 패킷을 볼 수 있습니다.
+> tcpdump -n -v -w trace_1.pcap
+ 
+③ Trickle ICE(WebRTC 샘플 페이지)
+WebRTC 샘플 웹페이지 중 하나인 Trickle ICE를 활용해 브라우저에 입력한 TURN 서버 정보(URL, username, credential)로부터 relay candidate를 확인할 수 있습니다. 클라이언트 구현체를 트러블슈팅하기 전, Trickle ICE가 사용하고자 하는 TURN 리소스에 제대로 접근할 수 있는지 확인해야 합니다.
+ 
+④ coturn/turnutils_uclient
+인기 있는 오픈소스 TURN 서버 구현체인 coturn에서는 클라이언트를 시뮬레이션하는 툴인 coturn/turnutils_uclient을 제공합니다. 이 툴은 다양한 옵션을 제공하며, 채널 또는 Send Indication만 사용해보는 것처럼, TURN의 특정 부분만 테스트할 수 있는 옵션도 제공합니다. turnutils_uclient를 활용해 사용하려는 TURN 서비스가 TURN 설정으로 올바르게 접근 가능한지 확인할 수 있습니다. 또한 이 툴은 jitter와 round trip time에 대한 정보를 제공합니다.
+ 
+⑤ Chrome webrtc-internals
+크롬을 사용할 때 무슨 일이 일어나는지 이해하려면 `chrome://webrtc-internals/` 탭을 이용하는 것이 가장 좋습니다. 이 탭은 브라우저에서 관리하는 각 RTCPeerConnection과 관련 정보를 제공하는데, 예를 들어 ICE candidate 목록, 사용 중인 TURN 서버의 상세 정보, iceTransportPolicy, 사용 중인 ICE candidate 쌍, 미디어 전송에 관련된 통계 자료 등을 포함합니다. 이 탭에서 ‘relay’ candidate를 찾은 후 클라이언트가 TURN 서비스에서 candidate들을 불러올 수 있는지, candidate pair로 선택되었는지 등을 확인하시기 바랍니다.
+ 
+마치며
+WebRTC Weekly에서 Troubleshooting TURN에 대해 정말 유익한 아티클을 읽었는데, WebRTC에 관심있는 분들과 이렇게 공유하게 되어 뿌듯합니다.
+네트워크를 위한 하드웨어가 발달하면서 기존의 텍스트나 이미지보다 더 크고 다양한 정보들이 네트워크를 통해 전송되고 있는데요. NAT는 처음 IPv4의 주소 고갈 문제를 해결하기 위해 등장했습니다. 그러나 주소 고갈을 해결하기 위한 대안 중 이론적으로 더 나은 것으로 평가되는 IPv6에 의해 언젠가는 사라질 것이라는 의견도 있었습니다. Google의 조사에 따르면 한국은 현재 IPv6의 도입률이 아직 20%에 못 미치지만, 전 세계적으로 이미 40%를 넘어서 몇 년 내로 IPv4보다 확대될 가능성도 적지 않다고 합니다. 그러나 NAT를 사용하여 네트워크를 운용하는 경험이 많이 쌓이다 보니, NAT가 가져다주는 보안 등의 다양한 이점은 IPv6의 보급과 별개로 NAT가 계속 생존할 수 있는 여지를 남겨둔다고 생각합니다. 미래가 어떻게 될지는 모르겠지만 앞으로도 복잡한 네트워크 속에서 TURN을 적용해야 하는 많은 분들에게 도움이 되는 내용이기를 기대합니다. 감사합니다.
+ 
+
+
+
+
+한현섭(hans.n9)
+운동을 싫어하지만 미식축구와 야구하는 개발자. 개발도 팀 스포츠처럼 하고 싶습니다. P2P와 Message Broker, 클라우드에 관심이 많습니다.
+
+
+
+
+
+
+
+공유하기
+
+게시글 관리
+
+
+구독하기카카오엔터프라이즈 기술블로그 Tech&(테크앤)
+
+
+저작자표시 비영리 변경금지
+
+
+
+
+
+
+Tag
+ACL, coturn, Kakao Enterprise, RFC, turn, WebRTC, wireshark, 네트워크, 망분리, 카카오엔터프라이즈
+
+
+관련글
+
+
+
+
+
+
+[컨테이너 인터널 #2] 컨테이너 파일시스템
+
+
+
+
+
+
+
+[컨테이너 인터널 #1] 컨테이너 톺아보기
+
+
+
+
+
+
+
+[TW] 기술문서에 올바른 우리글 사용하기
+
+
+
+
+
+
+
+NAACL 2022 참관기
+
+
+
+
+
+댓글0
+
+
+
+
+
+
+
+
+
+
