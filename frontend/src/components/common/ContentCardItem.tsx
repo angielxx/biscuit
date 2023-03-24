@@ -1,4 +1,6 @@
+import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
+import defaultImg from '../../assets/image/default_thumbnail_img.png';
 
 // twin macro
 import tw, { styled, css, TwStyle } from 'twin.macro';
@@ -12,9 +14,13 @@ const Tag = styled.div`
 const Thumbnail = styled.div<{ image: string | null }>`
   ${tw`w-full aspect-w-16 aspect-h-9 bg-cover bg-center rounded-10 relative cursor-pointer`}
   ${({ image }) =>
-    css`
-      background-image: url('${image}');
-    `}
+    image
+      ? css`
+          background-image: url("${image}");
+        `
+      : css`
+          background-image: url("src/assets/image/default_thumbnail_image.png");
+        `}
 `;
 
 const MarkBtnArea = styled.div<{ hidden: boolean }>`
@@ -67,7 +73,7 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
   // 북마크 버튼 숨김
   const [hideMark, setHideMark] = useState<boolean>(true);
   // 썸네일 이미지
-  const [thumbImg, setThumbImg] = useState<string | null>('');
+  // const [thumbImg, setThumbImg] = useState<string | null>('');
   // 요약
   const [desc, setDesc] = useState<string | null>('');
 
@@ -75,8 +81,8 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
     const year = date.slice(0, 4);
     const month = date.slice(5, 7);
     const day = date.slice(8, 10);
-    return(`${year}.${month}.${day}`);
-  }
+    return `${year}.${month}.${day}`;
+  };
 
   // 북마크 버튼 클릭 시
   const changeMarkHandler = () => {
@@ -87,10 +93,22 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
   };
   useEffect(() => {
     useGetMetaData(recentContent.url).then((data) => {
-      setThumbImg(data.image);
-      setDesc(data.desc);
+      // setThumbImg(data.image);
+      // setDesc(data.desc);
     });
-  }, []);
+  }, [recentContent]);
+
+  // 썸네일 가져오는 함수
+  const getMetaData = async (url: string) => {
+    const { image } = await useGetMetaData(url);
+    return image;
+  };
+
+  const { data: thumbImg } = useQuery({
+    queryKey: ['thumbnail', recentContent.id],
+    queryFn: () => getMetaData(recentContent.url),
+    staleTime: 1000 * 60 * 30
+  });
 
   return (
     <div id="content-area" className="flex flex-col gap-4 text-white w-full">
@@ -105,7 +123,7 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
       <div className="relative">
         <a href={recentContent.url} target="_blank">
           <Thumbnail
-            image={thumbImg}
+            image={thumbImg ? thumbImg : ''}
             onMouseEnter={() => setHideMark(false)}
             onMouseLeave={() => setHideMark(true)}
           />
