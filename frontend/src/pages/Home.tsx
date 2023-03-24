@@ -13,13 +13,6 @@ const HomeContainer = tw.div`
   flex-col w-screen justify-center
 `
 
-// 유진
-import Modal from "../components/common/Modal/Modal";
-import Nickname from "../components/OnBoarding/Nickname";
-import TextInput from "../components/OnBoarding/TextInput";
-import AboutUser from "../components/OnBoarding/AboutUser";
-import AboutInterest from "../components/OnBoarding/AboutInterest";
-
 export default function Home() {
   const functionToggle = useRecoilValue(functionToggleState);
 
@@ -79,7 +72,6 @@ export default function Home() {
         : null
       }
       { functionToggle.homeContentsToggle ? <HomeContents /> : null }
-
     </HomeContainer>
   );
 }

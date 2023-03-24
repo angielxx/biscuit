@@ -1,14 +1,22 @@
+import { MouseEventHandler, useState } from 'react';
+
 // css
 import tw, { styled } from 'twin.macro';
 
-// icons
-
 const Category = ({ category }: { category: string }) => {
-  return <img src={`src/assets/icons/category/${category}.svg`} />;
+  return <img src={`/src/assets/icons/category/${category}.svg`} />;
 };
 
 const CategoryBox = styled.div`
   ${tw`flex flex-col items-start order-5 w-full px-4 py-3 gap-[10px] text-white border-b border-solid border-dark-grey10`}
+
+  &:hover {
+    ${tw`bg-dark-primary-var`}
+  }
+
+  &.choose {
+    ${tw`bg-dark-primary-var`}
+  }
 `;
 
 const SubCategory = styled.div`
@@ -16,13 +24,15 @@ const SubCategory = styled.div`
 `;
 
 interface SmallProps {
-  isClick?: React.MouseEventHandler<HTMLDivElement>;
+  isClicked?: React.MouseEventHandler<HTMLDivElement>;
   title: string;
 }
 
-const SmallCategory = ({ isClick, title }: SmallProps) => {
+const SmallCategory = ({ isClicked, title }: SmallProps) => {
+  const [isChoose, setIsChoose] = useState<boolean>(false);
+
   return (
-    <CategoryBox onClick={isClick}>
+    <CategoryBox onClick={isClicked}>
       <SubCategory>
         <Category category={title} />
         <p className="text-h3">{title}</p>

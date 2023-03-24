@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import BigCategory from '../common/BigCategory';
+import Button from '../common/Button';
 
 // icons
 import backspace from '../../assets/icons/backspace.svg';
 
-type ClickHanlder = (item: string) => void;
+type ClickHanlder = (event: any, item: string) => void;
 
 const AboutInterest = () => {
   const [isCategory, setIsCategory] = useState<boolean>(false);
@@ -39,14 +40,29 @@ const AboutInterest = () => {
         },
         {
           id: 1,  //e.g. 123,
-          subName: "Spring",  //e.g. "React",
+          subName: "Java",  //e.g. "React",
         },
       ],
     },
   ]
 
-  const isClicked: ClickHanlder = (item: string) => {
-    
+  const [selectList, setSelectList] = useState<string[]>([]);
+
+  const isClicked: ClickHanlder = (event: any, item: string) => {
+    event.stopPropagation();
+    if (selectList.includes(item)) {
+      // 이미 리스트에 들어있다면 해당 item 삭제
+      const arr = selectList.filter((element) => element !== item);
+      setSelectList(arr);
+    } else {
+      // 없으면 해당 item 추가
+      setSelectList(selectList => [...selectList, item]);
+    }
+    console.log(selectList);
+  }
+
+  const isSend = () => {
+    console.log("저장한 리스트 보내기");
   }
 
   return (
@@ -59,20 +75,30 @@ const AboutInterest = () => {
         <span className='text-sub text-subColor'>관심사에 맞춘 컨텐츠를 홈 화면에서 추천드려요.</span>
       </div>
       <hr className="border-[1px] border-dark-grey20" />
-      {mainCateList.map((item, index) => {
-        return (
-          <BigCategory 
-            key={item.id} 
-            isCategory={page === index ? true : false}
-            isClicked={isClicked}
-            item={item}
-            onClick={() => {
-              setPage(index);
-              isCategory ? setIsCategory(false) : setIsCategory(true);
-            }}
-          />
-        )
-      })}
+      <div className='h-[440px] overflow-scroll'>
+        {mainCateList.map((item, index) => {
+          return (
+            <BigCategory
+              key={item.id}
+              isCategory={page === index ? isCategory : false}
+              isClicked={isClicked}
+              item={item}
+              onClick={() => {
+                setPage(index);
+                // page !== index 일 경우, isCategory가 true면, 걍 true로 냅둬야한다.
+                isCategory
+                  ? page === index
+                    ? setIsCategory(false)
+                    : setIsCategory(true)
+                  : setIsCategory(true);
+              }}
+            />
+          );
+        })}
+      </div>
+      <div className="flex justify-center px-2 gap-2">
+        <Button title="선택 완료" status={selectList.length !== 0 ? "active" : "disabled"} onClick={isSend} />   
+      </div>
     </>
   )
 }

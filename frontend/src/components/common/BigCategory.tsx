@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 // css
 import tw, { css, styled } from 'twin.macro';
 
@@ -6,11 +8,11 @@ import dropdown from '../../assets/icons/arrow_drop_down.svg';
 import SmallCategory from './SmallCategory';
 
 const CategoryBox = styled.button`
-  ${tw`flex flex-col`}
+  ${tw`w-full flex flex-col`}
 `
 
 const Category = styled.div`
-  ${tw`flex justify-between items-center w-[298px] h-13 box-border px-3 py-4 text-white self-stretch border-b border-solid border-dark-evaluated`}
+  ${tw`flex justify-between items-center w-full h-13 box-border px-3 py-4 text-white self-stretch border-b border-solid border-dark-evaluated`}
 `
 
 const Img = styled.img`
@@ -57,7 +59,7 @@ type Content = {
   }[]
 }
 
-type ClickHanlder = (item: string) => void;
+type ClickHanlder = (event: any, item: string) => void;
 
 interface BigCategoryProps {
   item: Content;
@@ -86,7 +88,10 @@ const BigCategory = ({item, onClick, isClicked, isCategory}: BigCategoryProps) =
             return (
               <SmallCategory 
                 key={idx} 
-                isClick={() => isClicked(content.subName)} title={content.subName} 
+                isClicked={(e) => {
+                  isClicked(e, content.subName);
+                }} 
+                title={content.subName}
               />
             )
           })}
