@@ -13,7 +13,12 @@ interface content {
   tags: Array<string>;
 }
 
-const get_home_contents = async (classification: string, categoryCount: number): Promise<content[] | undefined> => {
+interface randomContent {
+  category: string;
+  items: content[];
+}
+
+const get_home_contents = async (classification: string, categoryCount: number): Promise<content[] | randomContent[] | undefined> => {
   const response = await baseInstance.get(
     requests.GET_HOME_CONTENTS(classification, categoryCount)
   );
