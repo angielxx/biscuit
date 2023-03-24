@@ -17,9 +17,9 @@ interface content {
   id: number;
   title: string;
   url: string;
-  credit_by: string;
-  created_date: string;
-  time_cost: number;
+  creditBy: string;
+  createdDate: string;
+  timeCost: number;
   type: string;
   isMarked: boolean;
   tags: Array<string>;

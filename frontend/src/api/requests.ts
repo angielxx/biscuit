@@ -21,11 +21,6 @@ export const requests = {
   // 피드백 저장
   POST_FEEDBACK: `/api/feedbacks`,
 
-  // 랜덤 컨텐츠 추천 목록 조회
-  GET_RANDOM_CONTENTS(option: string) {
-    return `/api/recommends/random/${option}`;
-  },
-
   // 키워드 검색
   GET_SEARCH(keyword: string) {
     return `/api/search?${keyword}`;
@@ -35,4 +30,12 @@ export const requests = {
   QUIZZES(contentId: number) {
     return `/api/${contentId}/quizzes`;
   },
+
+  // 홈 인기/최신/랜덤 컨텐츠 추천 목록 조회
+  GET_HOME_CONTENTS(classification: string, categoryCount: number) {
+    return categoryCount > 0
+      ? `/api/recommands/random/${classification}?categoryCount=${categoryCount}`
+      : `/api/recommands/random/${classification}`;
+  },
+  
 };
