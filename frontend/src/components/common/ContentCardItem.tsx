@@ -1,10 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import defaultImg from '../../assets/image/default_thumbnail_img.png';
+import { startTimeState, isStartState, isModalOpenState } from "../../recoils/Contents/Atoms";
 
 // twin macro
 import tw, { styled, css, TwStyle } from 'twin.macro';
 import { useGetMetaData } from '../../hooks/useGetMetaData';
+import { useSetRecoilState } from 'recoil';
 
 // Styled component
 const Tag = styled.div`
@@ -110,6 +112,17 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
     staleTime: 1000 * 60 * 30
   });
 
+
+  const setStartTime = useSetRecoilState(startTimeState);
+  const setIsStart = useSetRecoilState(isStartState);
+  const setIsModalOpen = useSetRecoilState(isModalOpenState);
+  const openContents = (url: string) => {
+    window.open(url, "_blank", "noopener, noreferrer")
+    setStartTime(Date.now());
+    setIsStart(true);
+    setIsModalOpen(true);
+  }
+
   return (
     <div id="content-area" className="flex flex-col gap-4 text-white w-full">
       <div className="flex gap-2">
@@ -121,13 +134,13 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
           ))}
       </div>
       <div className="relative">
-        <a href={recentContent.url} target="_blank">
+        <button onClick={() => openContents(recentContent.url)}>
           <Thumbnail
             image={thumbImg ? thumbImg : ''}
             onMouseEnter={() => setHideMark(false)}
             onMouseLeave={() => setHideMark(true)}
           />
-        </a>
+        </button>
         <MarkBtnArea
           hidden={hideMark ? true : false}
           onMouseEnter={() => setHideMark(false)}
