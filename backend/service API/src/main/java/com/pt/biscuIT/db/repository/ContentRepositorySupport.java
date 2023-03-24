@@ -3,6 +3,7 @@ package com.pt.biscuIT.db.repository;
 import com.pt.biscuIT.db.entity.Content;
 import com.pt.biscuIT.db.entity.QCategory;
 import com.pt.biscuIT.db.entity.QContent;
+import com.pt.biscuIT.db.entity.QContentTag;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -20,6 +21,9 @@ import com.pt.biscuIT.db.entity.QContent;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -28,9 +32,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /*
  * ContentRepositorySupport
@@ -47,6 +51,7 @@ public class ContentRepositorySupport {
 
     QContent qContent = QContent.content;
     QCategory qCategory = QCategory.category;
+    QContentTag qContentTag = QContentTag.contentTag;
 
     /**
      * 최근 등록된 컨텐츠를 랜덤으로 가져온다.
@@ -87,15 +92,19 @@ public class ContentRepositorySupport {
         );
     }
 
-    public Page<Content> findContentByTitle(Long lastContentId, String keyword, PageRequest pageRequest) {
+    public Page<Content> findContentByTitleAndTag(String keyword, String sort, Integer time,  Long lastContentId, Pageable pageable) {
         List<Content> contents = jpaQueryFactory
                 .selectFrom(qContent)
-                .where(containTitle(keyword))
+                .join(qContentTag).on(qContentTag.content.id.eq(qContent.id))
+                .where((containTitle(keyword).or(containTag(keyword))).and(existTime(time)))
                 .offset(lastContentId)
-                .limit(pageRequest.getPageSize() + 1)
-                .orderBy(qContent.hit.desc())
-                .fetch();
-        return new PageImpl<>(contents, pageRequest, contents.size());
+                .limit(pageable.getPageSize() + 1)
+                // .orderBy(qContent.hit.desc())
+                .fetch()
+                .stream()
+                .distinct()
+                .collect(Collectors.toList());
+        return new PageImpl<>(contents, pageable, contents.size());
     }
 
     private BooleanExpression containTitle(String keyword) {
@@ -104,6 +113,21 @@ public class ContentRepositorySupport {
         }
         return qContent.title.containsIgnoreCase(keyword);
     }
+
+    private BooleanExpression containTag(String keyword) {
+        if(keyword == null || keyword.isEmpty()) {
+            return null;
+        }
+        return qContentTag.tag.name.containsIgnoreCase(keyword);
+    }
+
+    private BooleanExpression existTime(Integer time) {
+        if(time == null) {
+            return null;
+        }
+        return qContent.timeCost.eq(time);
+    }
+
 
     public Page<Content> findPopularContentByRandom(Pageable pageable) {
         List<Content> contentList = jpaQueryFactory
@@ -126,14 +150,22 @@ public class ContentRepositorySupport {
         );
     }
 
-    private List<OrderSpecifier> getOrderSpecifiers(Sort sort) {
-        List<OrderSpecifier> orderSpecifiers = new ArrayList<>();
+    public Page<Content> findContentByTitle(Long lastContentId, String title, PageRequest pageRequest) {
+        List<Content> contents = jpaQueryFactory
+            .selectFrom(qContent)
+            .where(containTitle(title),
+                qContent.id.lt(lastContentId))
+            .offset(pageRequest.getOffset())
+            .limit(pageRequest.getPageSize() + 1)
+            .orderBy(qContent.hit.desc())
+            .fetch();
+        return new PageImpl<>(contents, pageRequest, contents.size());
+    }
 
-        sort.stream().forEach(order -> {
-            String prop = order.getProperty();
-            PathBuilder orderByExpression = new PathBuilder(Content.class, "content");
-            orderSpecifiers.add(new OrderSpecifier<>(Order.DESC, orderByExpression.get(prop)));
-        });
-        return orderSpecifiers;
+    private BooleanExpression containTitle(String title) {
+        if(title == null || title.isEmpty()) {
+            return null;
+        }
+        return qContent.title.containsIgnoreCase(title);
     }
 }
