@@ -39,6 +39,5 @@ export const useGetMetaData = async (url: string) => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
   const { image, desc } = scrap(doc, url);
-  console.log(desc);
   return { image, desc };
 };

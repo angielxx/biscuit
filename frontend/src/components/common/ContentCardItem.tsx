@@ -48,9 +48,9 @@ interface recentContent {
   id: number;
   title: string;
   url: string;
-  credit_by: string;
-  created_date: string;
-  time_cost: number;
+  creditBy: string;
+  createdDate: string;
+  timeCost: number;
   type: string;
   isMarked: boolean;
   tags: Array<string>;
@@ -70,6 +70,13 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
   const [thumbImg, setThumbImg] = useState<string | null>('');
   // 요약
   const [desc, setDesc] = useState<string | null>('');
+
+  const stringToDate = (date: string) => {
+    const year = date.slice(0, 4);
+    const month = date.slice(5, 7);
+    const day = date.slice(8, 10);
+    return(`${year}.${month}.${day}`);
+  }
 
   // 북마크 버튼 클릭 시
   const changeMarkHandler = () => {
@@ -131,7 +138,7 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
         <div id="text">
           <p>{recentContent.title}</p>
           <span>
-            {recentContent.credit_by} | {recentContent.created_date}{' '}
+            {recentContent.creditBy} | {stringToDate(recentContent.createdDate)}{' '}
           </span>
         </div>
       </ContentInfo>
