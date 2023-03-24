@@ -32,6 +32,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -74,6 +76,7 @@ public class ContentRepositorySupport {
 
     public Page<Content> findContentByCategory(String category, Pageable pageable) {
         List<OrderSpecifier> ORDERS = getOrderSpecifiers(pageable.getSort());
+
         return new PageImpl<>(
                 jpaQueryFactory
                         .selectFrom(qContent)
@@ -92,18 +95,19 @@ public class ContentRepositorySupport {
         );
     }
 
-    public Page<Content> findContentByTitleAndTag(String keyword, String sort, Integer time,  Long lastContentId, Pageable pageable) {
+    public Page<Content> findContentByTitleAndTag(String keyword, Integer time,  Long lastContentId, Pageable pageable) {
+        List<OrderSpecifier> ORDERS = getOrderSpecifiers(pageable.getSort());
         List<Content> contents = jpaQueryFactory
                 .selectFrom(qContent)
+                .distinct()
                 .join(qContentTag).on(qContentTag.content.id.eq(qContent.id))
                 .where((containTitle(keyword).or(containTag(keyword))).and(existTime(time)))
+                .orderBy(
+                    ORDERS.stream().toArray(OrderSpecifier[]::new)
+                )
                 .offset(lastContentId)
-                .limit(pageable.getPageSize() + 1)
-                // .orderBy(qContent.hit.desc())
-                .fetch()
-                .stream()
-                .distinct()
-                .collect(Collectors.toList());
+                .limit(pageable.getPageSize())
+                .fetch();
         return new PageImpl<>(contents, pageable, contents.size());
     }
 
@@ -150,22 +154,15 @@ public class ContentRepositorySupport {
         );
     }
 
-    public Page<Content> findContentByTitle(Long lastContentId, String title, PageRequest pageRequest) {
-        List<Content> contents = jpaQueryFactory
-            .selectFrom(qContent)
-            .where(containTitle(title),
-                qContent.id.lt(lastContentId))
-            .offset(pageRequest.getOffset())
-            .limit(pageRequest.getPageSize() + 1)
-            .orderBy(qContent.hit.desc())
-            .fetch();
-        return new PageImpl<>(contents, pageRequest, contents.size());
+    private List<OrderSpecifier> getOrderSpecifiers(Sort sort) {
+        List<OrderSpecifier> orderSpecifiers = new ArrayList<>();
+
+        sort.stream().forEach(order -> {
+            String prop = order.getProperty();
+            PathBuilder orderByExpression = new PathBuilder(Content.class, "content");
+            orderSpecifiers.add(new OrderSpecifier<>(Order.DESC, orderByExpression.get(prop)));
+        });
+        return orderSpecifiers;
     }
 
-    private BooleanExpression containTitle(String title) {
-        if(title == null || title.isEmpty()) {
-            return null;
-        }
-        return qContent.title.containsIgnoreCase(title);
-    }
 }
