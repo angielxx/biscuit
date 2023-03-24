@@ -43,16 +43,9 @@ for row in csvReader:
         print("created_date", created_date)
         print("tag", tag)
 
-        # tag_insert_sql = """
-        #         insert into tag (name) values (%s)
-        #             SELECT *
-        #             FROM (SELECT %s) AS tmp
-        #             WHERE NOT EXISTS (
-        #                 SELECT name
-        #                 FROM tag
-        #                 WHERE name = %s
-        #             ) LIMIT 1;
-        #     """
+        tag_insert_sql = """
+                insert ignore into tag (name) values (%s)
+            """
         # content_select_sql = """
         #         select id from content where url = %s
         #     """
@@ -60,18 +53,29 @@ for row in csvReader:
         #         select id from tag where name = %s
         #     """
 
-        # curs.execute(tag_insert_sql, (tag, tag, tag))
+        curs.execute(tag_insert_sql, (tag))
         # curs.execute(content_select_sql, (url))
-        # content_id = curs.fetchall()
-        # print(content_id)
+        # content_id, tag_id = None, None
+        # content_row = curs.fetchone()
+        # print(content_row)
+        # if content_row:
+        #     content_id = content_row[0]
+        #     print("content_id", content_id)
         # curs.execute(tag_select_sql, (tag))
-        # tag_id = curs.fetchall()
-        # print(tag_id)
-
-        # content_tag_sql = """
-        #         insert into content_tag (content_id, tag_id) values ((select id from content where url = %s), (select id from tag where name = %s))
-        #     """
-        # curs.execute(content_tag_sql, (content_id, tag_id))
+        # tag_row = curs.fetchone()
+        # print(tag_row)
+        # if tag_row:
+        #     tag_id = tag_row[0]
+        #     print("tag_id", tag_id)
+        # if content_id and tag_id:
+        content_tag_sql = """
+                insert into content_tag (content_id, tag_id) values ((select id from content where url = %s), (select id from tag where name = %s))
+            """
+        tag_update_sql = (
+            """update biscuit.tag set content_cnt = content_cnt + 1 where name = %s"""
+        )
+        curs.execute(content_tag_sql, (url, tag))
+        curs.execute(tag_update_sql, (tag))
 
     # db의 변화 저장
 
