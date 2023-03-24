@@ -31,19 +31,11 @@ export const requests = {
     return `/api/${contentId}/quizzes`;
   },
 
-  // 홈 인기 컨텐츠 추천 목록 조회
-  GET_POPULAR_CONTENTS() {
-    return `/api/recommands/random/popular`;
-  },
-  
-  // 홈 최신 컨텐츠 추천 목록 조회
-  GET_RECENT_CONTENTS() {
-    return `/api/recommands/random/recent`;
-  },
-
-  // 홈 랜덤 컨텐츠 추천 목록 조회
-  GET_RANDOM_CONTENTS(categoryCount: number) {
-    return `/api/recommands/random/category?categoryCount=${categoryCount}`;
+  // 홈 인기/최신/랜덤 컨텐츠 추천 목록 조회
+  GET_HOME_CONTENTS(classification: string, categoryCount: number) {
+    return categoryCount > 0
+      ? `/api/recommands/random/${classification}?categoryCount=${categoryCount}`
+      : `/api/recommands/random/${classification}`;
   },
   
 };
