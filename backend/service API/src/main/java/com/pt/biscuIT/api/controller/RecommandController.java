@@ -60,12 +60,8 @@ public class RecommandController {
             Page<ContentInfoDto> contentList = recommandService.getRandomContent(option, pageable);
 
             PageMetaData metaData = PageMetaData.builder()
-                    .first(contentList.isFirst())
+                    .lastContentId(contentList.getContent().get(contentList.getContent().size() - 1).getId())
                     .last(contentList.isLast())
-                    .size(contentList.getSize())
-                    .page(contentList.getNumber())
-                    .itemCnt(contentList.getTotalElements())
-                    .totalPageCnt(contentList.getTotalPages())
                     .build();
 
             return ResponseEntity.status(200).body(RandomRecentContentRes.of(

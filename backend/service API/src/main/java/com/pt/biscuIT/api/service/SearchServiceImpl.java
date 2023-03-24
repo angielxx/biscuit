@@ -44,13 +44,9 @@ public class SearchServiceImpl implements SearchService {
 			.build());
 
 		PageMetaData pageMetaData = PageMetaData.builder()
-			.page(contents.getNumber())
-			.size(contents.getSize())
-			.totalPageCnt(contents.getTotalPages())
-			.itemCnt(contents.getTotalElements())
-			.first(contents.isFirst())
-			.last(contents.isLast())
-			.build();
+												.lastContentId(contents.getContent().get(contents.getContent().size() - 1).getId())
+												.last(contents.isLast())
+												.build();
 		SearchContentRes res = SearchContentRes.builder()
 			.metaData(pageMetaData)
 			.results(dtos)

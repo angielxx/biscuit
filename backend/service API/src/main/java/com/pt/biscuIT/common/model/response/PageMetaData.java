@@ -14,16 +14,8 @@ import lombok.Setter;
 @Setter
 @Builder
 public class PageMetaData {
-    // 현재 페이지: Page<Entity>.getPageNumber()
-    int page;
-    // 페이지당 사이즈: Page<Entity>.getPageSize()
-    int size;
-    // 전체 페이지 수: Page<Entity>.getTotalPages()
-    int totalPageCnt;
-    // 현재 dto 개수 : Page<Entity>.getTotalElements()
-    long itemCnt;
-    // 처음 페이지인지 확인 : pageable.isFirst()
-    boolean first;
+    // 마지막 컨텐츠 id
+    Long lastContentId;
     // 마지막 페이지인지 확인 : pageable.isLast()
     boolean last;
 }

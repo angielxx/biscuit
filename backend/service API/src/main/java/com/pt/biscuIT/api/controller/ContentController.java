@@ -29,16 +29,14 @@ public class ContentController {
     ContentRepository contentRepositorySupport;
 
     @GetMapping("/{category}")
-    public ResponseEntity<? extends BaseResponseBody> getRandomRecentContent(@PathVariable String category, Pageable pageable) {
+    public ResponseEntity<? extends BaseResponseBody> getRandomRecentContent(@PathVariable String category, Pageable pageable) throws Exception {
         Page<ContentInfoDto> contentList = contentService.getCategoryContent(category, pageable);
 
         PageMetaData metaData = PageMetaData.builder()
-                                            .first(contentList.isFirst())
                                             .last(contentList.isLast())
-                                            .size(contentList.getSize())
-                                            .page(contentList.getNumber())
-                                            .itemCnt(contentList.getNumberOfElements())
-                                            .totalPageCnt(contentList.getTotalPages())
+                                            .lastContentId(
+                                                            contentList.getContent().get(contentList.getContent().size() - 1).getId()
+                                            )
                                             .build();
 
         RandomRecentContentRes res = RandomRecentContentRes.builder()
