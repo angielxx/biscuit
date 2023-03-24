@@ -6,9 +6,9 @@ const { persistAtom } = recoilPersist();
 const functionToggleState = atom({
   key: "functionToggleState",
   default: {
-    homePageToggle : true,
-    buttonToggle: true,
-    dropDownToggle: true,
+    homePageToggle : false,
+    buttonToggle: false,
+    dropDownToggle: false,
     filterBarToggle: true,
     bannerToggle: true,
     homeContentsToggle: true,

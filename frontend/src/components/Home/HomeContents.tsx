@@ -5,6 +5,7 @@ const HomeContentsContainer = tw.div`
   flex-col w-full h-fit
 `;
 
+
 const HomeContents = ({}: Object) => {
   const unAuthContents = ["popular", "recent"];
   const authContent = ["fit", "favor_category", "bookmarked", "similar_member"];
