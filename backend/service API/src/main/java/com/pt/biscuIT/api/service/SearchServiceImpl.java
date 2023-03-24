@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.pt.biscuIT.api.dto.content.ContentInfoDto;
@@ -25,11 +26,12 @@ public class SearchServiceImpl implements SearchService {
 	private final ContentRepositorySupport contentRepositorySupport;
 
 	@Override
-	public SearchContentRes search(String keyword, Long lastContentId, Pageable pageable) {
+	public SearchContentRes search(String keyword, Integer time,  Long lastContentId, Pageable pageable) {
 		//태그 용 빈배열
 		String[] tags = {};
-		PageRequest pageRequest = PageRequest.of(0, pageable.getPageSize());
-		Page<Content> contents = contentRepositorySupport.findContentByTitle(lastContentId, keyword, pageRequest);
+		Pageable page = PageRequest.of(0, pageable.getPageSize(), pageable.getSort());
+		Page<Content> contents = contentRepositorySupport.findContentByTitleAndTag(keyword, time, lastContentId, page);
+
 		Page<ContentInfoDto> dtos = contents.map(c -> ContentInfoDto.builder()
 			.id(c.getId())
 			.title(c.getTitle())
