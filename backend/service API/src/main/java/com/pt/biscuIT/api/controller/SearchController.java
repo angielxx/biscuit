@@ -24,7 +24,7 @@ public class SearchController {
 	private final SearchService searchService;
 
 	@GetMapping
-	public SearchContentRes search(@RequestParam String keyword, @RequestParam Long lastContentId, Pageable pageable) {
-		return searchService.search(keyword, lastContentId, pageable);
+	public SearchContentRes search(@RequestParam String keyword, @RequestParam(required = false) String sort, @RequestParam(required = false) Integer time, @RequestParam Long lastContentId, Pageable pageable) {
+		return searchService.search(keyword, sort, time, lastContentId, pageable);
 	}
 }
