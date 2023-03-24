@@ -39,9 +39,9 @@ interface RecentContentState {
   id: number;
   title: string;
   url: string;
-  credit_by: string;
-  created_date: string;
-  time_cost: number;
+  creditBy: string;
+  createdDate: string;
+  timeCost: number;
   type: string;
   isMarked: boolean;
   tags: Array<string>;
@@ -66,9 +66,9 @@ const FeedbackModal = ({ onClose }: FeedbackModalProps) => {
     id: 0,
     title: '',
     url: '',
-    credit_by: '',
-    created_date: '',
-    time_cost: 0,
+    creditBy: '',
+    createdDate: '',
+    timeCost: 0,
     type: '',
     isMarked: false,
     tags: [],
@@ -105,9 +105,9 @@ const FeedbackModal = ({ onClose }: FeedbackModalProps) => {
       id: 3,
       title: '이은지의 CS',
       url: 'https://velog.io/@94applekoo/CS-프로세스와-스레드',
-      credit_by: '이은지',
-      created_date: '2023-03-21',
-      time_cost: 0,
+      creditBy: '이은지',
+      createdDate: '2023-03-21',
+      timeCost: 0,
       type: '타입',
       isMarked: false,
       tags: ['Typescript', 'Javascript', 'Redux-saga'],
