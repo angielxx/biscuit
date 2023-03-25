@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +29,8 @@ public class ContentService {
     @Autowired
     ContentRepositorySupport contentRepositorySupport;
 
-    public Page<ContentInfoDto> getCategoryContent(
-            String category,
-            @PageableDefault(size = 30, sort = "createdDate")
-            Pageable pageable) {
-        Page<Content> contentList = contentRepositorySupport.findContentByCategory(category, pageable);
-        if (contentList.getSize() == 0) throw new BiscuitException(ErrorCode.CONTENT_NOT_FOUND);
+    public Page<ContentInfoDto> getCategoryContent (String category, Pageable pageable, Long lastContentId, int time) {
+        Page<Content> contentList = contentRepositorySupport.findContentByCategory(category, pageable, lastContentId, time);
 
         return contentList.map(ContentInfoDto::new);
     }
