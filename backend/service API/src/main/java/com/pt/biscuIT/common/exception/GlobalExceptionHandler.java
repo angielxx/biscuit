@@ -15,8 +15,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity(BaseResponseBody.of(e.getErrorCode().getStatus().value(), e.getErrorCode().getMessage()), HttpStatus.valueOf(e.getErrorCode().getStatus().value()));
     }
 
-    @ExceptionHandler({Exception.class})
-    protected ResponseEntity handleException(Exception e) {
-        return new ResponseEntity(BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @ExceptionHandler({Exception.class})
+//    protected ResponseEntity handleException(Exception e) {
+//        return new ResponseEntity(BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 }
