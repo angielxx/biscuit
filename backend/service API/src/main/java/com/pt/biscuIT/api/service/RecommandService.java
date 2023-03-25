@@ -30,15 +30,12 @@ public class RecommandService {
     @Autowired
     ContentRepositorySupport contentRepositorySupport;
 
-    public Page<ContentInfoDto> getRandomContent(String option, Pageable pageable) {
+    public Page<ContentInfoDto> getRandomContent(Pageable pageable, int time) {
         Page<ContentInfoDto> res = new PageImpl<>(new ArrayList<>(), pageable, 0);
-        if("recent".equals(option)){
-            Page<Content> contentList = contentRepositorySupport.findRecentContentByRandom(pageable);
-            res = contentList.map(ContentInfoDto::new);
-        } else if("popular".equals(option)) {
-            Page<Content> contentList = contentRepositorySupport.findPopularContentByRandom(pageable);
-            res = contentList.map(ContentInfoDto::new);
-        }
+
+        Page<Content> contentList = contentRepositorySupport.findContentByRandom(pageable, time);
+        res = contentList.map(ContentInfoDto::new);
+
         return res;
     }
 
@@ -50,7 +47,7 @@ public class RecommandService {
             ContentInfoListCategoryDto content = new ContentInfoListCategoryDto().builder()
                                                                                  .category(category)
                                                                                  .build();
-            Page<Content> contentList = contentRepositorySupport.findContentByCategory(category, pageable);
+            Page<Content> contentList = contentRepositorySupport.findContentByCategory(category, pageable, 0L, 0);
 
             content.setItems(contentList.map(ContentInfoDto::new).getContent());
 

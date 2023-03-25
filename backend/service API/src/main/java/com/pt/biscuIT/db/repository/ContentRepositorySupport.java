@@ -3,6 +3,7 @@ package com.pt.biscuIT.db.repository;
 import com.pt.biscuIT.db.entity.Content;
 import com.pt.biscuIT.db.entity.QCategory;
 import com.pt.biscuIT.db.entity.QContent;
+import com.pt.biscuIT.db.entity.QContentTag;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -39,6 +40,7 @@ public class ContentRepositorySupport {
 
     QContent qContent = QContent.content;
     QCategory qCategory = QCategory.category;
+    QContentTag qContentTag = QContentTag.contentTag;
 
     /**
      * 최근 등록된 컨텐츠를 랜덤으로 가져온다.
@@ -46,19 +48,6 @@ public class ContentRepositorySupport {
      * @param pageable
      * @return
      */
-    public Page<Content> findRecentContentByRandom(Pageable pageable) {
-        return new PageImpl<>(
-                jpaQueryFactory
-                        .selectFrom(qContent)
-                        .orderBy(qContent.createdDate.desc())
-                        .offset(pageable.getOffset())
-                        .limit(pageable.getPageSize())
-                        .fetch(),
-                pageable,
-                jpaQueryFactory.selectFrom(qContent).fetch().size()
-        );
-    }
-
     public Page<Content> findContentByCategory(String category, Pageable pageable, Long lastContentId, int time) {
         List<OrderSpecifier> ORDERS = getOrderSpecifiers(pageable.getSort());
 
@@ -93,15 +82,20 @@ public class ContentRepositorySupport {
         );
     }
 
-    public Page<Content> findContentByTitle(Long lastContentId, String keyword, PageRequest pageRequest) {
+    public Page<Content> findContentByTitleAndTag(String keyword, Integer time,  Long lastContentId, Pageable pageable) {
+        List<OrderSpecifier> ORDERS = getOrderSpecifiers(pageable.getSort());
         List<Content> contents = jpaQueryFactory
                 .selectFrom(qContent)
-                .where(containTitle(keyword))
+                .distinct()
+                .join(qContentTag).on(qContentTag.content.id.eq(qContent.id))
+                .where((containTitle(keyword).or(cotainTag(keyword))).and(existTime(time)))
+                .orderBy(
+                        ORDERS.stream().toArray(OrderSpecifier[]::new)
+                )
                 .offset(lastContentId)
-                .limit(pageRequest.getPageSize() + 1)
-                .orderBy(qContent.hit.desc())
+                .limit(pageable.getPageSize())
                 .fetch();
-        return new PageImpl<>(contents, pageRequest, contents.size());
+        return new PageImpl<>(contents, pageable, contents.size());
     }
 
     private BooleanExpression containTitle(String keyword) {
@@ -111,20 +105,41 @@ public class ContentRepositorySupport {
         return qContent.title.containsIgnoreCase(keyword);
     }
 
-    public Page<Content> findPopularContentByRandom(Pageable pageable) {
+    private BooleanExpression cotainTag(String keyword) {
+        if(keyword == null || keyword.isEmpty()) {
+            return null;
+        }
+        return qContentTag.tag.name.containsIgnoreCase(keyword);
+    }
+
+    private BooleanExpression existTime(int time) {
+        if(time == 0) {
+            return null;
+        }
+        return qContent.timeCost.lt(time);
+    }
+
+    public Page<Content> findContentByRandom (Pageable pageable, int time) {
+        List<OrderSpecifier> ORDERS = getOrderSpecifiers(pageable.getSort());
+        BooleanBuilder condition = new BooleanBuilder();
+        if(time > 0) condition.and(qContent.timeCost.lt(time));
+
         List<Content> contentList = jpaQueryFactory
                 .selectFrom(qContent)
-                .orderBy(qContent.hit.desc())
+                .where(condition)
+                .orderBy(ORDERS.stream().toArray(OrderSpecifier[]::new))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
-        Collections.shuffle(contentList);
+
+//        Collections.shuffle(contentList);
+
         return new PageImpl<>(
                 contentList,
                 pageable,
                 jpaQueryFactory
                         .selectFrom(qContent)
-                        .orderBy(qContent.hit.desc())
+                        .orderBy(ORDERS.stream().toArray(OrderSpecifier[]::new))
                         .fetch()
                         .size()
         );

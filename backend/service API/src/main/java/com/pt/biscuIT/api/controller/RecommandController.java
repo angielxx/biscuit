@@ -40,40 +40,41 @@ public class RecommandController {
         500: 서버 내부 오류
     */
 
-    @GetMapping("/random/{option}")
+    @GetMapping("/random")
     public ResponseEntity<? extends BaseResponseBody> getRandomRecentContent(
-            @PathVariable String option,
-            Pageable pageable,
+            @PageableDefault(size = 30) Pageable pageable,
+            @RequestParam(required = false, defaultValue = "0") int time
+    ) {
+        Page<ContentInfoDto> contentList = recommandService.getRandomContent(pageable, time);
+
+        PageMetaData metaData = PageMetaData.builder()
+                .lastContentId(contentList.getContent().get(contentList.getContent().size() - 1).getId())
+                .last(contentList.isLast())
+                .build();
+
+        return ResponseEntity.status(200).body(RandomRecentContentRes.of(
+                HttpStatus.OK.value(),
+                "SUCCESS",
+                RandomRecentContentRes.builder()
+                        .metaData(metaData)
+                        .results(contentList.getContent())
+                        .build())
+        );
+    }
+
+    @GetMapping("/random/category")
+    public ResponseEntity<? extends BaseResponseBody> getRandomRecentContent(
+            @PageableDefault(size = 30) Pageable pageable,
             Integer categoryCount
     ) {
-        if("category".equals(option)) {
-            Page<ContentInfoListCategoryDto> contentList = recommandService.getRandomCategoryContent(categoryCount, pageable);
+        Page<ContentInfoListCategoryDto> contentList = recommandService.getRandomCategoryContent(categoryCount, pageable);
 
-            return ResponseEntity.status(200).body(RandomCategoryContentRes.of(
-                    HttpStatus.OK.value(),
-                    "SUCCESS",
-                    RandomCategoryContentRes.builder()
-                                            .results(contentList.getContent())
-                                            .build())
-            );
-        } else if("recent".equals(option) || "popular".equals(option)){
-            Page<ContentInfoDto> contentList = recommandService.getRandomContent(option, pageable);
-
-            PageMetaData metaData = PageMetaData.builder()
-                    .lastContentId(contentList.getContent().get(contentList.getContent().size() - 1).getId())
-                    .last(contentList.isLast())
-                    .build();
-
-            return ResponseEntity.status(200).body(RandomRecentContentRes.of(
-                    HttpStatus.OK.value(),
-                    "SUCCESS",
-                    RandomRecentContentRes.builder()
-                            .metaData(metaData)
-                            .results(contentList.getContent())
-                            .build())
-            );
-        }
-
-        return ResponseEntity.status(400).body(BaseResponseBody.of(HttpStatus.BAD_REQUEST.value(), "BAD_REQUEST"));
+        return ResponseEntity.status(200).body(RandomCategoryContentRes.of(
+                HttpStatus.OK.value(),
+                "SUCCESS",
+                RandomCategoryContentRes.builder()
+                        .results(contentList.getContent())
+                        .build()
+        ));
     }
 }
