@@ -20,8 +20,7 @@ const ModalContainer = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     max-height: 90vh;
-    min-height: 90vh;
-    max-width: 85vw;
+    max-width: 90vw;
   `}
 `;
 
@@ -30,7 +29,6 @@ const ModalContentContainer = styled.div`
   ${css`
     height: calc(100% - 72px);
     max-height: calc(90vh - 72px);
-    min-height: calc(90vh - 72px);
   `}
 `;
 

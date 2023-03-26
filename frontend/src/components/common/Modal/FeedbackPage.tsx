@@ -14,8 +14,9 @@ const FeedbackBtns = styled.div`
   ${tw`flex justify-center items-start p-6 gap-4 h-fit w-full`}
 `;
 
-const FeedbackBtn = styled.button`
+const FeedbackBtn = styled.button<{ status: string }>`
   ${tw`bg-dark-grey30 hover:bg-dark-primary-var rounded-full aspect-h-1 aspect-w-1 min-w-[40px] max-w-[60px] p-2`}
+  ${({ status }) => FeedbackBtnStyles[status]}
   & {
     img {
       ${tw`aspect-h-1 aspect-w-1 p-0`}
@@ -23,17 +24,23 @@ const FeedbackBtn = styled.button`
   }
 `;
 
-const FeedbackBtnStyles = {
-  default: tw`bg-dark-grey30`,
+type FeedbackBtnStylesType = {
+  [index: string]: TwStyle;
+  default: TwStyle;
+  clicked: TwStyle;
+};
+const FeedbackBtnStyles: FeedbackBtnStylesType = {
+  default: tw`bg-dark-grey30 hover:bg-dark-primary-var`,
+  clicked: tw`bg-dark-primary hover:bg-dark-primary-var`,
 };
 
 interface FeedbackPageProps {
-  onSubmit: () => void;
+  onSubmit: (feedback: number | null) => void;
 }
 
 const FeedbackPage = ({ onSubmit }: FeedbackPageProps) => {
   // 선택된 피드백 번호
-  const [feedback, setFeedback] = useState(0);
+  const [feedback, setFeedback] = useState<number | null>(null);
 
   return (
     <>
@@ -47,7 +54,15 @@ const FeedbackPage = ({ onSubmit }: FeedbackPageProps) => {
 
           return (
             <div className="flex flex-col items-center gap-2">
-              <FeedbackBtn>
+              <FeedbackBtn
+                status={feedback === index ? 'clicked' : 'default'}
+                onClick={() =>
+                  setFeedback((prev) => {
+                    if (prev === index) return null;
+                    else return index;
+                  })
+                }
+              >
                 <img src={emoji[index]} alt="너무 쉬워요 이모티콘" />
               </FeedbackBtn>
               <p>{text}</p>
@@ -64,7 +79,11 @@ const FeedbackPage = ({ onSubmit }: FeedbackPageProps) => {
           <img src={grinning_face} alt="어려워요 이모티콘" />
         </FeedbackBtn> */}
       </FeedbackBtns>
-      <Button title="퀴즈 풀래요" status="active" onClick={onSubmit} />
+      <Button
+        title="퀴즈 풀래요"
+        status="active"
+        onClick={() => onSubmit(feedback)}
+      />
     </>
   );
 };

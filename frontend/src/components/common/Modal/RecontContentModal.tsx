@@ -88,8 +88,9 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   }
 
   // 피드백 제출
-  const feedbackSubmitHandler = () => {
+  const feedbackSubmitHandler = (feedback: number | null) => {
     // API POST 요청 : 피드백 저장
+    onClose();
   };
 
   // 퀴즈 제출

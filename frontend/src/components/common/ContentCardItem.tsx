@@ -19,7 +19,7 @@ const Tag = styled.div`
 `;
 
 const Thumbnail = styled.div<{ image: string | null }>`
-  ${tw`w-full aspect-w-16 aspect-h-9 bg-cover bg-center rounded-10 relative cursor-pointer`}
+  ${tw`aspect-w-16 aspect-h-9 bg-center rounded-10 relative cursor-pointer`}
   ${({ image }) =>
     image
       ? css`
@@ -28,6 +28,15 @@ const Thumbnail = styled.div<{ image: string | null }>`
       : css`
           background-image: url('src/assets/image/default_thumbnail_image.png');
         `}
+  ${css`
+    background-size: 102%;
+    transition: background-size 0.2s ease;
+    -moz-transition: background-size 0.2s ease;
+    -web-kit-transition: background-size 0.2s ease;
+  `}
+  &:hover {
+    background-size: 110%;
+  }
 `;
 
 const MarkBtnArea = styled.div<{ hidden: boolean }>`
@@ -103,14 +112,6 @@ const ContentCardItem = ({ content }: contentCardItemProps) => {
     });
   };
 
-  useEffect(() => {
-    useGetMetaData(content.url).then((data) => {
-      // setThumbImg(data.image);
-      // setDesc(data.desc);
-    });
-    console.log('useeffect: ', content);
-  }, [content]);
-
   // 썸네일 가져오는 함수
   const getMetaData = async (url: string) => {
     const { image } = await useGetMetaData(url);
@@ -149,24 +150,18 @@ const ContentCardItem = ({ content }: contentCardItemProps) => {
             </Tag>
           ))}
       </div>
-      <div className="relative">
-        <button
-          onClick={() => clickContentHandler(content.url)}
-          className="w-full"
-        >
-          <Thumbnail
-            image={thumbImg ? thumbImg : ''}
-            onMouseEnter={() => setHideMark(false)}
-            onMouseLeave={() => setHideMark(true)}
-          />
-        </button>
-        <MarkBtnArea
-          hidden={hideMark ? true : false}
+
+      <button
+        onClick={() => clickContentHandler(content.url)}
+        className="w-full"
+      >
+        <Thumbnail
+          image={thumbImg ? thumbImg : ''}
           onMouseEnter={() => setHideMark(false)}
           onMouseLeave={() => setHideMark(true)}
-          onClick={changeMarkHandler}
-        ></MarkBtnArea>
-      </div>
+        />
+      </button>
+
       <ContentInfo image="">
         <div id="channel"></div>
         <TextInfo id="text">
