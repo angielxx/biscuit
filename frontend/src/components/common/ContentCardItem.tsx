@@ -1,12 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import defaultImg from '../../assets/image/default_thumbnail_img.png';
-import { startTimeState, isStartState, isModalOpenState } from "../../recoils/Contents/Atoms";
+import {
+  startTimeState,
+  isStartState,
+  isModalOpenState,
+  recentContentState,
+} from '../../recoils/Contents/Atoms';
 
 // twin macro
 import tw, { styled, css, TwStyle } from 'twin.macro';
 import { useGetMetaData } from '../../hooks/useGetMetaData';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 // Styled component
 const Tag = styled.div`
@@ -18,10 +23,10 @@ const Thumbnail = styled.div<{ image: string | null }>`
   ${({ image }) =>
     image
       ? css`
-          background-image: url("${image}");
+          background-image: url('${image}');
         `
       : css`
-          background-image: url("src/assets/image/default_thumbnail_image.png");
+          background-image: url('src/assets/image/default_thumbnail_image.png');
         `}
 `;
 
@@ -52,7 +57,7 @@ const ContentInfo = styled.div<{ image: string }>`
 `;
 
 // Main component
-interface recentContent {
+interface content {
   id: number;
   title: string;
   url: string;
@@ -62,20 +67,17 @@ interface recentContent {
   type: string;
   isMarked: boolean;
   tags: Array<string>;
-  // channelImg: string;
 }
 
 interface contentCardItemProps {
-  recentContent: recentContent;
+  content: content;
 }
 
-const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
+const ContentCardItem = ({ content }: contentCardItemProps) => {
   // 북마크 저장 여부
-  const [isMarked, setIsMarked] = useState<boolean>(recentContent.isMarked);
+  const [isMarked, setIsMarked] = useState<boolean>(content.isMarked);
   // 북마크 버튼 숨김
   const [hideMark, setHideMark] = useState<boolean>(true);
-  // 썸네일 이미지
-  // const [thumbImg, setThumbImg] = useState<string | null>('');
   // 요약
   const [desc, setDesc] = useState<string | null>('');
 
@@ -94,11 +96,11 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
     });
   };
   useEffect(() => {
-    useGetMetaData(recentContent.url).then((data) => {
+    useGetMetaData(content.url).then((data) => {
       // setThumbImg(data.image);
       // setDesc(data.desc);
     });
-  }, [recentContent]);
+  }, [content]);
 
   // 썸네일 가져오는 함수
   const getMetaData = async (url: string) => {
@@ -107,34 +109,41 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
   };
 
   const { data: thumbImg } = useQuery({
-    queryKey: ['thumbnail', recentContent.id],
-    queryFn: () => getMetaData(recentContent.url),
-    staleTime: 1000 * 60 * 30
+    queryKey: ['thumbnail', content.id],
+    queryFn: () => getMetaData(content.url),
+    staleTime: 1000 * 60 * 30,
   });
-
 
   const setStartTime = useSetRecoilState(startTimeState);
   const setIsStart = useSetRecoilState(isStartState);
-  const setIsModalOpen = useSetRecoilState(isModalOpenState);
-  const openContents = (url: string) => {
-    window.open(url, "_blank", "noopener, noreferrer")
+  const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState);
+  const setcontent = useSetRecoilState(recentContentState);
+
+  const clickContentHandler = (url: string) => {
+    window.open(url, '_blank', 'noopener, noreferrer');
     setStartTime(Date.now());
     setIsStart(true);
-    setIsModalOpen(true);
-  }
+    if (!isModalOpen) {
+      setIsModalOpen(true);
+      setcontent(content);
+    }
+  };
 
   return (
     <div id="content-area" className="flex flex-col gap-4 text-white w-full">
       <div className="flex gap-2">
-        {recentContent.tags &&
-          recentContent.tags.map((tag, index) => (
+        {content.tags &&
+          content.tags.map((tag, index) => (
             <Tag key={index}>
               <span>{tag}</span>
             </Tag>
           ))}
       </div>
       <div className="relative">
-        <button onClick={() => openContents(recentContent.url)} className="w-full">
+        <button
+          onClick={() => clickContentHandler(content.url)}
+          className="w-full"
+        >
           <Thumbnail
             image={thumbImg ? thumbImg : ''}
             onMouseEnter={() => setHideMark(false)}
@@ -167,9 +176,9 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
       <ContentInfo image="">
         <div id="channel"></div>
         <div id="text">
-          <p>{recentContent.title}</p>
+          <p>{content.title}</p>
           <span>
-            {recentContent.creditBy} | {stringToDate(recentContent.createdDate)}{' '}
+            {content.creditBy} | {stringToDate(content.createdDate)}{' '}
           </span>
         </div>
       </ContentInfo>
