@@ -6,7 +6,7 @@ import Category from './pages/Category';
 
 import { useRecoilState } from 'recoil';
 import { isModalOpenState } from './recoils/Contents/Atoms';
-import FeedbackModal from './components/common/Modal/FeedbackModal';
+import RecentContentModal from './components/common/Modal/RecontContentModal';
 import Modal from './components/common/Modal/Modal';
 
 export default function Routers() {
@@ -17,7 +17,7 @@ export default function Routers() {
       {isModalOpen ? (
         <Modal
           onClose={() => setIsModalOpen(false)}
-          content={<FeedbackModal onClose={() => setIsModalOpen(false)} />}
+          content={<RecentContentModal onClose={() => setIsModalOpen(false)} />}
         />
       ) : null}
       <Routes>
