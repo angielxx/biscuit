@@ -14,7 +14,7 @@ import { JsxElement } from 'typescript';
 
 // Styled component
 const ModalContainer = styled.div`
-  ${tw`fixed z-50 bg-dark-evaluated p-6 text-white rounded-20`}
+  ${tw`fixed z-50 bg-dark-evaluated p-6 text-white rounded-20 pt-5`}
   ${css`
     top: 50%;
     left: 50%;

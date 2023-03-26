@@ -141,7 +141,10 @@ const ContentCardItem = ({ content }: contentCardItemProps) => {
   };
 
   return (
-    <div id="content-area" className="flex flex-col gap-4 text-white w-full">
+    <div
+      id="content-area"
+      className="flex flex-col gap-4 text-white w-full min-w-[240px]"
+    >
       <div className="flex gap-2">
         {content.tags &&
           content.tags.map((tag, index) => (
@@ -165,7 +168,9 @@ const ContentCardItem = ({ content }: contentCardItemProps) => {
       <ContentInfo image="">
         <div id="channel"></div>
         <TextInfo id="text">
-          <p>{content.title}</p>
+          <p className="leading-5 max-h-[40px] overflow-hidden">
+            {content.title}
+          </p>
           <span>
             {content.creditBy} | {stringToDate(content.createdDate)}{' '}
           </span>

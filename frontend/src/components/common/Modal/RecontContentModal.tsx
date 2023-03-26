@@ -31,6 +31,13 @@ const Container = styled.div`
   }
 `;
 
+const DivideLine = styled.hr`
+  ${tw`bg-dark-grey20 h-[1px]`}
+  ${css`
+    border: 0;
+  `}
+`;
+
 // interface
 interface FeedbackModalProps {
   onClose: () => void;
@@ -100,9 +107,9 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
 
   return (
     <div className="flex flex-col gap-4 w-full">
-      <h4 className="text-h3 text-primary">방금 본 컨텐츠</h4>
+      <h3 className="text-h3 text-primary">방금 본 컨텐츠</h3>
       {recentContent && <ContentCardItem content={recentContent} />}
-      <hr className="bg-dark-grey-20" />
+      <DivideLine />
 
       <Container>
         {/* 피드백 */}

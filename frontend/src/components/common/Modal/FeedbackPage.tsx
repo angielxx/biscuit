@@ -65,19 +65,10 @@ const FeedbackPage = ({ onSubmit }: FeedbackPageProps) => {
               >
                 <img src={emoji[index]} alt="너무 쉬워요 이모티콘" />
               </FeedbackBtn>
-              <p>{text}</p>
+              <span className="text-dark-grey80 text-tiny">{text}</span>
             </div>
           );
         })}
-        {/* <div>
-          <FeedbackBtn>
-            <img src={smiling_face} alt="적당해요 이모티콘" />
-          </FeedbackBtn>
-          <p>적당해요</p>
-        </div>
-        <FeedbackBtn>
-          <img src={grinning_face} alt="어려워요 이모티콘" />
-        </FeedbackBtn> */}
       </FeedbackBtns>
       <Button
         title="퀴즈 풀래요"
