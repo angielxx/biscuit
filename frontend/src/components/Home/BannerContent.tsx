@@ -6,7 +6,7 @@ type BannerProps = {
 }
 
 const BannerContainer = styled.img<{image: string}>`
-  ${tw`w-[400px] h-[200px] flex`}
+  ${tw`w-full h-[200px] flex`}
   ${({ image }) =>
     css`
       background-size: cover;
@@ -18,7 +18,7 @@ const BannerContainer = styled.img<{image: string}>`
 const BannerContent = ({bannerUrl, imgUrl}: BannerProps) => {
 
   const onClickBanner = () => {
-    window.open(bannerUrl, "_blank")
+    window.open(bannerUrl, "_blank", "noopener, noreferrer")
   }
 
   return (

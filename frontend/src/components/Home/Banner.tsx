@@ -11,7 +11,7 @@ type BannerObj = {
 }
 
 const BannerContainer = tw.div`
-  bg-white w-[400px] h-[200px]
+  bg-white w-full h-[200px]
 `
 
 const Banner = () => {

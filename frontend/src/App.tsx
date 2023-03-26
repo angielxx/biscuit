@@ -1,5 +1,5 @@
 import { BrowserRouter } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
+import { RecoilRoot, useRecoilState } from 'recoil';
 import Routers from './Routers';
 import Navbar from './components/common/Navbar';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
