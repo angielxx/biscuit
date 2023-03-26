@@ -134,7 +134,7 @@ const ContentCardItem = ({ recentContent }: contentCardItemProps) => {
           ))}
       </div>
       <div className="relative">
-        <button onClick={() => openContents(recentContent.url)}>
+        <button onClick={() => openContents(recentContent.url)} className="w-full">
           <Thumbnail
             image={thumbImg ? thumbImg : ''}
             onMouseEnter={() => setHideMark(false)}
