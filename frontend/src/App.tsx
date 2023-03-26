@@ -14,7 +14,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <RecoilRoot>
           <BrowserRouter>
-            {/* <Navbar /> */}
+            <Navbar />
             <div className="mt-20">
               <Routers />
             </div>
