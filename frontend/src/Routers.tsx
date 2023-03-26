@@ -7,21 +7,25 @@ import Category from './pages/Category';
 import { useRecoilState } from 'recoil';
 import { isModalOpenState } from './recoils/Contents/Atoms';
 import FeedbackModal from './components/common/Modal/FeedbackModal';
+import Modal from './components/common/Modal/Modal';
 
 export default function Routers() {
   const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState);
 
   return (
     <div>
-    {isModalOpen
-      ? <FeedbackModal onClose={() => setIsModalOpen(false)}/>
-      : null}
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/search" element={<Search />} />
-      <Route path="/category/:name" element={<Category />} />
-      <Route path="admin" element={<Admin />} />
-    </Routes>
+      {isModalOpen ? (
+        <Modal
+          onClose={() => setIsModalOpen(false)}
+          content={<FeedbackModal onClose={() => setIsModalOpen(false)} />}
+        />
+      ) : null}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/category/:name" element={<Category />} />
+        <Route path="admin" element={<Admin />} />
+      </Routes>
     </div>
   );
 }

@@ -75,6 +75,7 @@ interface content {
   type: string;
   isMarked: boolean;
   tags: Array<string>;
+  hit: number;
 }
 
 interface randomContent {

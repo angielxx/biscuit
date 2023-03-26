@@ -21,9 +21,32 @@ const isModalOpenState = atom({
   default: false,
 });
 
-const recentContentState = atom({
+interface content {
+  id: number;
+  title: string;
+  url: string;
+  creditBy: string;
+  createdDate: string;
+  timeCost: number;
+  type: string;
+  marked: boolean;
+  tags: Array<string> | null;
+  hit: number;
+}
+const recentContentState = atom<content>({
   key: 'recentContentState',
-  default: {},
+  default: {
+    id: 0,
+    title: '',
+    url: '',
+    creditBy: '',
+    createdDate: '',
+    timeCost: 0,
+    type: '',
+    marked: false,
+    tags: [],
+    hit: 0,
+  },
 });
 
 export {

@@ -9,8 +9,9 @@ interface content {
   createdDate: string;
   timeCost: number;
   type: string;
-  isMarked: boolean;
-  tags: Array<string>;
+  marked: boolean;
+  tags: Array<string> | null;
+  hit: number;
 }
 
 interface randomContent {
@@ -18,11 +19,14 @@ interface randomContent {
   items: content[];
 }
 
-const get_home_contents = async (classification: string, categoryCount: number): Promise<content[] | randomContent[] | undefined> => {
+const get_home_contents = async (
+  classification: string,
+  categoryCount: number
+): Promise<content[] | randomContent[] | undefined> => {
   const response = await baseInstance.get(
     requests.GET_HOME_CONTENTS(classification, categoryCount)
   );
   return response.data.results;
-}
+};
 
 export { get_home_contents };

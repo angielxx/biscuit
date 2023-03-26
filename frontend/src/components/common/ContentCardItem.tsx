@@ -36,11 +36,11 @@ const MarkBtnArea = styled.div<{ hidden: boolean }>`
 `;
 
 const BookmarkSvg = styled.svg`
-  ${tw`fill-primary absolute right-6 top-0 h-10`}
+  ${tw`fill-primary h-8 cursor-pointer`}
 `;
 
 const ContentInfo = styled.div<{ image: string }>`
-  ${tw`flex gap-2`}
+  ${tw`flex gap-2 relative`}
   p {
     ${tw`text-main`}
   }
@@ -56,6 +56,12 @@ const ContentInfo = styled.div<{ image: string }>`
   }
 `;
 
+const TextInfo = styled.div`
+  ${css`
+    width: calc(100% - 80px);
+  `}
+`;
+
 // Main component
 interface content {
   id: number;
@@ -65,8 +71,9 @@ interface content {
   createdDate: string;
   timeCost: number;
   type: string;
-  isMarked: boolean;
-  tags: Array<string>;
+  marked: boolean;
+  tags: Array<string> | null;
+  hit: number;
 }
 
 interface contentCardItemProps {
@@ -75,7 +82,7 @@ interface contentCardItemProps {
 
 const ContentCardItem = ({ content }: contentCardItemProps) => {
   // 북마크 저장 여부
-  const [isMarked, setIsMarked] = useState<boolean>(content.isMarked);
+  const [isMarked, setIsMarked] = useState<boolean>(content.marked);
   // 북마크 버튼 숨김
   const [hideMark, setHideMark] = useState<boolean>(true);
   // 요약
@@ -95,11 +102,13 @@ const ContentCardItem = ({ content }: contentCardItemProps) => {
       return !prev;
     });
   };
+
   useEffect(() => {
     useGetMetaData(content.url).then((data) => {
       // setThumbImg(data.image);
       // setDesc(data.desc);
     });
+    console.log('useeffect: ', content);
   }, [content]);
 
   // 썸네일 가져오는 함수
@@ -126,6 +135,7 @@ const ContentCardItem = ({ content }: contentCardItemProps) => {
     if (!isModalOpen) {
       setIsModalOpen(true);
       setcontent(content);
+      // console.log('content :', content);
     }
   };
 
@@ -155,7 +165,17 @@ const ContentCardItem = ({ content }: contentCardItemProps) => {
           onMouseEnter={() => setHideMark(false)}
           onMouseLeave={() => setHideMark(true)}
           onClick={changeMarkHandler}
-        >
+        ></MarkBtnArea>
+      </div>
+      <ContentInfo image="">
+        <div id="channel"></div>
+        <TextInfo id="text">
+          <p>{content.title}</p>
+          <span>
+            {content.creditBy} | {stringToDate(content.createdDate)}{' '}
+          </span>
+        </TextInfo>
+        <div onClick={changeMarkHandler} className="absolute right-0">
           {isMarked ? (
             <BookmarkSvg
               xmlns="http://www.w3.org/2000/svg"
@@ -171,15 +191,6 @@ const ContentCardItem = ({ content }: contentCardItemProps) => {
               <path d="M0 48C0 21.5 21.5 0 48 0l0 48V441.4l130.1-92.9c8.3-6 19.6-6 27.9 0L336 441.4V48H48V0H336c26.5 0 48 21.5 48 48V488c0 9-5 17.2-13 21.3s-17.6 3.4-24.9-1.8L192 397.5 37.9 507.5c-7.3 5.2-16.9 5.9-24.9 1.8S0 497 0 488V48z" />
             </BookmarkSvg>
           )}
-        </MarkBtnArea>
-      </div>
-      <ContentInfo image="">
-        <div id="channel"></div>
-        <div id="text">
-          <p>{content.title}</p>
-          <span>
-            {content.creditBy} | {stringToDate(content.createdDate)}{' '}
-          </span>
         </div>
       </ContentInfo>
     </div>

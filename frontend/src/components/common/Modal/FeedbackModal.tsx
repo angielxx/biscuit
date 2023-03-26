@@ -12,6 +12,8 @@ import tw, { styled, css, TwStyle } from 'twin.macro';
 import Close from '../../../assets/icons/close.svg';
 import ContentCardItem from '../ContentCardItem';
 import QuizItem from './QuizItem';
+import { useRecoilState } from 'recoil';
+import { recentContentState } from '../../../recoils/Contents/Atoms';
 
 // Styled component
 const Container = styled.div`
@@ -35,7 +37,7 @@ interface FeedbackModalProps {
   onClose: () => void;
 }
 
-interface RecentContentState {
+interface content {
   id: number;
   title: string;
   url: string;
@@ -43,8 +45,9 @@ interface RecentContentState {
   createdDate: string;
   timeCost: number;
   type: string;
-  isMarked: boolean;
-  tags: Array<string>;
+  marked: boolean;
+  tags: Array<string> | null;
+  hit: number;
 }
 
 interface Quiz {
@@ -53,7 +56,6 @@ interface Quiz {
   multiple_choice: Array<string>;
   answer: number;
 }
-// type QuizesState = Array<Quiz>;
 
 // Main component
 const FeedbackModal = ({ onClose }: FeedbackModalProps) => {
@@ -62,19 +64,8 @@ const FeedbackModal = ({ onClose }: FeedbackModalProps) => {
   // 페이지 (0:피드백, 1:퀴즈, 2:결과)
   const [page, setPage] = useState(1);
   // 방금 본 컨텐츠
-  const [recentContent, setRecentContent] = useState<RecentContentState>({
-    id: 0,
-    title: '',
-    url: '',
-    creditBy: '',
-    createdDate: '',
-    timeCost: 0,
-    type: '',
-    isMarked: false,
-    tags: [],
-  });
-  // // 컨텐츠에 대한 퀴즈
-  // const [quizes, setQuizes] = useState<QuizesState>();
+  const [recentContent, setRecentContent] = useRecoilState(recentContentState);
+
   // 3가지 퀴즈 각각 저장
   const [firstQuiz, setFirstQuiz] = useState<Quiz>({
     quizId: 0,
@@ -94,25 +85,13 @@ const FeedbackModal = ({ onClose }: FeedbackModalProps) => {
     multiple_choice: [],
     answer: 0,
   });
+
   // 선택한 퀴즈 정답
   const [firstAnswer, setFirstAnswer] = useState<null | number>(null);
   const [secondAnswer, setSecondAnswer] = useState<null | number>(null);
   const [thirdAnswer, setThirdAnswer] = useState<null | number>(null);
 
   useEffect(() => {
-    // API get 요청 : 컨텐츠 조회
-    setRecentContent({
-      id: 3,
-      title: '이은지의 CS',
-      url: 'https://velog.io/@94applekoo/CS-프로세스와-스레드',
-      creditBy: '이은지',
-      createdDate: '2023-03-21',
-      timeCost: 0,
-      type: '타입',
-      isMarked: false,
-      tags: ['Typescript', 'Javascript', 'Redux-saga'],
-    });
-
     // API get 요청 : 퀴즈 제공
     setFirstQuiz({
       quizId: 0,
@@ -132,7 +111,7 @@ const FeedbackModal = ({ onClose }: FeedbackModalProps) => {
       multiple_choice: ['보기0', '보기1', '보기2'],
       answer: 0,
     });
-  }, []);
+  }, [recentContent]);
 
   let title;
   let discription;
@@ -175,7 +154,7 @@ const FeedbackModal = ({ onClose }: FeedbackModalProps) => {
         <img src={Close} alt="" />
       </div>
       <h3 className="text-h3">방금 본 컨텐츠</h3>
-      {recentContent && <ContentCardItem recentContent={recentContent} />}
+      {recentContent && <ContentCardItem content={recentContent} />}
       <hr className="bg-dark-grey-20" />
 
       <Container id="feedback">
