@@ -8,6 +8,7 @@ import { useRecoilState } from 'recoil';
 import { isModalOpenState } from './recoils/Contents/Atoms';
 import RecentContentModal from './components/common/Modal/RecontContentModal';
 import Modal from './components/common/Modal/Modal';
+import OnBoarding from './pages/OnBoarding';
 
 export default function Routers() {
   const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState);
@@ -25,6 +26,7 @@ export default function Routers() {
         <Route path="/search" element={<Search />} />
         <Route path="/category/:name" element={<Category />} />
         <Route path="admin" element={<Admin />} />
+        <Route path="/onboarding" element={<OnBoarding />} />
       </Routes>
     </div>
   );

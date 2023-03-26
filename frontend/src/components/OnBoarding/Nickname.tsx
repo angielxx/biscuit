@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import Button from "../common/Button";
 import TextInput from "./TextInput";
 
@@ -14,8 +16,24 @@ const NicknameBox = styled.div`
 `;
 
 const Nickname = () => {
+  const [isCheck, setIsCheck] = useState<boolean>(false);
   const isClicked = () => {
     console.log("설정 완료");
+    // DB에 중복되는 닉네임이 있으면 setIsCheck(false);
+
+    // DB에 중복되는 닉네임이 없으면 setIsCheck(true);
+    // 상태 저장하고 AboutUser 컴포넌트로 이동
+  }
+
+  const [isName, setIsName] = useState<string>("");
+  const [isCount, setIsCount] = useState<number>(0);
+
+  const isChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      currentTarget: { value },
+    } = e;
+    setIsName(value);
+    setIsCount(e.target.value.replace(/<br\s*\/?>/gm, "\n").length);
   }
 
   return (
@@ -27,10 +45,10 @@ const Nickname = () => {
       <hr className="my-4 border-[1px] border-dark-grey20" />
       <NicknameBox>
         <span className="text-h3 text-white">닉네임을 설정해주세요.</span>
-        <TextInput status="primary" />
+        <TextInput status={isName === "" ? "primary" : isCheck ? "success" : "error"} onChange={isChange} isCount={isCount} />
       </NicknameBox>
       <div className="flex justify-center px-2 gap-2">
-        <Button title="설정 완료" status="active" onClick={isClicked} />   
+        <Button title="설정 완료" status={isName !== "" ? "active" : "disabled"} onClick={isClicked} />   
       </div>
     </>
   );
