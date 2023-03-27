@@ -13,7 +13,7 @@ import Close from '../../../assets/icons/close.svg';
 import ContentCardItem from '../ContentCardItem';
 import QuizItem from './QuizItem';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { endTimeState, recentContentState, startTimeState } from '../../../recoils/Contents/Atoms';
+import { getTimeSelector, recentContentState, startTimeState } from '../../../recoils/Contents/Atoms';
 import QuizResultPage from './QuizResultPage';
 import QuizPage from './QuizPage';
 import FeedbackPage from './FeedbackPage';
@@ -95,12 +95,10 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   }
 
   const startTime = useRecoilValue(startTimeState);
-  const [endTime, setEndTime] = useRecoilState(endTimeState);
+  const time = useRecoilValue(getTimeSelector);
   // 피드백 제출
   const feedbackSubmitHandler = (feedback: number | null) => {
     // API POST 요청 : 피드백 저장
-    if(endTime === "") setEndTime(Date.now().toString());
-    console.log(Number(endTime)-Number(startTime));
     onClose();
   };
 

@@ -127,17 +127,14 @@ const ContentCardItem = ({ content }: contentCardItemProps) => {
 
   const startTime = useRecoilValue(startTimeState);
   const setStartTime = useSetRecoilState(startTimeState);
-  const setEndTime = useSetRecoilState(endTimeState);
   const setIsStart = useSetRecoilState(isStartState);
   const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState);
   const setContent = useSetRecoilState(recentContentState);
 
   const clickContentHandler = (url: string) => {
     window.open(url, '_blank', 'noopener, noreferrer');
-    setStartTime(Date.now().toString());
-    setEndTime("");
-
-    console.log(startTime);
+    setStartTime(Number(Date.now().toString()));
+    // console.log(Date.now().toString());
     setIsStart(true);
     if (!isModalOpen) {
       setIsModalOpen(true);
