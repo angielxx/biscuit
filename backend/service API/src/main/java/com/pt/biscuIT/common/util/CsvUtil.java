@@ -44,8 +44,6 @@ public class CsvUtil {
             bw = new BufferedWriter(new FileWriter(path, true));
             bw.write(writeCsv(data));
             bw.newLine();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -59,4 +57,6 @@ public class CsvUtil {
             }
         }
     }
+
+
 }
