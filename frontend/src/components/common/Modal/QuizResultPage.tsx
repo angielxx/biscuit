@@ -1,6 +1,8 @@
 import React from 'react';
 
-const QuizResultPage = (props) => {
+interface QuizResultPageProps {}
+
+const QuizResultPage = (props: QuizResultPageProps) => {
   return <div></div>;
 };
 

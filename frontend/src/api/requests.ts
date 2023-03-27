@@ -11,7 +11,7 @@ export const requests = {
   ) {
     // return `/api/contents/${categoryName}?size=${size}&lastContentId=${lastContentId}&sort=${sort}&time=${time}`;
     return (
-      `/api/contents/${categoryName}?size=${size}&lastContentId=${lastContentId}` +
+      `/api/categories/${categoryName}/contents?size=${size}&lastContentId=${lastContentId}` +
       `${sort ? `&sort=${sort}` : ''}` +
       `${time ? `&time=${time}` : ''}`
     );
@@ -57,5 +57,4 @@ export const requests = {
       ? `/api/recommands/random/${classification}?categoryCount=${categoryCount}`
       : `/api/recommands/random/${classification}`;
   },
-  
 };
