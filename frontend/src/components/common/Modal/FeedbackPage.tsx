@@ -9,6 +9,8 @@ import grinning_face from '../../../assets/image/grinning-face.png';
 import tw, { styled, css, TwStyle } from 'twin.macro';
 import Button from '../Button';
 import FeedBackButton from './FeedBackButton';
+import { useSetRecoilState, useRecoilState, useRecoilValue } from 'recoil';
+import { endTimeState, isStartState } from '../../../recoils/Contents/Atoms';
 
 const FeedbackBtns = styled.div`
   ${tw`flex justify-center items-start p-6 gap-4 h-fit w-full`}
@@ -41,6 +43,16 @@ interface FeedbackPageProps {
 const FeedbackPage = ({ onSubmit }: FeedbackPageProps) => {
   // 선택된 피드백 번호
   const [feedback, setFeedback] = useState<number | null>(null);
+  const setEndTime = useSetRecoilState(endTimeState);
+  const endTime = useRecoilValue(endTimeState);
+  const [isStart, setIsStart] = useRecoilState(isStartState);
+
+  const endTimeHandler = () => {
+    if(isStart === true) {
+      setIsStart(false);
+      setEndTime(Date.now().toString());
+    }
+  }
 
   return (
     <>
@@ -56,11 +68,13 @@ const FeedbackPage = ({ onSubmit }: FeedbackPageProps) => {
             <div className="flex flex-col items-center gap-2">
               <FeedbackBtn
                 status={feedback === index ? 'clicked' : 'default'}
-                onClick={() =>
-                  setFeedback((prev) => {
-                    if (prev === index) return null;
-                    else return index;
-                  })
+                onClick={() => {
+                    setFeedback((prev) => {
+                      if (prev === index) return null;
+                      else return index;
+                    })
+                    endTimeHandler();
+                  }
                 }
               >
                 <img src={emoji[index]} alt="너무 쉬워요 이모티콘" />
@@ -73,7 +87,10 @@ const FeedbackPage = ({ onSubmit }: FeedbackPageProps) => {
       <Button
         title="퀴즈 풀래요"
         status="active"
-        onClick={() => onSubmit(feedback)}
+        onClick={() => {
+          endTimeHandler();
+          onSubmit(feedback);
+        }}
       />
     </>
   );

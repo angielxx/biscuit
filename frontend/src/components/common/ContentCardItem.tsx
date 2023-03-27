@@ -6,12 +6,13 @@ import {
   isStartState,
   isModalOpenState,
   recentContentState,
+  endTimeState,
 } from '../../recoils/Contents/Atoms';
 
 // twin macro
 import tw, { styled, css, TwStyle } from 'twin.macro';
 import { useGetMetaData } from '../../hooks/useGetMetaData';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 // Styled component
 const Tag = styled.div`
@@ -124,18 +125,23 @@ const ContentCardItem = ({ content }: contentCardItemProps) => {
     staleTime: 1000 * 60 * 30,
   });
 
+  const startTime = useRecoilValue(startTimeState);
   const setStartTime = useSetRecoilState(startTimeState);
+  const setEndTime = useSetRecoilState(endTimeState);
   const setIsStart = useSetRecoilState(isStartState);
   const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState);
-  const setcontent = useSetRecoilState(recentContentState);
+  const setContent = useSetRecoilState(recentContentState);
 
   const clickContentHandler = (url: string) => {
     window.open(url, '_blank', 'noopener, noreferrer');
-    setStartTime(Date.now());
+    setStartTime(Date.now().toString());
+    setEndTime("");
+
+    console.log(startTime);
     setIsStart(true);
     if (!isModalOpen) {
       setIsModalOpen(true);
-      setcontent(content);
+      setContent(content);
       // console.log('content :', content);
     }
   };
