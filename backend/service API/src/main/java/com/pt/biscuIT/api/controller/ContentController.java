@@ -55,4 +55,9 @@ public class ContentController {
 
         return ResponseEntity.status(200).body(RandomRecentContentRes.of(HttpStatus.OK.value(), "SUCCESS", res));
     }
+
+    @GetMapping("/{contentId}")
+    public void getContentDetail(@PathVariable Long contentId) {
+        contentService.getContentDetail(contentId);
+    }
 }
