@@ -48,4 +48,16 @@ public class ContentController {
         csvUtil.writeCsvFile(new String[]{contentId.toString(), feedback, timecost});
         return ResponseEntity.ok("SUCCESS");
     }
+
+    @PostMapping("/{contentId}/feedback")
+    public ResponseEntity<?> feedbackContent(
+            @PathVariable Long contentId,
+            @RequestParam String feedback,
+            @RequestParam(required = false) String timecost
+    ) {
+//        contentService.feedbackContent(contentId, feedback);
+        CsvUtil csvUtil = new CsvUtil();
+        csvUtil.writeCsvFile(new String[]{contentId.toString(), feedback, timecost});
+        return ResponseEntity.ok("SUCCESS");
+    }
 }
