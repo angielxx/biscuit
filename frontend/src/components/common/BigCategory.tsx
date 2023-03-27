@@ -69,6 +69,8 @@ interface BigCategoryProps {
 }
 
 const BigCategory = ({item, onClick, isClicked, isCategory}: BigCategoryProps) => {
+  const [isChoose, setIsChoose] = useState<boolean>(false);
+  const [page, setPage] = useState<number>();
 
   return (
     <CategoryBox onClick={onClick}>
@@ -84,14 +86,21 @@ const BigCategory = ({item, onClick, isClicked, isCategory}: BigCategoryProps) =
       </Category>
       {isCategory ? (
         <>
-          {item.subCategories.map((content, idx) => {
+          {item.subCategories.map((content, index) => {
             return (
               <SmallCategory 
-                key={idx} 
+                key={index} 
                 isClicked={(e) => {
                   isClicked(e, content.subName);
+                  setPage(index);
+                  isChoose
+                    ? page === index
+                      ? setIsChoose(false)
+                      : setIsChoose(true)
+                    : setIsChoose(true)
                 }} 
                 title={content.subName}
+                isChoose={page === index ? isChoose : false}
               />
             )
           })}

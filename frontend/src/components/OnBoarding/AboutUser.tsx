@@ -9,14 +9,23 @@ import backspace from '../../assets/icons/backspace.svg';
 import tw, { styled } from 'twin.macro';
 
 const ChooseContent = styled.div`
-  ${tw`flex flex-col px-2 gap-4`}
+  ${tw`flex flex-col px-2 gap-4 mb-4`}
 `
 
 const ChooseItem = styled.div`
   ${tw`flex flex-col p-2 gap-4`}
 `
 
-const AboutUser = () => {
+interface AboutUserProps {
+  isClicked: () => void;
+  jobSelected: string;
+  setJobSelected: React.Dispatch<React.SetStateAction<string>>;
+  yearSelected: string;
+  setYearSelected: React.Dispatch<React.SetStateAction<string>>;
+  isBack: () => void;
+}
+
+const AboutUser = ({ isClicked, jobSelected, setJobSelected, yearSelected, setYearSelected, isBack }: AboutUserProps) => {
   const jobList = [
     { id: 0, content: "Frontend" },
     { id: 1, content: "Backend" },
@@ -37,27 +46,16 @@ const AboutUser = () => {
     { id: 10, content: "10년 이상" },
   ]
 
-  const goBack = () => {
-    console.log("뒤로 가기");
-  }
-
-  const isClicked = () => {
-    console.log("선택 완료");
-  }
-
-  const [jobSelected, setJobSelected] = useState<string>("");
-  const [yearSelected, setYearSelected] = useState<string>("");
-
   return (
     <>
-      <div className='flex items-start'>
-        <img src={backspace} onClick={goBack} />
+      <div className='w-[323px] flex items-start'>
+        <img src={backspace} onClick={isBack} />
       </div>
-      <div className='flex flex-col gap-2'>
+      <div className='flex flex-col gap-2 mt-4'>
         <span className='text-h3'>OO님에 대해 알고 싶어요!</span>
         <span className='text-sub'>직무와 경력에 맞는 컨텐츠를 추천드려요</span>
       </div>
-      <hr className="border-[1px] border-dark-grey20" />
+      <hr className="my-4 border-[1px] border-dark-grey20" />
       <ChooseContent>
         <ChooseItem>
           <span className='text-h4'>어떤 직무의 개발자신가요?</span>
@@ -78,7 +76,7 @@ const AboutUser = () => {
           />
         </ChooseItem>
       </ChooseContent>
-      <div className="flex justify-center px-2 gap-2">
+      <div className="flex justify-center px-2 gap-2 mb-4">
         <Button title="선택 완료" status={jobSelected !== "" && yearSelected !== "" ? "active" : "disabled"} onClick={isClicked} />   
       </div>
     </>

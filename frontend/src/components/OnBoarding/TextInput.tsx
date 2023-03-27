@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent } from "react";
 import tw, { css, styled, TwStyle } from "twin.macro";
 
-type ChangeHanlder = (event: any) => void;
+type ChangeHanlder = (e: any) => void;
 
 interface TextInputProps {
   status: StatusType;
@@ -23,7 +23,7 @@ const InputStatus: InputStatusType = {
 };
 
 const Input = styled.input((props: { status: StatusType }) => [
-  tw`w-full h-11 p-4 gap-2 bg-dark-grey20 rounded-10 text-dark-grey70`,
+  tw`w-full h-11 p-4 gap-2 bg-dark-grey20 rounded-10 text-sub text-dark-grey70`,
   css`
     :focus {
       outline: none;
@@ -33,22 +33,12 @@ const Input = styled.input((props: { status: StatusType }) => [
 ]);
 
 const TextInput = ({status, isCount, onChange}: TextInputProps) => {
-  // const [isName, setIsName] = useState<string>("");
-  // const [isCount, setIsCount] = useState<number>(0);
-
-  // const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   const {
-  //     currentTarget: { value },
-  //   } = e;
-  //   setIsName(value);
-  //   setIsCount(e.target.value.replace(/<br\s*\/?>/gm, "\n").length);
-  // }
 
   return (
     <div className="w-full flex flex-col items-start p-2 gap-2">
       <Input 
         placeholder="닉네임을 입력하세요"
-        maxLength={10}
+        maxLength={9}
         status={status}
         onChange={onChange}
       />

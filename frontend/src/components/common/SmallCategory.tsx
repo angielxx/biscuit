@@ -26,13 +26,13 @@ const SubCategory = styled.div`
 interface SmallProps {
   isClicked?: React.MouseEventHandler<HTMLDivElement>;
   title: string;
+  isChoose: boolean;
 }
 
-const SmallCategory = ({ isClicked, title }: SmallProps) => {
-  const [isChoose, setIsChoose] = useState<boolean>(false);
+const SmallCategory = ({ isClicked, title, isChoose }: SmallProps) => {
 
   return (
-    <CategoryBox onClick={isClicked}>
+    <CategoryBox onClick={isClicked} className={isChoose ? "choose" : ""}>
       <SubCategory>
         <Category category={title} />
         <p className="text-h3">{title}</p>
