@@ -21,17 +21,20 @@ public class CsvUtil {
     public void writeCsvFile(String[] data) {
         String OS = System.getProperty("os.name").toLowerCase();
         String path = "";
+        String sep = "";
+        List<String> userDirList = null;
+
         if (OS.indexOf("win") >= 0) {
-            List<String> userDirList = Arrays.asList(System.getProperty("user.dir").split("\\\\"));
-            userDirList.remove(userDirList.size() - 1);
-            path = String.join("\\", userDirList);
-            path = path + "\\data\\feedback\\" + now() + ".csv";
+            userDirList = Arrays.asList(System.getProperty("user.dir").split("\\\\"));
+            sep = "\\";
         } else {
-            List<String> userDirList = Arrays.asList(System.getProperty("user.dir").split("/"));
-            userDirList.remove(userDirList.size() - 1);
-            path = String.join("/", userDirList);
-            path = path + "/data/feedback/" + now() + ".csv";
+            userDirList = Arrays.asList(System.getProperty("user.dir").split("/"));
+            sep = "/";
         }
+        userDirList.remove(userDirList.size() - 1);
+        path = String.join(sep, userDirList);
+        path = path + sep + "data" + sep + "feedback" + sep + now() + ".csv";
+
         writeCsvFile(path, data);
     }
 
