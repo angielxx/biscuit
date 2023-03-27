@@ -9,7 +9,7 @@ import grinning_face from '../../../assets/image/grinning-face.png';
 import tw, { styled, css, TwStyle } from 'twin.macro';
 import Button from '../Button';
 import FeedBackButton from './FeedBackButton';
-import { useSetRecoilState, useRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilState, useRecoilValue } from 'recoil';
 import { endTimeState, isStartState } from '../../../recoils/Contents/Atoms';
 
 const FeedbackBtns = styled.div`
@@ -44,12 +44,13 @@ const FeedbackPage = ({ onSubmit }: FeedbackPageProps) => {
   // 선택된 피드백 번호
   const [feedback, setFeedback] = useState<number | null>(null);
   const setEndTime = useSetRecoilState(endTimeState);
+  const endTime = useRecoilValue(endTimeState);
   const [isStart, setIsStart] = useRecoilState(isStartState);
 
   const endTimeHandler = () => {
     if(isStart === true) {
       setIsStart(false);
-      setEndTime(Date.now());
+      setEndTime(Date.now().toString());
     }
   }
 
@@ -87,8 +88,8 @@ const FeedbackPage = ({ onSubmit }: FeedbackPageProps) => {
         title="퀴즈 풀래요"
         status="active"
         onClick={() => {
-          onSubmit(feedback);
           endTimeHandler();
+          onSubmit(feedback);
         }}
       />
     </>

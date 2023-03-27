@@ -94,12 +94,13 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
       break;
   }
 
+  const startTime = useRecoilValue(startTimeState);
+  const [endTime, setEndTime] = useRecoilState(endTimeState);
   // 피드백 제출
   const feedbackSubmitHandler = (feedback: number | null) => {
     // API POST 요청 : 피드백 저장
-    const startTime = useRecoilValue(startTimeState);
-    const endTime = useRecoilValue(endTimeState);
-    console.log(endTime - startTime);
+    if(endTime === "") setEndTime(Date.now().toString());
+    console.log(Number(endTime)-Number(startTime));
     onClose();
   };
 

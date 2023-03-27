@@ -3,12 +3,12 @@ import { recoilPersist } from 'recoil-persist';
 
 const startTimeState = atom({
   key: 'startTimeState',
-  default: Date.now(),
+  default: "",
 });
 
 const endTimeState = atom({
   key: 'endTimeState',
-  default: Date.now(),
+  default: "",
 });
 
 const isStartState = atom({
