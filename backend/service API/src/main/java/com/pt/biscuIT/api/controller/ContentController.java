@@ -8,6 +8,7 @@ import com.pt.biscuIT.common.exception.BiscuitException;
 import com.pt.biscuIT.common.exception.ErrorCode;
 import com.pt.biscuIT.common.model.response.BaseResponseBody;
 import com.pt.biscuIT.common.model.response.PageMetaData;
+import com.pt.biscuIT.common.util.CsvUtil;
 import com.pt.biscuIT.db.repository.ContentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,5 +55,17 @@ public class ContentController {
                 .build();
 
         return ResponseEntity.status(200).body(RandomRecentContentRes.of(HttpStatus.OK.value(), "SUCCESS", res));
+    }
+
+    @PostMapping("/{contentId}/feedback")
+    public ResponseEntity<?> feedbackContent(
+            @PathVariable Long contentId,
+            @RequestParam String feedback,
+            @RequestParam(required = false) String timecost
+    ) {
+//        contentService.feedbackContent(contentId, feedback);
+        CsvUtil csvUtil = new CsvUtil();
+        csvUtil.writeCsvFile(new String[]{contentId.toString(), feedback, timecost});
+        return ResponseEntity.ok("SUCCESS");
     }
 }
