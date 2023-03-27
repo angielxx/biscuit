@@ -44,7 +44,7 @@ const FeedbackPage = ({ onSubmit }: FeedbackPageProps) => {
 
   return (
     <>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 break-keep">
         <h4>방금 본 컨텐츠가 어땠는지 알려주세요.</h4>
         <p>피드백을 주시면 더 정확한 컨텐츠를 받아보실 수 있어요.</p>
       </div>

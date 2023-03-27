@@ -48,26 +48,19 @@ const BookmarkSvg = styled.svg`
   ${tw`fill-primary h-8 cursor-pointer`}
 `;
 
-const ContentInfo = styled.div<{ image: string }>`
-  ${tw`flex gap-2 relative`}
+const ContentInfo = styled.div`
+  ${tw`flex gap-2 relative w-full justify-between`}
   p {
     ${tw`text-main`}
   }
   span {
     ${tw`text-sub text-subColor`}
   }
-
-  #channel {
-    ${tw`bg-primary w-10 h-10 rounded-full min-w-[40px] min-h-[40px]`}
-    ${({ image }) => css`
-      background-image: url(${image});
-    `}
-  }
 `;
 
 const TextInfo = styled.div`
   ${css`
-    width: calc(100% - 80px);
+    word-break: keep-all;
   `}
 `;
 
@@ -169,8 +162,8 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
         />
       </button>
 
-      <ContentInfo image="">
-        <div id="channel"></div>
+      <ContentInfo>
+        {/* <div id="channel"></div> */}
         <TextInfo id="text">
           <p className="leading-5 max-h-[40px] overflow-hidden">
             {content.title}
@@ -180,7 +173,7 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
           </span>
         </TextInfo>
         {isAuth && (
-          <div onClick={changeMarkHandler} className="absolute right-0">
+          <div onClick={changeMarkHandler}>
             {isMarked ? (
               <BookmarkSvg
                 xmlns="http://www.w3.org/2000/svg"
