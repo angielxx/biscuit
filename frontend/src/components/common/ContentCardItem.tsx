@@ -127,7 +127,7 @@ const ContentCardItem = ({ content }: contentCardItemProps) => {
   const setStartTime = useSetRecoilState(startTimeState);
   const setIsStart = useSetRecoilState(isStartState);
   const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState);
-  const setcontent = useSetRecoilState(recentContentState);
+  const setContent = useSetRecoilState(recentContentState);
 
   const clickContentHandler = (url: string) => {
     window.open(url, '_blank', 'noopener, noreferrer');
@@ -135,7 +135,7 @@ const ContentCardItem = ({ content }: contentCardItemProps) => {
     setIsStart(true);
     if (!isModalOpen) {
       setIsModalOpen(true);
-      setcontent(content);
+      setContent(content);
       // console.log('content :', content);
     }
   };
