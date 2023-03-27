@@ -13,6 +13,8 @@ import close from '../../assets/icons/close.svg';
 import setting from '../../assets/icons/setting.svg';
 import bookmark from '../../assets/icons/bookmark.svg';
 import history from '../../assets/icons/history.svg';
+import { useQuery } from '@tanstack/react-query';
+import { get_categories } from '../../api/category';
 
 const Aside = styled.div`
   ${tw`h-full z-20 flex flex-col items-start p-2 fixed w-[314px] right-0 top-0 bg-[#1A1B1E]`}
@@ -63,36 +65,10 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
   const [page, setPage] = useState<number>();
   const navigate = useNavigate();
 
-  const mainCateList = [
-    {
-      id: 0, //e.g. 03,
-      mainName: 'FrontEnd', //e.g. "Frontend",
-      subCategories: [
-        {
-          id: 0, //e.g. 123,
-          subName: 'React', //e.g. "React",
-        },
-        {
-          id: 1, //e.g. 123,
-          subName: 'TypeScript', //e.g. "React",
-        },
-      ],
-    },
-    {
-      id: 1, //e.g. 03,
-      mainName: 'BackEnd', //e.g. "Frontend",
-      subCategories: [
-        {
-          id: 0, //e.g. 123,
-          subName: 'Django', //e.g. "React",
-        },
-        {
-          id: 1, //e.g. 123,
-          subName: 'Spring', //e.g. "React",
-        },
-      ],
-    },
-  ];
+  const { data, isLoading } = useQuery(
+    ['get_categories'],
+    () => get_categories()
+  )
 
   const goToMypage = () => {
     navigate('/mypage');
@@ -136,7 +112,8 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
           />
         </AsideBtn>
       </ProfileBox>
-      {mainCateList.map((item, index) => {
+
+      {data?.map((item, index) => {
         return (
           <BigCategory
             key={item.id}
