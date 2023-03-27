@@ -31,31 +31,6 @@ public class ContentController {
     @Autowired
     ContentRepository contentRepositorySupport;
 
-    @GetMapping("/{category}")
-    public ResponseEntity<? extends BaseResponseBody> getContentByCategory(
-            @PathVariable String category,
-            @PageableDefault(size = 30, sort = "createdDate", page = 0) Pageable pageable,
-            @RequestParam(defaultValue = "999999") Long lastContentId,
-            @RequestParam(required = false, defaultValue = "0") int time
-    ) {
-        Page<ContentInfoDto> contentList = contentService.getCategoryContent(category, pageable, lastContentId, time);
-        if(contentList.getContent().size() == 0) throw new BiscuitException(ErrorCode.CONTENT_NOT_FOUND);
-
-        PageMetaData metaData = PageMetaData.builder()
-                .last(contentList.isLast())
-                .lastContentId(
-                        contentList.getContent().get(contentList.getContent().size() - 1).getId()
-                )
-                .build();
-
-        RandomRecentContentRes res = RandomRecentContentRes.builder()
-                .metaData(metaData)
-                .results(contentList.getContent())
-                .build();
-
-        return ResponseEntity.status(200).body(RandomRecentContentRes.of(HttpStatus.OK.value(), "SUCCESS", res));
-    }
-
     @GetMapping("/{contentId}")
     public void getContentDetail(@PathVariable Long contentId) {
         contentService.getContentDetail(contentId);
