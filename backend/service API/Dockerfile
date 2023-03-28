@@ -13,11 +13,11 @@ RUN gradle clean build
 FROM openjdk:11-jdk
 
 ENV APP_HOME=/apps
-ARG ARTIFACT_NAME=app.jar
+#ARG ARTIFACT_NAME=app.jar
 ARG JAR_FILE_PATH=build/libs/biscuIT-0.0.1-SNAPSHOT.jar
 
 WORKDIR $APP_HOME
-COPY --from=builder $APP_HOME/$JAR_FILE_PATH $ARTIFACT_NAME
+COPY --from=builder $APP_HOME/$JAR_FILE_PATH app.jar
 
 EXPOSE 8080
 
