@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,9 +50,10 @@ public class CategoryController {
             @PathVariable String category,
             @PageableDefault(size = 30, sort = "createdDate", page = 0) Pageable pageable,
             @RequestParam(defaultValue = "999999") Long lastContentId,
-            @RequestParam(required = false, defaultValue = "0") int time
+            @RequestParam(required = false, defaultValue = "0") int time,
+            @RequestParam(required = false, defaultValue = "999999") int hitRate
     ) {
-        Page<ContentInfoDto> contentList = contentService.getCategoryContent(category, pageable, lastContentId, time);
+        Page<ContentInfoDto> contentList = contentService.getCategoryContent(category, pageable, lastContentId, time, hitRate);
         if(contentList.getContent().size() == 0) throw new BiscuitException(ErrorCode.CONTENT_NOT_FOUND);
 
         PageMetaData metaData = PageMetaData.builder()

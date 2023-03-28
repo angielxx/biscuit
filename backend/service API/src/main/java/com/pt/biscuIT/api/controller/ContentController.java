@@ -24,6 +24,7 @@ public class ContentController {
     }
 
     @PostMapping("/{contentId}/feedbacks")
+    @PostMapping("/{contentId}/feedback")
     public ResponseEntity<?> feedbackContent(
             @PathVariable Long contentId,
             @RequestParam String feedback,
