@@ -18,15 +18,6 @@ def make_file(url, credit_at, create_date, title):
     # BeautifulSoup 객체 만들기
     soup = BeautifulSoup(response.content, "html.parser")
 
-    # # article 태그 가져오기
-    # article_tag = soup.find("article")
-    # soup = article_tag
-    # pre_list = soup.find_all("pre")
-    # for item in pre_list:
-    #     soup.find("pre").decompose()
-
-    # print(soup.get_text())
-
     # article 태그 가져오기
     article_tag = soup.find("article")
 
