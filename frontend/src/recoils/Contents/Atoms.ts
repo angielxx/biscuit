@@ -1,15 +1,15 @@
-import { atom } from 'recoil';
+import { atom, selector } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
 const startTimeState = atom({
   key: 'startTimeState',
-  default: Date.now(),
+  default: 0,
 });
 
 const endTimeState = atom({
   key: 'endTimeState',
-  default: Date.now(),
-});
+  default: 0,
+})
 
 const isStartState = atom({
   key: 'isStartState',
@@ -49,10 +49,18 @@ const recentContentState = atom<content>({
   },
 });
 
+const getTimeSelector = selector({
+  key: 'getTimeSelector',
+  get: ({get}) => {
+    return Number(get(endTimeState)) - Number(get(startTimeState));
+  }
+})
+
 export {
   startTimeState,
-  endTimeState,
   isStartState,
   isModalOpenState,
   recentContentState,
+  getTimeSelector,
+  endTimeState,
 };

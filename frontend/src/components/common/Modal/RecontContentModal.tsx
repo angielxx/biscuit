@@ -12,8 +12,8 @@ import tw, { styled, css, TwStyle } from 'twin.macro';
 import Close from '../../../assets/icons/close.svg';
 import ContentCardItem from '../ContentCardItem';
 import QuizItem from './QuizItem';
-import { useRecoilState } from 'recoil';
-import { recentContentState } from '../../../recoils/Contents/Atoms';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { getTimeSelector, recentContentState, startTimeState } from '../../../recoils/Contents/Atoms';
 import QuizResultPage from './QuizResultPage';
 import QuizPage from './QuizPage';
 import FeedbackPage from './FeedbackPage';
@@ -94,6 +94,8 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
       break;
   }
 
+  const startTime = useRecoilValue(startTimeState);
+  const time = useRecoilValue(getTimeSelector);
   // 피드백 제출
   const feedbackSubmitHandler = (feedback: number | null) => {
     // API POST 요청 : 피드백 저장

@@ -27,8 +27,9 @@ interface content {
   createdDate: string;
   timeCost: number;
   type: string;
-  isMarked: boolean;
-  tags: Array<string>;
+  marked: boolean;
+  tags: Array<string> | null;
+  hit: number;
 }
 
 const Search = () => {
@@ -90,9 +91,7 @@ const Search = () => {
       />
       <ResultContainer>
         {searchResult &&
-          searchResult.map((content) => (
-            <ContentCardItem recentContent={content} />
-          ))}
+          searchResult.map((content) => <ContentCardItem content={content} />)}
       </ResultContainer>
     </div>
   );

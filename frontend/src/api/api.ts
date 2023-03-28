@@ -9,8 +9,9 @@ interface content {
   createdDate: string;
   timeCost: number;
   type: string;
-  isMarked: boolean;
-  tags: Array<string>;
+  marked: boolean;
+  tags: Array<string> | null;
+  hit: number;
 }
 
 // 카테고리별 컨텐츠 목록 조회
