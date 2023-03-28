@@ -18,8 +18,8 @@ public class ContentService {
     @Autowired
     ContentRepositorySupport contentRepositorySupport;
 
-    public Page<ContentInfoDto> getCategoryContent (String category, Pageable pageable, Long lastContentId, int time) {
-        Page<Content> contentList = contentRepositorySupport.findContentByCategory(category, pageable, lastContentId, time);
+    public Page<ContentInfoDto> getCategoryContent (String category, Pageable pageable, Long lastContentId, int time, int hitRate) {
+        Page<Content> contentList = contentRepositorySupport.findContentByCategory(category, pageable, lastContentId, time, hitRate);
 
         return contentList.map(ContentInfoDto::new);
     }

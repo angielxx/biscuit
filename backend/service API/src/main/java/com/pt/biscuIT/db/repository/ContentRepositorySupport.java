@@ -48,19 +48,25 @@ public class ContentRepositorySupport {
      * @param pageable
      * @return
      */
-    public Page<Content> findContentByCategory(String category, Pageable pageable, Long lastContentId, int time) {
+    public Page<Content> findContentByCategory(String category, Pageable pageable, Long lastContentId, int time, int hitRate) {
         List<OrderSpecifier> ORDERS = getOrderSpecifiers(pageable.getSort());
 
-        BooleanBuilder condition = new BooleanBuilder();
+        BooleanBuilder whereCondition = new BooleanBuilder();
 
-        condition.and(qCategory.mainName.like(category).or(qCategory.subName.like(category)));
-        condition.and(qContent.id.lt(lastContentId));
-        if(time > 0) condition.and(qContent.timeCost.lt(time));
+        for (Sort.Order o : pageable.getSort()) {
+            if (o.getProperty().equals("hit")) {
+                whereCondition.and(qContent.hit.loe(hitRate));
+            }
+        }
+
+        whereCondition.and(qContent.id.lt(lastContentId));
+        whereCondition.and(qCategory.mainName.like(category).or(qCategory.subName.like(category)));
+        if(time > 0) whereCondition.and(qContent.timeCost.lt(time));
 
         List<Content> contentList = jpaQueryFactory
                 .selectFrom(qContent)
                 .join(qContent.category, qCategory)
-                .where(condition)
+                .where(whereCondition)
                 .orderBy(
                         ORDERS.stream().toArray(OrderSpecifier[]::new)
                 )
@@ -74,7 +80,7 @@ public class ContentRepositorySupport {
                 jpaQueryFactory
                         .selectFrom(qContent)
                         .join(qContent.category, qCategory)
-                        .where(condition)
+                        .where(whereCondition)
                         .orderBy(
                                 ORDERS.stream().toArray(OrderSpecifier[]::new)
                         )
