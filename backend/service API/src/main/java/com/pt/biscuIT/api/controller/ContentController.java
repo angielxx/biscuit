@@ -22,8 +22,6 @@ public class ContentController {
     public void getContentDetail(@PathVariable Long contentId) {
         contentService.getContentDetail(contentId);
     }
-
-    @PostMapping("/{contentId}/feedbacks")
     @PostMapping("/{contentId}/feedback")
     public ResponseEntity<?> feedbackContent(
             @PathVariable Long contentId,
