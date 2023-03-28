@@ -71,10 +71,17 @@ const FeedbackPage = ({ onSubmit }: FeedbackPageProps) => {
         })}
       </FeedbackBtns>
       <Button
+        title="선택 완료"
+        status={feedback ? 'active' : 'disabled'}
+        onClick={() => {
+          if (feedback) onSubmit(feedback);
+        }}
+      />
+      {/* <Button
         title="퀴즈 풀래요"
         status="active"
         onClick={() => onSubmit(feedback)}
-      />
+      /> */}
     </>
   );
 };

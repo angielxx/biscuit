@@ -165,7 +165,10 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
       <ContentInfo>
         {/* <div id="channel"></div> */}
         <TextInfo id="text">
-          <p className="leading-5 max-h-[40px] overflow-hidden">
+          <p
+            className="leading-5 max-h-[40px] overflow-hidden cursor-pointer text-main-bold hover:text-main-bold hover:text-primary"
+            onClick={() => clickContentHandler(content.url)}
+          >
             {content.title}
           </p>
           <span>

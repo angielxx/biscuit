@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
+import { useMutation } from '@tanstack/react-query';
 
 // Component
 import FeedBackButton from './FeedBackButton';
@@ -17,6 +18,7 @@ import { recentContentState } from '../../../recoils/Contents/Atoms';
 import QuizResultPage from './QuizResultPage';
 import QuizPage from './QuizPage';
 import FeedbackPage from './FeedbackPage';
+import { post_feedback } from '../../../api/feedback';
 
 // Styled component
 const Container = styled.div`
@@ -74,29 +76,23 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
     // API get 요청 : 퀴즈 제공
   }, []);
 
-  let title;
-  let discription;
-  switch (page) {
-    case 0:
-      title = '방금 본 컨텐츠가 어땠는지 알려주세요.';
-      discription = '피드백을 주시면 더 정확한 컨텐츠를 받아보실 수 있어요.';
-      break;
-    case 1:
-      title = '잘 이해했는지 확인해보세요.';
-      discription = '퀴즈를 풀면 대시보드에 잔디가 자라나요.';
-      break;
-    case 2:
-      title = '채점결과';
-      discription = '';
-      break;
-
-    default:
-      break;
+  interface mutateParams {
+    contentId: number;
+    feedback: 1 | 2 | 3;
+    timecost: number;
   }
+
+  const { mutate } = useMutation({
+    mutationFn: ({ contentId, feedback, timecost }: mutateParams) =>
+      post_feedback(contentId, feedback, timecost),
+  });
 
   // 피드백 제출
   const feedbackSubmitHandler = (feedback: number | null) => {
+    // timecost 설정 필요
+    const timecost = 0;
     // API POST 요청 : 피드백 저장
+    mutate({ recentContent.id, feedback, timecost });
     onClose();
   };
 

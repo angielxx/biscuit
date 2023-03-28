@@ -28,7 +28,9 @@ export const requests = {
   },
 
   // 피드백 저장
-  POST_FEEDBACK: `/api/feedbacks`,
+  POST_FEEDBACK(contentId: number) {
+    return `/api/contents/${contentId}/feedbacks`;
+  },
 
   // 키워드 검색
   GET_SEARCH(
