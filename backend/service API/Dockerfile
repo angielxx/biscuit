@@ -8,7 +8,7 @@ COPY build.gradle settings.gradle $APP_HOME/
 
 COPY src $APP_HOME/src
 
-RUN ./gradlew clean build --exculde-task test
+RUN gradle clean build
 
 FROM openjdk:11-jdk
 
