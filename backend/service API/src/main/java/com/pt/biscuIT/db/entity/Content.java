@@ -4,9 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -25,7 +22,7 @@ public class Content implements Serializable {
 	private String url;
 	private String title;
 	private String writer;
-	private String creditBy;
+	private String channel;
 	private LocalDateTime createdDate;
 	@ColumnDefault("0")
 	private Integer hit;
