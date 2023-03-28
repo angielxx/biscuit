@@ -18,14 +18,14 @@ const BannerContainer = tw.div`
 `;
 
 const BannerBg = styled.div<{ img: any }>`
-  ${tw`gap-[6vh] bg-center bg-cover h-[35vh] flex flex-col justify-center items-center text-center text-[1.5rem]`}
+  ${tw`px-[10%] gap-[1vh] bg-center bg-cover h-[28vh] min-h-[300px] flex flex-col justify-evenly items-start text-center text-[1.5rem]`}
   ${({ img }) => css`
     background-image: url('${img}');
   `}
 `;
 
 const SeeMoreBtn = styled.button`
-  ${tw`bg-black text-sub text-primary rounded-full px-5 py-2 transition ease-in hover:scale-105`}
+  ${tw`shadow-md bg-black text-main text-primary rounded-full px-5 py-2 transition ease-in hover:scale-105 hover:text-main-bold hover:text-black hover:bg-white`}
 `;
 
 const Banner = () => {
@@ -65,18 +65,28 @@ const Banner = () => {
   return (
     <BannerContainer>
       <div className="carousel">
-        <BannerBg key="1" img={gradient_bg}>
-          <div className="flex flex-col">
-            <span>나에게 딱! 맞는</span>
-            <span className="relative">
-              <strong>테크 컨텐츠</strong> 추천 서비스
-              <div className="bg-primary w-full h-[2vh] absolute" />
-            </span>
+        <Slider {...settings}>
+          <div>
+            <BannerBg key="1" img={gradient_bg}>
+              <div className="flex flex-col items-start gap-[2vh]">
+                <div className="flex flex-col items-start text-left text-[2rem] leading-10 tracking-tight relative z-auto px-1">
+                  <span className="z-10">
+                    나에게 딱! 맞는 <br />
+                    <span className="underline underline-offset-[-8px] decoration-primary decoration-[1rem] break-keep">
+                      <strong className="text-bold">테크 컨텐츠</strong> 추천
+                      서비스
+                    </span>
+                  </span>
+                  {/* <div className="bg-dark-primary w-full h-[1rem] absolute bottom-0 left-[1px]" /> */}
+                </div>
+                <span className="text-main px-1">
+                  지금 가입하고 바로 만나보세요.
+                </span>
+              </div>
+              <SeeMoreBtn>비스킷 시작하기</SeeMoreBtn>
+            </BannerBg>
           </div>
-          <SeeMoreBtn>자세히 보기</SeeMoreBtn>
-        </BannerBg>
-        {/* <Slider {...settings}>
-          {bannerList?.map((banner) => {
+          {/* {bannerList?.map((banner) => {
             return (
               <BannerContent
                 key={banner.uid}
@@ -84,8 +94,8 @@ const Banner = () => {
                 imgUrl={banner.imgUrl}
               />
             );
-          })}
-        </Slider> */}
+          })} */}
+        </Slider>
       </div>
     </BannerContainer>
   );
