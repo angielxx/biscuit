@@ -8,15 +8,17 @@ import AboutInterest from "../components/OnBoarding/AboutInterest";
 type ClickHanlder = (event: any, item: string) => void;
 
 const OnBoarding = () => {
+  const [userData, setUserData] = useState({
+    nickname: "",
+    period: "",
+    job: "",
+    interests: "",
+  });
+
   const [page, setPage] = useState<number>(0);
 
   const isClose = () => {
     return ;
-  }
-
-  const nickname = () => {
-    setPage(1);
-    console.log(isName);
   }
 
   const isBack = () => {
@@ -45,11 +47,18 @@ const OnBoarding = () => {
     setIsCount(e.target.value.replace(/<br\s*\/?>/gm, "\n").length);
   }
 
+  const nickname = () => {
+    setUserData({...userData, nickname: isName});
+    setPage(1);
+    console.log(isName);
+  }
+
   // 1. 직무, 연차 모달
   const [jobSelected, setJobSelected] = useState<string>("");
   const [yearSelected, setYearSelected] = useState<string>("");
 
   const aboutUser = () => {
+    setUserData({...userData, job: jobSelected, period: yearSelected})
     console.log(jobSelected, yearSelected);
     setPage(2);
   }
@@ -72,7 +81,8 @@ const OnBoarding = () => {
   }
 
   const isSend = () => {
-    return ;
+    // setUserData({...userData, interest: selectList})
+    console.log(userData);
   }
 
   return (
