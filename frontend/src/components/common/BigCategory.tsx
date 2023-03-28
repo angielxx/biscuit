@@ -7,11 +7,11 @@ import tw, { css, styled } from 'twin.macro';
 import dropdown from '../../assets/icons/arrow_drop_down.svg';
 import SmallCategory from './SmallCategory';
 
-const CategoryBox = styled.button`
+const CategoryBox = styled.li`
   ${tw`w-full flex flex-col`}
 `
 
-const Category = styled.div`
+const Category = styled.button`
   ${tw`flex justify-between items-center w-full h-13 box-border px-3 py-4 text-white self-stretch border-b border-solid border-dark-evaluated`}
 `
 
@@ -63,14 +63,13 @@ type ClickHanlder = (event: any, item: string) => void;
 
 interface BigCategoryProps {
   item: Content;
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  onClick: React.MouseEventHandler<HTMLLIElement>;
   isClicked: ClickHanlder;
   isCategory: boolean;
 }
 
 const BigCategory = ({item, onClick, isClicked, isCategory}: BigCategoryProps) => {
   const [isChoose, setIsChoose] = useState<boolean>(false);
-  const [page, setPage] = useState<number>();
 
   return (
     <CategoryBox onClick={onClick}>
@@ -84,28 +83,31 @@ const BigCategory = ({item, onClick, isClicked, isCategory}: BigCategoryProps) =
           }
         />
       </Category>
-      {isCategory ? (
-        <>
-          {item.subCategories.map((content, index) => {
-            return (
-              <SmallCategory 
-                key={index} 
-                isClicked={(e) => {
-                  isClicked(e, content.subName);
-                  setPage(index);
-                  isChoose
-                    ? page === index
-                      ? setIsChoose(false)
-                      : setIsChoose(true)
-                    : setIsChoose(true)
-                }} 
-                title={content.subName}
-                isChoose={page === index ? isChoose : false}
-              />
-            )
-          })}
-        </>
-      ) : null}
+      <div>
+        <ul>
+          {isCategory ? (
+            <>
+              {item.subCategories.map((content, index) => {
+                return (
+                  <SmallCategory 
+                    key={index}
+                    isClicked={(e) => {
+                      isClicked(e, content.subName);
+                      
+                      isChoose
+                        ? setIsChoose(false) 
+                        : setIsChoose(true)
+
+                    }} 
+                    title={content.subName}
+                    isChoose={isChoose}
+                  />
+                )
+              })}
+            </>
+          ) : null}
+        </ul>
+      </div>
     </CategoryBox>
   )
 }

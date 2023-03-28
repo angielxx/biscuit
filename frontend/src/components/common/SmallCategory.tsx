@@ -7,7 +7,7 @@ const Category = ({ category }: { category: string }) => {
   return <img src={`/src/assets/icons/category/${category}.svg`} />;
 };
 
-const CategoryBox = styled.div`
+const CategoryBox = styled.li`
   ${tw`flex flex-col items-start order-5 w-full px-4 py-3 gap-[10px] text-white border-b border-solid border-dark-grey10`}
 
   &:hover {
@@ -24,7 +24,7 @@ const SubCategory = styled.div`
 `;
 
 interface SmallProps {
-  isClicked?: React.MouseEventHandler<HTMLDivElement>;
+  isClicked?: React.MouseEventHandler<HTMLLIElement>;
   title: string;
   isChoose: boolean;
 }

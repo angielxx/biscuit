@@ -4,7 +4,7 @@ import Button from "../common/Button";
 import TextInput from "./TextInput";
 
 // icons
-import hello from '../../assets/icons/hello.svg';
+import hello from '../../assets/icons/hello.png';
 import tw, { styled } from "twin.macro";
 
 const WelcomeBox = styled.div`
@@ -27,7 +27,7 @@ const Nickname = ({ isClicked, isChange, isName, isCount }: NicknameProps) => {
   return (
     <>
       <WelcomeBox>
-        <img src={hello} />
+        <img src={hello} className="w-20 h-20" />
         <span>비스킷에 오신 걸 환영합니다</span>
       </WelcomeBox>
       <hr className="my-4 border-[1px] border-dark-grey20" />

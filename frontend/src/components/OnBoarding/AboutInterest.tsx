@@ -35,7 +35,7 @@ const AboutInterest = ({isBack, isSend, isClicked, selectList}: AboutInterestPro
         <span className='text-sub text-subColor'>관심사에 맞춘 컨텐츠를 홈 화면에서 추천드려요.</span>
       </div>
       <hr className="my-4 border-[1px] border-dark-grey20" />
-      <div className='h-[440px] overflow-scroll'>
+      <ul className='h-[440px] overflow-scroll'>
         {data?.map((item, index) => {
           return (
             <BigCategory
@@ -55,7 +55,7 @@ const AboutInterest = ({isBack, isSend, isClicked, selectList}: AboutInterestPro
             />
           );
         })}
-      </div>
+      </ul>
       <div className="flex justify-center px-2 gap-2 my-4">
         <Button title="선택 완료" status={selectList.length !== 0 ? "active" : "disabled"} onClick={isSend} />   
       </div>

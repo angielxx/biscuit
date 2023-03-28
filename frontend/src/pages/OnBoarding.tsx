@@ -48,9 +48,13 @@ const OnBoarding = () => {
   }
 
   const nickname = () => {
-    setUserData({...userData, nickname: isName});
-    setPage(1);
-    console.log(isName);
+    if (isName !== "") {
+      setUserData({...userData, nickname: isName});
+      setPage(1);
+      console.log(isName);
+    } else {
+      return ;
+    }
   }
 
   // 1. 직무, 연차 모달
@@ -58,11 +62,14 @@ const OnBoarding = () => {
   const [yearSelected, setYearSelected] = useState<string>("");
 
   const aboutUser = () => {
-    setUserData({...userData, job: jobSelected, period: yearSelected})
-    console.log(jobSelected, yearSelected);
-    setPage(2);
+    if (jobSelected !== "" && yearSelected !== "") {
+      setUserData({...userData, job: jobSelected, period: yearSelected})
+      console.log(jobSelected, yearSelected);
+      setPage(2);
+    } else {
+      return ;
+    }
   }
-  
 
   // 2. 닉네임, 직무/연차, 관심사 JSON 전달
   const [selectList, setSelectList] = useState<string[]>([]);
