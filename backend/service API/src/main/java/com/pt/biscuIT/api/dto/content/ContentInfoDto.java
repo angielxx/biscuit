@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.pt.biscuIT.db.entity.Content;
-
 /**
  * @author 7unho
  * @since 2020-11-23
@@ -37,7 +35,7 @@ public class ContentInfoDto {
         this.id = content.getId();
         this.title = content.getTitle();
         this.url = content.getUrl();
-        this.creditBy = content.getCreditBy();
+        this.creditBy = content.getChannel();
         this.createdDate = content.getCreatedDate();
         this.timeCost = content.getTimeCost();
         this.type = Type.POST.toString();

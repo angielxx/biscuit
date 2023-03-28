@@ -1,23 +1,11 @@
-import configparser
 import csv
 import datetime
 
-import pymysql
+import config
 
-config = configparser.ConfigParser()
-config.read("src/config.ini", encoding="utf-8")
-
-conn = pymysql.connect(
-    host=config["DB"]["HOST"],
-    user=config["DB"]["USER"],
-    password=config["DB"]["PASSWORD"],
-    db=config["DB"]["DATABASE"],
-    charset="utf8",
-)
+conn = config.connect()
 
 curs = conn.cursor()
-
-conn.commit()
 
 
 f = open("data/crawling_data.csv", "r", encoding="utf-8")
