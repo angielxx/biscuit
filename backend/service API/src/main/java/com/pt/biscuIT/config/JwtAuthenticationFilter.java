@@ -7,7 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.pt.biscuIT.common.auth.BiscuitMemberDetails;
+import com.pt.biscuIT.api.dto.member.MemberAuthDto;
 import com.pt.biscuIT.db.entity.Member;
 import com.pt.biscuIT.api.service.MemberService;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -78,7 +78,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
                 Member member = memberService.getMemberByEmail(email);
                 if(member != null) {
                     // 식별된 정상 유저인 경우, 요청 context 내에서 참조 가능한 인증 정보(jwtAuthentication) 생성.
-                    BiscuitMemberDetails memberDetails = new BiscuitMemberDetails(member);
+                    MemberAuthDto memberDetails = new MemberAuthDto(member);
                     UsernamePasswordAuthenticationToken jwtAuthentication = new UsernamePasswordAuthenticationToken(email,
                             null, memberDetails.getAuthorities());
                     jwtAuthentication.setDetails(memberDetails);
