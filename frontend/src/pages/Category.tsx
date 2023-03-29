@@ -23,15 +23,14 @@ interface content {
   createdDate: string;
   timeCost: number;
   type: string;
-  isMarked: boolean;
-  tags: Array<string>;
+  marked: boolean;
+  tags: Array<string> | null;
+  hit: number;
 }
 
 const Category = () => {
   // 카테고리명
   const [categoryName, setCategoryName] = useState<string>('');
-  // 조회 결과
-  const [categoryResult, setCategoryResult] = useState<Array<content>>([]);
   // 정렬 필터
   const [sort, setSort] = useState<string | null>(null);
   // 시간 필터
@@ -58,9 +57,9 @@ const Category = () => {
   // 무한스크롤 데이터 패칭
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ['get_catetory_contents'],
+      queryKey: ['get_catetory_contents', categoryName],
       enabled: !!categoryName,
-      queryFn: ({ pageParam = 0 }) =>
+      queryFn: ({ pageParam = 999 }) =>
         get_category_contents(categoryName, sort, time, pageParam, size),
       getNextPageParam: (lastPage) =>
         lastPage?.isLast ? undefined : lastPage?.nextLastContentId,
@@ -70,10 +69,10 @@ const Category = () => {
     <div className="mt-20">
       <SmallCategory title={categoryName} />
       <CategoryContainer>
-        {data?.pages.map((page, index) => (
+        {data?.pages.map((page, index: number) => (
           <React.Fragment key={index}>
-            {page?.contentList?.map((result) => (
-              <ContentCardItem key={result.id} recentContent={result} />
+            {page?.contentList?.map((content) => (
+              <ContentCardItem key={content.id} content={content} />
             ))}
           </React.Fragment>
         ))}

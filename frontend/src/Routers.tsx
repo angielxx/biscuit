@@ -11,7 +11,7 @@ import Modal from './components/common/Modal/Modal';
 
 export default function Routers() {
   const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState);
-
+  // setIsModalOpen(true);
   return (
     <div>
       {isModalOpen ? (
