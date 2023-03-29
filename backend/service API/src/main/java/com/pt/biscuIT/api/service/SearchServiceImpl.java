@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.pt.biscuIT.api.dto.content.ContentInfoDto;
@@ -36,7 +35,7 @@ public class SearchServiceImpl implements SearchService {
 			.id(c.getId())
 			.title(c.getTitle())
 			.url(c.getUrl())
-			.creditBy(c.getCreditBy())
+			.creditBy(c.getChannel())
 			.createdDate(c.getCreatedDate())
 			.timeCost(c.getTimeCost())
 			.type(Type.POST.toString())
@@ -45,8 +44,12 @@ public class SearchServiceImpl implements SearchService {
 			.hit(c.getHit())
 			.build());
 
+		Long tmpLastContentId = 0L;
+		if(contents.getContent().size() > 0) {
+			tmpLastContentId = contents.getContent().get(contents.getContent().size() - 1).getId();
+		}
 		PageMetaData pageMetaData = PageMetaData.builder()
-												.lastContentId(contents.getContent().get(contents.getContent().size() - 1).getId())
+												.lastContentId(tmpLastContentId)
 												.last(contents.isLast())
 												.build();
 		SearchContentRes res = SearchContentRes.builder()

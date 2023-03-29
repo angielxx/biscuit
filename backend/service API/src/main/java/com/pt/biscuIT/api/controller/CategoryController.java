@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,14 +45,15 @@ public class CategoryController {
         return ResponseEntity.status(200).body(CategoryInfoListRes.of(HttpStatus.OK.value(), "SUCCESS", res));
     }
 
-    @GetMapping("/{category}/contents")
+    @GetMapping("/{category}/contents/{condition}")
     public ResponseEntity<? extends BaseResponseBody> getContentByCategory(
             @PathVariable String category,
-            @PageableDefault(size = 30, sort = "createdDate", page = 0) Pageable pageable,
+            @PageableDefault(size = 30, page = 0) Pageable pageable,
             @RequestParam(defaultValue = "999999") Long lastContentId,
-            @RequestParam(required = false, defaultValue = "0") int time
+            @RequestParam(required = false, defaultValue = "0") int time,
+            @PathVariable String condition
     ) {
-        Page<ContentInfoDto> contentList = contentService.getCategoryContent(category, pageable, lastContentId, time);
+        Page<ContentInfoDto> contentList = contentService.getCategoryContent(category, pageable, lastContentId, time, condition);
         if(contentList.getContent().size() == 0) throw new BiscuitException(ErrorCode.CONTENT_NOT_FOUND);
 
         PageMetaData metaData = PageMetaData.builder()

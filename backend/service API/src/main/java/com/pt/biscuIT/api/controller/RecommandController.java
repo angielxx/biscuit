@@ -63,9 +63,9 @@ public class RecommandController {
     }
 
     @GetMapping("/random/category")
-    public ResponseEntity<? extends BaseResponseBody> getRandomRecentContent(
+    public ResponseEntity<? extends BaseResponseBody> getRandomCategoryContent(
             @PageableDefault(size = 30) Pageable pageable,
-            Integer categoryCount
+            @RequestParam(required = false, defaultValue = "5") int categoryCount
     ) {
         Page<ContentInfoListCategoryDto> contentList = recommandService.getRandomCategoryContent(categoryCount, pageable);
 
