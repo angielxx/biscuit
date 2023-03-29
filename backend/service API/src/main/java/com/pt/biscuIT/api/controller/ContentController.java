@@ -3,19 +3,17 @@ package com.pt.biscuIT.api.controller;
 import com.pt.biscuIT.api.service.ContentService;
 import com.pt.biscuIT.common.util.CsvUtil;
 import com.pt.biscuIT.db.repository.ContentRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/contents")
 @Slf4j
+@RequiredArgsConstructor
+@RequestMapping("/api/contents")
 public class ContentController {
-    @Autowired
     ContentService contentService;
-
-    @Autowired
     ContentRepository contentRepositorySupport;
 
     @GetMapping("/{contentId}")
@@ -27,6 +25,7 @@ public class ContentController {
             @PathVariable Long contentId,
             @RequestBody String feedback,
             @RequestBody(required = false) String timecost
+            // TODO: Feedback DTO 추가
     ) {
 //        contentService.feedbackContent(contentId, feedback);
         CsvUtil csvUtil = new CsvUtil();
