@@ -49,12 +49,12 @@ public class ContentRepositorySupport {
      * @param pageable
      * @return
      */
-    public Page<Content> findRecentContentByCategory(String category, Pageable pageable, Long lastContentId, int time) {
+    public Page<Content> findRecentContentByCategory(String category, Pageable pageable, Long lastContentId, int from, int to) {
         BooleanBuilder whereCondition = new BooleanBuilder();
 
         whereCondition.and(qContent.id.lt(lastContentId));
         whereCondition.and(qCategory.mainName.like(category).or(qCategory.subName.like(category)));
-        if(time > 0) whereCondition.and(qContent.timeCost.lt(time));
+        whereCondition.and(qContent.timeCost.between(from, to));
 
         List<Content> contentList = jpaQueryFactory
                 .selectFrom(qContent)
@@ -77,7 +77,7 @@ public class ContentRepositorySupport {
         );
     }
 
-    public Page<Content> findPopularContentByCategory(String category, Pageable pageable, Long poppularId, int time) {
+    public Page<Content> findPopularContentByCategory(String category, Pageable pageable, Long poppularId, int from, int to) {
         BooleanBuilder whereCondition = new BooleanBuilder();
 
         // 조인 조건
@@ -91,7 +91,7 @@ public class ContentRepositorySupport {
         whereCondition.and(qContentView.id.lt(poppularId));
 
         // 시간 조건
-        if(time > 0) whereCondition.and(qContent.timeCost.lt(time));
+        whereCondition.and(qContent.timeCost.between(from, to));
 
         List<Content> contentList = jpaQueryFactory
                 .select(qContent)
@@ -114,13 +114,13 @@ public class ContentRepositorySupport {
         );
     }
 
-    public Page<Content> findContentByTitleAndTag(String keyword, Integer time,  Long lastContentId, Pageable pageable) {
+    public Page<Content> findContentByTitleAndTag(String keyword, int from, int to, Long lastContentId, Pageable pageable) {
         List<OrderSpecifier> ORDERS = getOrderSpecifiers(pageable.getSort());
         List<Content> contents = jpaQueryFactory
                 .selectFrom(qContent)
                 .distinct()
                 .join(qContentTag).on(qContentTag.content.id.eq(qContent.id))
-                .where((containTitle(keyword).or(cotainTag(keyword))).and(existTime(time)))
+                .where((containTitle(keyword).or(cotainTag(keyword))).and(existTime(from, to)))
                 .orderBy(
                         ORDERS.stream().toArray(OrderSpecifier[]::new)
                 )
@@ -132,7 +132,7 @@ public class ContentRepositorySupport {
             .selectFrom(qContent)
             .distinct()
             .join(qContentTag).on(qContentTag.content.id.eq(qContent.id))
-            .where((containTitle(keyword).or(cotainTag(keyword))).and(existTime(time)))
+            .where((containTitle(keyword).or(cotainTag(keyword))).and(existTime(from, to)))
             .orderBy(
                 ORDERS.stream().toArray(OrderSpecifier[]::new)
             )
@@ -153,11 +153,8 @@ public class ContentRepositorySupport {
         return qContentTag.tag.name.containsIgnoreCase(keyword);
     }
 
-    private BooleanExpression existTime(int time) {
-        if(time == 0) {
-            return null;
-        }
-        return qContent.timeCost.lt(time);
+    private BooleanExpression existTime(int from, int to) {
+        return qContent.timeCost.between(from, to);
     }
 
     public Page<Content> findContentByRandom (Pageable pageable, int from, int to) {

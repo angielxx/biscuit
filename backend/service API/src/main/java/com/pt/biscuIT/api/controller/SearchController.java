@@ -26,10 +26,12 @@ public class SearchController {
 	private final SearchService searchService;
 
 	@GetMapping
-	public SearchContentRes search(@RequestParam String keyword, @RequestParam(required = false) Integer time, @RequestParam Long lastContentId, @PageableDefault(size = 30, sort = "createdDate")Pageable pageable) {
-		if(time == null) {
-			time = 0;
-		}
-		return searchService.search(keyword, time, lastContentId, pageable);
+	public SearchContentRes search(
+			@RequestParam String keyword,
+			@RequestParam(required = false, defaultValue = "0") int from,
+			@RequestParam(required = false, defaultValue = "1440") int to,
+			@RequestParam Long lastContentId,
+			@PageableDefault(size = 30, sort = "createdDate")Pageable pageable) {
+		return searchService.search(keyword, from, to, lastContentId, pageable);
 	}
 }

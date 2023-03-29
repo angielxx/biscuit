@@ -50,10 +50,11 @@ public class CategoryController {
             @PathVariable String category,
             @PageableDefault(size = 30, page = 0) Pageable pageable,
             @RequestParam(defaultValue = "999999") Long lastContentId,
-            @RequestParam(required = false, defaultValue = "0") int time,
+            @RequestParam(required = false, defaultValue = "0") int from,
+            @RequestParam(required = false, defaultValue = "1440") int to,
             @PathVariable String condition
     ) {
-        Page<ContentInfoDto> contentList = contentService.getCategoryContent(category, pageable, lastContentId, time, condition);
+        Page<ContentInfoDto> contentList = contentService.getCategoryContent(category, pageable, lastContentId, from, to, condition);
         if(contentList.getContent().size() == 0) throw new BiscuitException(ErrorCode.CONTENT_NOT_FOUND);
 
         PageMetaData metaData = PageMetaData.builder()
