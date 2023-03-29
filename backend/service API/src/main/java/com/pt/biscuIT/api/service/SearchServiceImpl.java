@@ -45,8 +45,12 @@ public class SearchServiceImpl implements SearchService {
 			.hit(c.getHit())
 			.build());
 
+		Long tmpLastContentId = 0L;
+		if(contents.getContent().size() > 0) {
+			tmpLastContentId = contents.getContent().get(contents.getContent().size() - 1).getId();
+		}
 		PageMetaData pageMetaData = PageMetaData.builder()
-												.lastContentId(contents.getContent().get(contents.getContent().size() - 1).getId())
+												.lastContentId(tmpLastContentId)
 												.last(contents.isLast())
 												.build();
 		SearchContentRes res = SearchContentRes.builder()

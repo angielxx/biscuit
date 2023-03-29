@@ -27,6 +27,9 @@ public class SearchController {
 
 	@GetMapping
 	public SearchContentRes search(@RequestParam String keyword, @RequestParam(required = false) Integer time, @RequestParam Long lastContentId, @PageableDefault(size = 30, sort = "createdDate")Pageable pageable) {
+		if(time == null) {
+			time = 0;
+		}
 		return searchService.search(keyword, time, lastContentId, pageable);
 	}
 }
