@@ -10,6 +10,10 @@ def date_format(created_date):
     if created_date == '오늘':
         return today.strftime('%Y-%m-%d')
     
+    if created_date == '어제':
+        return (today - timedelta(days=1)).strftime('%Y-%m-%d')
+    
+    
     if created_date.find('일 전') == 1:
         created_date = int(created_date[:1])
         return (today - timedelta(days=created_date)).strftime('%Y-%m-%d')
