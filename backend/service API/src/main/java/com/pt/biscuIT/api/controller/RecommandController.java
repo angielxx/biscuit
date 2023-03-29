@@ -43,9 +43,10 @@ public class RecommandController {
     @GetMapping("/random")
     public ResponseEntity<? extends BaseResponseBody> getRandomRecentContent(
             @PageableDefault(size = 30) Pageable pageable,
-            @RequestParam(required = false, defaultValue = "0") int time
+            @RequestParam(required = false, defaultValue = "0") int from,
+            @RequestParam(required = false, defaultValue = "1440") int to
     ) {
-        Page<ContentInfoDto> contentList = recommandService.getRandomContent(pageable, time);
+        Page<ContentInfoDto> contentList = recommandService.getRandomContent(pageable, from, to);
 
         PageMetaData metaData = PageMetaData.builder()
                 .lastContentId(contentList.getContent().get(contentList.getContent().size() - 1).getId())

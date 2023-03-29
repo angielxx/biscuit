@@ -160,14 +160,12 @@ public class ContentRepositorySupport {
         return qContent.timeCost.lt(time);
     }
 
-    public Page<Content> findContentByRandom (Pageable pageable, int time) {
+    public Page<Content> findContentByRandom (Pageable pageable, int from, int to) {
         List<OrderSpecifier> ORDERS = getOrderSpecifiers(pageable.getSort());
-        BooleanBuilder condition = new BooleanBuilder();
-        if(time > 0) condition.and(qContent.timeCost.lt(time));
 
         List<Content> contentList = jpaQueryFactory
                 .selectFrom(qContent)
-                .where(condition)
+                .where(qContent.timeCost.between(from, to))
                 .orderBy(ORDERS.stream().toArray(OrderSpecifier[]::new))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -180,6 +178,7 @@ public class ContentRepositorySupport {
                 pageable,
                 jpaQueryFactory
                         .selectFrom(qContent)
+                        .where(qContent.timeCost.between(from, to))
                         .orderBy(ORDERS.stream().toArray(OrderSpecifier[]::new))
                         .fetch()
                         .size()

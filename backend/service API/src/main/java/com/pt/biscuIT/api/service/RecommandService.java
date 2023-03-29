@@ -30,11 +30,9 @@ public class RecommandService {
     @Autowired
     ContentRepositorySupport contentRepositorySupport;
 
-    public Page<ContentInfoDto> getRandomContent(Pageable pageable, int time) {
-        Page<ContentInfoDto> res = new PageImpl<>(new ArrayList<>(), pageable, 0);
-
-        Page<Content> contentList = contentRepositorySupport.findContentByRandom(pageable, time);
-        res = contentList.map(ContentInfoDto::new);
+    public Page<ContentInfoDto> getRandomContent(Pageable pageable, int from, int to) {
+        Page<Content> contentList = contentRepositorySupport.findContentByRandom(pageable, from, to);
+        Page<ContentInfoDto> res = contentList.map(ContentInfoDto::new);
 
         return res;
     }
