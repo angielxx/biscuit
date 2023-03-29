@@ -8,9 +8,12 @@ import { useRecoilState } from 'recoil';
 import { isModalOpenState } from './recoils/Contents/Atoms';
 import RecentContentModal from './components/common/Modal/RecontContentModal';
 import Modal from './components/common/Modal/Modal';
+import { isStartModalState } from './recoils/Start/Atoms';
+import Login from './components/Start/Login';
 
 export default function Routers() {
   const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState);
+  const [isStartModalOpen, setIsStartModalOpen] = useRecoilState(isStartModalState);
 
   return (
     <div>
@@ -18,6 +21,12 @@ export default function Routers() {
         <Modal
           onClose={() => setIsModalOpen(false)}
           content={<RecentContentModal onClose={() => setIsModalOpen(false)} />}
+        />
+      ) : null}
+      {isStartModalOpen ? (
+        <Modal
+          onClose={() => setIsStartModalOpen(false)}
+          content={<Login />}
         />
       ) : null}
       <Routes>
