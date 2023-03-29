@@ -6,8 +6,7 @@ import com.pt.biscuIT.common.model.response.BaseResponseBody;
 import com.pt.biscuIT.common.model.response.PageMetaData;
 import com.pt.biscuIT.api.dto.content.ContentInfoDto;
 import com.pt.biscuIT.api.response.RandomRecentContentRes;
-import com.pt.biscuIT.api.service.RecommandService;
-import com.pt.biscuIT.db.entity.Content;
+import com.pt.biscuIT.api.service.RecommendService;
 import com.pt.biscuIT.db.repository.ContentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +17,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/api/recommands")
+@RequestMapping("/api/recommends")
 @Slf4j
-public class RecommandController {
+public class RecommendController {
 
     @Autowired
-    RecommandService recommandService;
+    RecommendService recommendService;
 
     @Autowired
     ContentRepository contentRepositorySupport;
@@ -46,7 +43,7 @@ public class RecommandController {
             @RequestParam(required = false, defaultValue = "0") int from,
             @RequestParam(required = false, defaultValue = "1440") int to
     ) {
-        Page<ContentInfoDto> contentList = recommandService.getRandomContent(pageable, from, to);
+        Page<ContentInfoDto> contentList = recommendService.getRandomContent(pageable, from, to);
 
         PageMetaData metaData = PageMetaData.builder()
                 .lastContentId(contentList.getContent().get(contentList.getContent().size() - 1).getId())
@@ -70,7 +67,7 @@ public class RecommandController {
             @RequestParam(required = false, defaultValue = "0") int from,
             @RequestParam(required = false, defaultValue = "1440") int to
     ) {
-        Page<ContentInfoListCategoryDto> contentList = recommandService.getRandomCategoryContent(categoryCount, pageable, from, to);
+        Page<ContentInfoListCategoryDto> contentList = recommendService.getRandomCategoryContent(categoryCount, pageable, from, to);
 
         return ResponseEntity.status(200).body(RandomCategoryContentRes.of(
                 HttpStatus.OK.value(),
