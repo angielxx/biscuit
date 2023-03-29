@@ -1,7 +1,6 @@
 package com.pt.biscuIT.config;
-
+import com.pt.biscuIT.api.service.AuthService;
 import com.pt.biscuIT.api.service.MemberService;
-import com.pt.biscuIT.common.auth.BiscuitMemberDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/auth/signin/**",
     };
 
-    private BiscuitMemberDetailsService biscuitMemberDetailsService;
+    private AuthService authService;
 
     private MemberService memberService;
 
@@ -53,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        daoAuthenticationProvider.setUserDetailsService(this.biscuitMemberDetailsService);
+        daoAuthenticationProvider.setUserDetailsService(this.authService);
         return daoAuthenticationProvider;
     }
 
