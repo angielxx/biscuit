@@ -25,8 +25,8 @@ public class ContentController {
     @PostMapping("/{contentId}/feedback")
     public ResponseEntity<?> feedbackContent(
             @PathVariable Long contentId,
-            @RequestParam String feedback,
-            @RequestParam(required = false) String timecost
+            @RequestBody String feedback,
+            @RequestBody(required = false) String timecost
     ) {
 //        contentService.feedbackContent(contentId, feedback);
         CsvUtil csvUtil = new CsvUtil();
