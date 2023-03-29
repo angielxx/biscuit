@@ -20,12 +20,12 @@ interface AboutUserProps {
   isClicked: () => void;
   jobSelected: string;
   setJobSelected: React.Dispatch<React.SetStateAction<string>>;
-  yearSelected: string;
-  setYearSelected: React.Dispatch<React.SetStateAction<string>>;
+  periodSelected: string;
+  setPeriodSelected: React.Dispatch<React.SetStateAction<string>>;
   isBack: () => void;
 }
 
-const AboutUser = ({ isClicked, jobSelected, setJobSelected, yearSelected, setYearSelected, isBack }: AboutUserProps) => {
+const AboutUser = ({ isClicked, jobSelected, setJobSelected, periodSelected, setPeriodSelected, isBack }: AboutUserProps) => {
   const jobList = [
     { id: 0, content: "Frontend" },
     { id: 1, content: "Backend" },
@@ -71,13 +71,13 @@ const AboutUser = ({ isClicked, jobSelected, setJobSelected, yearSelected, setYe
           <DropDown 
             itemList={yearsList} 
             placeHolder="연차 선택"
-            selected={yearSelected}
-            setSelected={setYearSelected}
+            selected={periodSelected}
+            setSelected={setPeriodSelected}
           />
         </ChooseItem>
       </ChooseContent>
       <div className="flex justify-center px-2 gap-2 mb-4">
-        <Button title="선택 완료" status={jobSelected !== "" && yearSelected !== "" ? "active" : "disabled"} onClick={isClicked} />   
+        <Button title="선택 완료" status={jobSelected !== "" && periodSelected !== "" ? "active" : "disabled"} onClick={isClicked} />   
       </div>
     </>
   );

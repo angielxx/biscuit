@@ -38,7 +38,7 @@ const TextInput = ({status, isCount, onChange}: TextInputProps) => {
     <div className="w-full flex flex-col items-start p-2 gap-2">
       <Input 
         placeholder="닉네임을 입력하세요"
-        maxLength={9}
+        maxLength={10}
         status={status}
         onChange={onChange}
       />
