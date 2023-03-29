@@ -93,8 +93,6 @@ interface ContentCardItemProps {
 const ContentCardItem = ({ content }: ContentCardItemProps) => {
   // 북마크 저장 여부
   const [isMarked, setIsMarked] = useState<boolean>(content.marked);
-  // 북마크 버튼 숨김
-  const [hideMark, setHideMark] = useState<boolean>(true);
   // 요약
   const [desc, setDesc] = useState<string | null>('');
   // 로그인 여부

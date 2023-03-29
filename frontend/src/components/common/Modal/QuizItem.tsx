@@ -12,7 +12,7 @@ const Question = tw.h4`text-h4 text-white`;
 
 const QuizItemContainer = tw.div`flex flex-col gap-2 items-center`;
 
-const OptionsContainer = tw.div`flex flex-wrap gap-2`;
+const OptionsContainer = tw.div`flex flex-wrap gap-2 justify-center items-center`;
 
 const QuizItem = ({ question, options, onClick }: QuizItemProps) => {
   const [clickedOption, setClickedOption] = useState<null | number>(null);
@@ -26,7 +26,10 @@ const QuizItem = ({ question, options, onClick }: QuizItemProps) => {
             key={index}
             option={option}
             status={clickedOption === index ? 'selected' : 'default'}
-            onClick={() => setClickedOption(index)}
+            onClick={() => {
+              onClick(index);
+              setClickedOption(index);
+            }}
           />
         ))}
       </OptionsContainer>
