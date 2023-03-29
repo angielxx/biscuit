@@ -2,7 +2,6 @@ package com.pt.biscuIT.api.service;
 
 import com.pt.biscuIT.api.dto.content.ContentInfoDto;
 import com.pt.biscuIT.api.dto.content.ContentInfoListCategoryDto;
-import com.pt.biscuIT.db.entity.Category;
 import com.pt.biscuIT.db.entity.Content;
 import com.pt.biscuIT.db.repository.ContentRepository;
 import com.pt.biscuIT.db.repository.ContentRepositorySupport;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +21,8 @@ import java.util.List;
  * @since 2020-11-23
  */
 @Slf4j
-@Service("recommandService")
-public class RecommandService {
+@Service("recommendService")
+public class RecommendService {
     @Autowired
     ContentRepository contentRepository;
     @Autowired
