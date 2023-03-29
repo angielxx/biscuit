@@ -1,18 +1,18 @@
-package com.pt.biscuIT.common.auth;
+package com.pt.biscuIT.api.dto.member;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import com.pt.biscuIT.db.entity.Member;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * 현재 액세스 토큰으로 부터 인증된 유저의 부가 상세정보(활성화 여부, 만료, 롤 등) 정의.
  */
-public class BiscuitMemberDetails implements UserDetails {
-    @Autowired
+@RequiredArgsConstructor
+public class MemberAuthDto implements UserDetails {
     Member member;
     boolean accountNonExpired;
     boolean accountNonLocked;
@@ -20,7 +20,7 @@ public class BiscuitMemberDetails implements UserDetails {
     boolean enabled = false;
     List<GrantedAuthority> roles = new ArrayList<>();
 
-    public BiscuitMemberDetails(Member member) {
+    public MemberAuthDto(Member member) {
         super();
         this.member = member;
     }
