@@ -1,14 +1,13 @@
 package com.pt.biscuIT.db.repository;
 
-import com.pt.biscuIT.db.entity.Content;
-import com.pt.biscuIT.db.entity.QCategory;
-import com.pt.biscuIT.db.entity.QContent;
-import com.pt.biscuIT.db.entity.QContentTag;
+import com.pt.biscuIT.api.dto.content.ContentInfoDto;
+import com.pt.biscuIT.db.entity.*;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -42,22 +41,16 @@ public class ContentRepositorySupport {
     QCategory qCategory = QCategory.category;
     QContentTag qContentTag = QContentTag.contentTag;
 
+    QContentView qContentView = QContentView.contentView;
+
     /**
      * 최근 등록된 컨텐츠를 랜덤으로 가져온다.
      *
      * @param pageable
      * @return
      */
-    public Page<Content> findContentByCategory(String category, Pageable pageable, Long lastContentId, int time, int hitRate) {
-        List<OrderSpecifier> ORDERS = getOrderSpecifiers(pageable.getSort());
-
+    public Page<Content> findRecentContentByCategory(String category, Pageable pageable, Long lastContentId, int time) {
         BooleanBuilder whereCondition = new BooleanBuilder();
-
-        for (Sort.Order o : pageable.getSort()) {
-            if (o.getProperty().equals("hit")) {
-                whereCondition.and(qContent.hit.loe(hitRate));
-            }
-        }
 
         whereCondition.and(qContent.id.lt(lastContentId));
         whereCondition.and(qCategory.mainName.like(category).or(qCategory.subName.like(category)));
@@ -67,9 +60,7 @@ public class ContentRepositorySupport {
                 .selectFrom(qContent)
                 .join(qContent.category, qCategory)
                 .where(whereCondition)
-                .orderBy(
-                        ORDERS.stream().toArray(OrderSpecifier[]::new)
-                )
+                .orderBy(qContent.id.desc())
                 .offset(0)
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -81,9 +72,44 @@ public class ContentRepositorySupport {
                         .selectFrom(qContent)
                         .join(qContent.category, qCategory)
                         .where(whereCondition)
-                        .orderBy(
-                                ORDERS.stream().toArray(OrderSpecifier[]::new)
-                        )
+                        .orderBy(qContent.id.desc())
+                        .fetch().size()
+        );
+    }
+
+    public Page<Content> findPopularContentByCategory(String category, Pageable pageable, Long poppularId, int time) {
+        BooleanBuilder whereCondition = new BooleanBuilder();
+
+        // 조인 조건
+        whereCondition.and(qContent.category.id.eq(qCategory.id));
+        whereCondition.and(qContent.id.eq(qContentView.contentId));
+
+        // 카테고리 서치
+        whereCondition.and(qCategory.mainName.like(category).or(qCategory.subName.like(category)));
+
+        // 페이징 조건
+        whereCondition.and(qContentView.id.lt(poppularId));
+
+        // 시간 조건
+        if(time > 0) whereCondition.and(qContent.timeCost.lt(time));
+
+        List<Content> contentList = jpaQueryFactory
+                .select(qContent)
+                .from(qContent, qContentView, qCategory)
+                .where(whereCondition)
+                .orderBy(qContentView.id.desc())
+                .offset(0)
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return new PageImpl<>(
+                contentList,
+                pageable,
+                jpaQueryFactory
+                        .select(qContent)
+                        .from(qContent, qContentView, qCategory)
+                        .where(whereCondition)
+                        .orderBy(qContentView.id.desc())
                         .fetch().size()
         );
     }
