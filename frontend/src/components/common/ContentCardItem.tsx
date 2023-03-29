@@ -6,12 +6,13 @@ import {
   isStartState,
   isModalOpenState,
   recentContentState,
+  endTimeState,
 } from '../../recoils/Contents/Atoms';
 
 // twin macro
 import tw, { styled, css, TwStyle } from 'twin.macro';
 import { useGetMetaData } from '../../hooks/useGetMetaData';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 // Styled component
 const Tag = styled.div`
@@ -85,8 +86,6 @@ interface ContentCardItemProps {
 const ContentCardItem = ({ content }: ContentCardItemProps) => {
   // 북마크 저장 여부
   const [isMarked, setIsMarked] = useState<boolean>(content.marked);
-  // 북마크 버튼 숨김
-  const [hideMark, setHideMark] = useState<boolean>(true);
   // 요약
   const [desc, setDesc] = useState<string | null>('');
   // 로그인 여부
@@ -121,18 +120,20 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
     staleTime: 1000 * 60 * 30,
   });
 
+  const startTime = useRecoilValue(startTimeState);
   const setStartTime = useSetRecoilState(startTimeState);
   const setIsStart = useSetRecoilState(isStartState);
   const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState);
-  const setcontent = useSetRecoilState(recentContentState);
+  const setContent = useSetRecoilState(recentContentState);
 
   const clickContentHandler = (url: string) => {
     window.open(url, '_blank', 'noopener, noreferrer');
-    setStartTime(Date.now());
+    setStartTime(Number(Date.now().toString()));
+    // console.log(Date.now().toString());
     setIsStart(true);
     if (!isModalOpen) {
       setIsModalOpen(true);
-      setcontent(content);
+      setContent(content);
       // console.log('content :', content);
     }
   };

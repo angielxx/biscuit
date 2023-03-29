@@ -3,7 +3,7 @@ import { requests } from './requests';
 
 export const post_feedback = async (
   contentId: number,
-  feedback: 1 | 2 | 3,
+  feedback: number | null,
   timecost: number
 ) => {
   await baseInstance.post(requests.POST_FEEDBACK(contentId), {

@@ -18,20 +18,20 @@ type optionStylesType = {
 };
 
 const optionStyles: optionStylesType = {
-  default: tw`bg-primary`,
-  selected: tw``,
+  default: tw`border-[1px] border-white`,
+  selected: tw`border-[1px] border-primary bg-primary text-black text-sub-bold`,
   wrong: tw``,
   right: tw``,
 };
 
 const Option = styled.div((props: { status: StatusType }) => [
-  tw`text-main px-3`,
-  optionStyles[status],
+  tw`text-sub px-3 rounded-full py-1 px-3 cursor-pointer text-center`,
+  optionStyles[props.status],
 ]);
 
 const QuizOption = ({ option, status, onClick }: QuizOptionProps) => {
   return (
-    <Option status={status}>
+    <Option status={status} onClick={() => onClick()}>
       <span>{option}</span>
     </Option>
   );
