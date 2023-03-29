@@ -101,7 +101,16 @@ public class ContentRepositorySupport {
                 .offset(lastContentId)
                 .limit(pageable.getPageSize())
                 .fetch();
-        return new PageImpl<>(contents, pageable, contents.size());
+        return new PageImpl<>(contents, pageable,
+            jpaQueryFactory
+            .selectFrom(qContent)
+            .distinct()
+            .join(qContentTag).on(qContentTag.content.id.eq(qContent.id))
+            .where((containTitle(keyword).or(cotainTag(keyword))).and(existTime(time)))
+            .orderBy(
+                ORDERS.stream().toArray(OrderSpecifier[]::new)
+            )
+            .fetchCount());
     }
 
     private BooleanExpression containTitle(String keyword) {
