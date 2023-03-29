@@ -1,7 +1,9 @@
 package com.pt.biscuIT.common.util;
 
-import javax.imageio.IIOException;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,6 +17,7 @@ public class CsvUtil {
             sb.append(s);
             sb.append(",");
         }
+        sb.deleteCharAt(sb.length() - 1);
         return sb.toString();
     }
 
@@ -23,12 +26,11 @@ public class CsvUtil {
         String path = "";
         String sep = "";
         List<String> userDirList = null;
-
-        if (OS.indexOf("win") >= 0) {
-            userDirList = Arrays.asList(System.getProperty("user.dir").split("\\\\"));
+        if (OS.contains("win")) {
+            userDirList = new ArrayList<>(Arrays.asList(System.getProperty("user.dir").split("\\\\")));
             sep = "\\";
         } else {
-            userDirList = Arrays.asList(System.getProperty("user.dir").split("/"));
+            userDirList = new ArrayList<>(Arrays.asList(System.getProperty("user.dir").split("/")));
             sep = "/";
         }
         userDirList.remove(userDirList.size() - 1);
@@ -40,8 +42,12 @@ public class CsvUtil {
 
     public void writeCsvFile(String path, String[] data) {
         BufferedWriter bw = null;
+        File file = new File(path);
         try {
-            bw = new BufferedWriter(new FileWriter(path, true));
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            bw = new BufferedWriter(new FileWriter(file, true));
             bw.write(writeCsv(data));
             bw.newLine();
         } catch (IOException e) {
