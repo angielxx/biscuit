@@ -25,11 +25,11 @@ public class SearchServiceImpl implements SearchService {
 	private final ContentRepositorySupport contentRepositorySupport;
 
 	@Override
-	public SearchContentRes search(String keyword, Integer time,  Long lastContentId, Pageable pageable) {
+	public SearchContentRes search(String keyword, int from, int to, Long lastContentId, Pageable pageable) {
 		//태그 용 빈배열
 		String[] tags = {};
 		Pageable page = PageRequest.of(0, pageable.getPageSize(), pageable.getSort());
-		Page<Content> contents = contentRepositorySupport.findContentByTitleAndTag(keyword, time, lastContentId, page);
+		Page<Content> contents = contentRepositorySupport.findContentByTitleAndTag(keyword, from, to, lastContentId, page);
 
 		Page<ContentInfoDto> dtos = contents.map(c -> ContentInfoDto.builder()
 			.id(c.getId())
