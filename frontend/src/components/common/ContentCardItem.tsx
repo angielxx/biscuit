@@ -156,11 +156,7 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
         onClick={() => clickContentHandler(content.url)}
         className="w-full"
       >
-        <Thumbnail
-          image={thumbImg ? thumbImg : ''}
-          onMouseEnter={() => setHideMark(false)}
-          onMouseLeave={() => setHideMark(true)}
-        />
+        <Thumbnail image={thumbImg ? thumbImg : ''} />
       </button>
 
       <ContentInfo>
