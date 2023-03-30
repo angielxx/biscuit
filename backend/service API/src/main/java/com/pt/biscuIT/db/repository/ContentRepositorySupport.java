@@ -77,7 +77,7 @@ public class ContentRepositorySupport {
         );
     }
 
-    public Page<Content> findPopularContentByCategory(String category, Pageable pageable, Long poppularId, int from, int to) {
+    public Page<Content> findPopularContentByCategory(String category, Pageable pageable, Long popularId, int from, int to) {
         BooleanBuilder whereCondition = new BooleanBuilder();
 
         // 조인 조건
@@ -88,7 +88,7 @@ public class ContentRepositorySupport {
         whereCondition.and(qCategory.mainName.like(category).or(qCategory.subName.like(category)));
 
         // 페이징 조건
-        whereCondition.and(qContentView.id.lt(poppularId));
+        whereCondition.and(qContentView.id.lt(popularId));
 
         // 시간 조건
         whereCondition.and(qContent.timeCost.between(from, to));
@@ -114,29 +114,55 @@ public class ContentRepositorySupport {
         );
     }
 
-    public Page<Content> findContentByTitleAndTag(String keyword, int from, int to, Long lastContentId, Pageable pageable) {
-        List<OrderSpecifier> ORDERS = getOrderSpecifiers(pageable.getSort());
+    public Page<Content> findRecentContentByTitleAndTag(String keyword, Pageable pageable, Long lastContentId, int from, int to) {
+        BooleanBuilder whereCondition = new BooleanBuilder();
+        whereCondition.and(qContent.id.lt(lastContentId));
+        whereCondition.and(containTitle(keyword).or(cotainTag(keyword)));
+        whereCondition.and(qContent.timeCost.between(from, to));
+
         List<Content> contents = jpaQueryFactory
-                .selectFrom(qContent)
-                .distinct()
-                .join(qContentTag).on(qContentTag.content.id.eq(qContent.id))
-                .where((containTitle(keyword).or(cotainTag(keyword))).and(existTime(from, to)))
-                .orderBy(
-                        ORDERS.stream().toArray(OrderSpecifier[]::new)
-                )
-                .offset(lastContentId)
-                .limit(pageable.getPageSize())
-                .fetch();
-        return new PageImpl<>(contents, pageable,
-            jpaQueryFactory
             .selectFrom(qContent)
             .distinct()
             .join(qContentTag).on(qContentTag.content.id.eq(qContent.id))
-            .where((containTitle(keyword).or(cotainTag(keyword))).and(existTime(from, to)))
-            .orderBy(
-                ORDERS.stream().toArray(OrderSpecifier[]::new)
-            )
-            .fetchCount());
+            .where(whereCondition)
+            .orderBy(qContent.id.desc())
+            .offset(0)
+            .limit(pageable.getPageSize())
+            .fetch();
+        return new PageImpl<>(contents, pageable,
+            jpaQueryFactory
+                .selectFrom(qContent)
+                .distinct()
+                .join(qContentTag).on(qContentTag.content.id.eq(qContent.id))
+                .where(whereCondition)
+                .orderBy(qContent.id.desc())
+                .fetch().size());
+    }
+
+    public Page<Content> findPopularContentByTitleAndTag(String keyword, Pageable pageable, Long popularId, int from, int to) {
+        BooleanBuilder whereCondition = new BooleanBuilder();
+        whereCondition.and(qContentTag.content.id.eq(qContent.id));
+        whereCondition.and(qContent.id.eq(qContentView.contentId));
+        whereCondition.and(containTitle(keyword).or(cotainTag(keyword)));
+        whereCondition.and(qContentView.id.lt(popularId));
+        whereCondition.and(qContent.timeCost.between(from, to));
+        List<Content> contents = jpaQueryFactory
+                .select(qContent)
+                .from(qContent, qContentView, qContentTag)
+                .distinct()
+                .where(whereCondition)
+                .orderBy(qContentView.id.desc())
+                .offset(0)
+                .limit(pageable.getPageSize())
+                .fetch();
+        return new PageImpl<>(contents, pageable,
+                    jpaQueryFactory
+                        .select(qContent)
+                        .from(qContent, qContentView, qContentTag)
+                        .distinct()
+                        .where(whereCondition)
+                        .orderBy(qContentView.id.desc())
+                        .fetch().size());
     }
 
     private BooleanExpression containTitle(String keyword) {
@@ -151,10 +177,6 @@ public class ContentRepositorySupport {
             return null;
         }
         return qContentTag.tag.name.containsIgnoreCase(keyword);
-    }
-
-    private BooleanExpression existTime(int from, int to) {
-        return qContent.timeCost.between(from, to);
     }
 
     public Page<Content> findContentByRandom (Pageable pageable, int from, int to) {
