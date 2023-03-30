@@ -5,7 +5,7 @@ import os
 
 
 def connect():
-    ini_path = os.getcwd().split("src")[0] + "src/config.ini"
+    ini_path = os.getcwd().split("src")[0] + "\src\config.ini"
     config = configparser.ConfigParser()
     config.read(ini_path, encoding="utf-8")
     print(ini_path)

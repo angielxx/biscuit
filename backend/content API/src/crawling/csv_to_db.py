@@ -21,52 +21,47 @@ def insert_article():
         channel = row[2]
         created_date = datetime.datetime.strptime(row[3], "%Y-%m-%d")
         categories = row[4]
+        content_type = "ARTICLE"
 
         # article data 삽입
-        article_insert_sql = """insert ignore into content (source, title, writer, channel, created_date, type) values (%s, %s, %s, %s, %s, article)"""
+        article_insert_sql = """insert ignore into content (source, title, writer, channel, created_date, type) values (%s, %s, %s, %s, %s, %s)"""
         curs.execute(
-            article_insert_sql, (source, title, channel, channel, created_date)
+            article_insert_sql,
+            (source, title, channel, channel, created_date, content_type),
         )
 
         for category in categories.split():
+
             print("title", title)
             print("channel", channel)
             print("created_date", created_date)
             print("category", category)
 
-            category_insert_sql = """
-                    insert ignore into category (name) values (%s)
-                """
-            curs.execute(category_insert_sql, (category))
-
-            content_select_sql = """
+            # insert_category_sql = """
+            #         insert ignore into category (sub_name) values (%s)
+            #     """
+            select_content_id_sql = """
                     select id from content where source = %s
                 """
-            curs.execute(content_select_sql, (source))
-
-            category_select_sql = """
-                    select id from category where name = %s
+            select_category_id_sql = """
+                    select id from category where sub_name = %s
                 """
+            content_category_sql = """
+                    insert into content_category (content_id, category_id) values (%s, %s)
+                """
+            # category_update_sql = """update biscuit.category set content_cnt = content_cnt + 1 where sub_name = %s"""
 
-            content_id, category_id = None, None
+            # insert category
+            # curs.execute(insert_category_sql, (category))
+
+            # insert content_category
+            curs.execute(select_content_id_sql, (source))
             content_row = curs.fetchone()
-            print(content_row)
-            if content_row:
-                content_id = content_row[0]
-                print("content_id", content_id)
-            curs.execute(category_select_sql, (category))
+            curs.execute(select_category_id_sql, (category))
             category_row = curs.fetchone()
-            print(category_row)
-            if category_row:
-                category_id = category_row[0]
-                print("category_id", category_id)
-            if content_id and category_id:
-                content_category_sql = """
-                        insert into content_category (content_id, category_id) values ((select id from content where source = %s), (select id from category where name = %s))
-                    """
-                category_update_sql = """update biscuit.category set content_cnt = content_cnt + 1 where name = %s"""
-                curs.execute(content_category_sql, (source, category))
-                curs.execute(category_update_sql, (category))
+            if content_row and category_row:
+                curs.execute(content_category_sql, (content_row[0], category_row[0]))
+                # curs.execute(category_update_sql, (category))
 
         # db의 변화 저장
 
@@ -88,14 +83,38 @@ def insert_video():
 
     for row in csvReader:
 
-        video_id = row[0]
+        source = row[0]
         title = row[1]
         channel = row[2]
         created_date = datetime.datetime.strptime(row[3], "%Y-%m-%d")
         category_id = row[4]
+        content_type = "VIDEO"
 
-        content_insert_sql = """insert ignore into content (source, title, writer, channel, created_date) values (%s, %s, %s, %s, %s)"""
-
-        curs.execute(
-            content_insert_sql, (source, title, channel, channel, created_date)
+        print(
+            "title",
+            title,
+            "channel",
+            channel,
+            "created_date",
+            created_date,
+            "category_id",
+            category_id,
         )
+
+        # video data 삽입
+        video_insert_sql = """insert ignore into content (source, title, writer, channel, created_date, type) values (%s, %s, %s, %s, %s, %s)"""
+        curs.execute(
+            video_insert_sql,
+            (source, title, channel, channel, created_date, content_type),
+        )
+
+        # content category 삽입
+        content_category_sql = """
+                    insert into content_category (content_id, category_id) values ((select id from content where source = %s), %d)
+                """
+        curs.execute(content_category_sql, (source, category_id))
+
+        conn.commit()
+
+    f.close()
+    conn.close()
