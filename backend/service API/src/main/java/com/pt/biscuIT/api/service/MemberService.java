@@ -1,6 +1,7 @@
 package com.pt.biscuIT.api.service;
 
 import com.pt.biscuIT.db.entity.Member;
+import com.pt.biscuIT.db.repository.MemberRepository;
 import com.pt.biscuIT.db.repository.MemberRepositorySupport;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +18,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service("memberService")
 public class MemberService {
+    MemberRepository memberRepository;
     MemberRepositorySupport memberRepositorySupport;
 
-    public Member getMemberByEmail(String email) {
-        return memberRepositorySupport.findByEmail(email);
+    public Member findMemberById(Long id) {
+        if (memberRepository.findById(id).isPresent()) {
+            return memberRepository.findById(id).get();
+        }else {
+            throw new IllegalArgumentException("해당 회원이 존재하지 않습니다.");
+        }
     }
 }
