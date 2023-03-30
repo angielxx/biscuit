@@ -12,7 +12,7 @@ const OnBoarding = () => {
     nickname: "",
     period: "",
     job: "",
-    interests: "",
+    interests: [],
   });
 
   const [page, setPage] = useState<number>(0);
@@ -95,12 +95,13 @@ const OnBoarding = () => {
     const nextId = useRef(0);
     const interest = {
       id: nextId.current + 1,
-      interest: item
+      title: item
     }
+    
   }
 
   const isSend = () => {
-    // setUserData({...userData, interest: selectList})
+    setUserData({...userData, interests: selectList})
     console.log(userData);
   }
 
