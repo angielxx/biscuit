@@ -35,8 +35,11 @@ function scrap(doc: Document, url: string) {
 
 export const useGetMetaData = async (url: string) => {
   try {
-    const html = await fetch(url, {
-      mode: 'cors',
+    console.log('url :', url);
+    const html = await fetch(`https://cors-anywhere.herokuapp.com/${url}`, {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+      },
     }).then((res) => {
       return res.text();
     });

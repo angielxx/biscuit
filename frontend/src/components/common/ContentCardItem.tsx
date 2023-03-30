@@ -90,7 +90,7 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
   const [desc, setDesc] = useState<string | null>('');
   // 로그인 여부
   const isAuth = false;
-
+  // console.log('content in card :', content);
   // 날짜 포맷
   const stringToDate = (date: string) => {
     const year = date.slice(0, 4);
