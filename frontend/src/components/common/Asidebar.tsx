@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { isStartModalState } from '../../recoils/Start/Atoms';
 
 // components
 import BigCategory from './BigCategory';
@@ -13,6 +14,7 @@ import { useQuery } from '@tanstack/react-query';
 import { get_categories } from '../../api/category';
 import AsideProfile from './AsideProfile';
 import AsideLogin from './AsideLogin';
+import { useRecoilState } from 'recoil';
 
 const Aside = styled.div`
   ${tw`h-full z-20 flex flex-col items-start p-2 fixed w-[314px] right-0 top-0 bg-[#1A1B1E]`}
@@ -49,6 +51,7 @@ type ClickHanlder = (item: string) => void;
 const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
   const [isCategory, setIsCategory] = useState<boolean>(false);
   const [page, setPage] = useState<number>();
+  const [isStartModal, setIsStartModal] = useRecoilState(isStartModalState);
   const navigate = useNavigate();
 
   const { data, isLoading } = useQuery(
@@ -61,8 +64,8 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
     setIsOpen(false);
   };
 
-  const goLogin = () => {
-    navigate(`/start`);
+  const startModal = () => {
+    setIsStartModal(true);
     setIsOpen(false);
   }
 
@@ -77,7 +80,7 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
       </Closeicon>
 
       {/* 로그인 안했을 때 */}
-      <AsideLogin onClick={goLogin} />
+      <AsideLogin onClick={startModal} />
       
 
       {/* 로그인 했을 때 */}
