@@ -12,7 +12,7 @@ import OnBoarding from './pages/OnBoarding';
 
 export default function Routers() {
   const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState);
-
+  // setIsModalOpen(true);
   return (
     <div>
       {isModalOpen ? (

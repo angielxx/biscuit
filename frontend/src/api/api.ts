@@ -59,7 +59,7 @@ export const get_search = async (
   size: number
 ): Promise<
   | {
-      contentList: Array<content>;
+      content: Array<content>;
       nextLastContentId: number;
       isLast: boolean;
     }
@@ -69,8 +69,9 @@ export const get_search = async (
     requests.GET_SEARCH(keyword, sort, time, lastContentId, size)
   );
   const { last: isLast } = data.metaData;
-  const { contentList } = data.results;
-  const nextLastContentId = contentList[contentList.length - 1]?.id;
+  const { content } = data.results;
+  console.log(data);
+  const nextLastContentId = content[content.length - 1]?.id;
 
-  return { contentList, nextLastContentId, isLast };
+  return { content, nextLastContentId, isLast };
 };
