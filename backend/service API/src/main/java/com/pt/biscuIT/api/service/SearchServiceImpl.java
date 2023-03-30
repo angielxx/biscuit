@@ -30,14 +30,14 @@ public class SearchServiceImpl implements SearchService {
 	private final ContentViewRepositorySupport contentViewRepositorySupport;
 
 	@Override
-	public SearchContentRes search(String keyword, int from, int to, Long lastContentId, Pageable pageable, String condition) {
+	public SearchContentRes search(String keyword, int from, int to, Long lastContentId, Pageable pageable, String condition, Type type) {
 		Page<Content> contentList = null;
 		if("recent".equals(condition)) {
-			contentList = contentRepositorySupport.findRecentContentByTitleAndTag(keyword, pageable, lastContentId, from, to);
+			contentList = contentRepositorySupport.findRecentContentByTitleAndTag(keyword, pageable, lastContentId, from, to, type);
 		}
 		else if("hit".equals(condition)) {
 			Long popularId = contentViewRepositorySupport.findIdByContentId(lastContentId);
-			contentList = contentRepositorySupport.findPopularContentByTitleAndTag(keyword, pageable, popularId, from, to);
+			contentList = contentRepositorySupport.findPopularContentByTitleAndTag(keyword, pageable, popularId, from, to, type);
 		} else throw new BiscuitException(ErrorCode.INVALID_PARAMETER);
 
 		if(contentList == null || contentList.getContent().size() == 0) throw new BiscuitException(ErrorCode.CONTENT_NOT_FOUND);

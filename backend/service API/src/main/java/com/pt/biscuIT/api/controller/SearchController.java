@@ -2,6 +2,7 @@ package com.pt.biscuIT.api.controller;
 
 import java.util.List;
 
+import com.pt.biscuIT.db.entity.Type;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +34,8 @@ public class SearchController {
 			@RequestParam(required = false, defaultValue = "1440") int to,
 			@RequestParam(defaultValue = "999999") Long lastContentId,
 			@PageableDefault(size = 30, page = 0) Pageable pageable,
-			@PathVariable String condition) {
-		return searchService.search(keyword, from, to, lastContentId, pageable, condition);
+			@PathVariable String condition,
+			@RequestParam Type type) {
+		return searchService.search(keyword, from, to, lastContentId, pageable, condition, type);
 	}
 }
