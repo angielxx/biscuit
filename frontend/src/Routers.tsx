@@ -9,7 +9,8 @@ import { isModalOpenState } from './recoils/Contents/Atoms';
 import RecentContentModal from './components/common/Modal/RecontContentModal';
 import Modal from './components/common/Modal/Modal';
 import { isStartModalState } from './recoils/Start/Atoms';
-import Login from './components/Start/Login';
+import Start from './components/Start/Start';
+import GoogleLogin from './components/Start/GoogleLogin';
 
 export default function Routers() {
   const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState);
@@ -26,7 +27,7 @@ export default function Routers() {
       {isStartModalOpen ? (
         <Modal
           onClose={() => setIsStartModalOpen(false)}
-          content={<Login />}
+          content={<Start />}
         />
       ) : null}
       <Routes>
@@ -34,6 +35,7 @@ export default function Routers() {
         <Route path="/search" element={<Search />} />
         <Route path="/category/:name" element={<Category />} />
         <Route path="admin" element={<Admin />} />
+        <Route path="/login/oauth2/code/google" element={<GoogleLogin />} />
       </Routes>
     </div>
   );
