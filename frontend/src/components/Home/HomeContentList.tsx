@@ -113,29 +113,28 @@ const HomeContentList = ({ category }: HomeComentListProps) => {
     })
     setTimeFilterIdx(timeIdx);
   }, [timeFilter])
+
   // 해당 카테고리에 맞는 글들 불러오기
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['get_home_contents', category],
+  const { data } = useQuery({
+    queryKey: ['get_home_contents', category, timeFilterIdx],
     queryFn: async () => {
       const categoryCount = (category === 'category' ? 5 : undefined);
       const fromTo = timeFilterArr[timeFilterIdx];
       return await get_home_contents(category, categoryCount, fromTo)
     },
-    enabled: !!timeFilterIdx,
-    options: {
-      staleTime: 60 * 60 * 1000,
-      cacheTime: Infinity,
-    }
+    enabled: !!(timeFilterIdx!==undefined),
+    staleTime: 60 * 60 * 1000,
+    cacheTime: Infinity,
   });
 
   return (
     <>
       {category === 'category' ? (
         <>
-          {data?.map((result) => {
+          {data?.map((result, idx) => {
             return (
               <>
-                <ListTitleContatiner>
+                <ListTitleContatiner key={idx}>
                   <MyLogo category={'items' in result ? result.category : ''} />
                   <Title>{'items' in result ? result.category : ''}</Title>
                 </ListTitleContatiner>
