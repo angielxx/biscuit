@@ -8,6 +8,6 @@ import com.pt.biscuIT.api.response.SearchContentRes;
 @Service
 public interface SearchService {
 
-	SearchContentRes search(String keyword, int from, int to, Long lastContentId, Pageable pageable);
+	SearchContentRes search(String keyword, int from, int to, Long lastContentId, Pageable pageable, String condition);
 
 }

@@ -28,8 +28,8 @@ public class ContentService {
             contentList = contentRepositorySupport.findRecentContentByCategory(category, pageable, lastContentId, from, to);
         }
         else if("hit".equals(condition)) {
-            Long popluarId = contentViewRepositorySupport.findIdByContentId(lastContentId);
-            contentList = contentRepositorySupport.findPopularContentByCategory(category, pageable, popluarId, from, to);
+            Long popularId = contentViewRepositorySupport.findIdByContentId(lastContentId);
+            contentList = contentRepositorySupport.findPopularContentByCategory(category, pageable, popularId, from, to);
         } else throw new BiscuitException(ErrorCode.INVALID_PARAMETER);
         if(contentList == null || contentList.getContent().size() == 0) throw new BiscuitException(ErrorCode.CONTENT_NOT_FOUND);
 
