@@ -1,6 +1,6 @@
 import tw, { styled } from 'twin.macro';
-import Github from '../../assets/icons/github.svg';
-import Google from '../../assets/icons/google.svg';
+import Github from '../../assets/icons/github_login.svg';
+import Google from '../../assets/icons/google_login.svg';
 
 const Container = styled.div`
   ${tw`w-[290px] flex flex-col gap-9 py-6`}
