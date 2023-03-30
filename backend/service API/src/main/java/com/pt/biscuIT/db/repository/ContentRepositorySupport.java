@@ -19,10 +19,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /*
  * ContentRepositorySupport
@@ -43,22 +40,26 @@ public class ContentRepositorySupport {
 
     QContentView qContentView = QContentView.contentView;
 
+    QContentCategory qContentCategory = QContentCategory.contentCategory;
+
     /**
      * 최근 등록된 컨텐츠를 랜덤으로 가져온다.
      *
      * @param pageable
      * @return
      */
-    public Page<Content> findRecentContentByCategory(String category, Pageable pageable, Long lastContentId, int from, int to) {
+    public Page<Content> findRecentContentByCategory(List<Long> categoryIdList, Pageable pageable, Long lastContentId, int from, int to) {
         BooleanBuilder whereCondition = new BooleanBuilder();
 
         whereCondition.and(qContent.id.lt(lastContentId));
-        whereCondition.and(qCategory.mainName.like(category).or(qCategory.subName.like(category)));
+        whereCondition.and(qContent.id.eq(qContentCategory.content.id));
+        whereCondition.and(qContentCategory.category.id.eq(qCategory.id));
+        whereCondition.and(qContentCategory.category.id.in(categoryIdList));
         whereCondition.and(qContent.timeCost.between(from, to));
 
         List<Content> contentList = jpaQueryFactory
-                .selectFrom(qContent)
-                .join(qContent.category, qCategory)
+                .select(qContent)
+                .from(qContent, qContentCategory)
                 .where(whereCondition)
                 .orderBy(qContent.id.desc())
                 .offset(0)
@@ -69,23 +70,23 @@ public class ContentRepositorySupport {
                 contentList,
                 pageable,
                 jpaQueryFactory
-                        .selectFrom(qContent)
-                        .join(qContent.category, qCategory)
+                        .select(qContent)
+                        .from(qContent, qContentCategory)
                         .where(whereCondition)
                         .orderBy(qContent.id.desc())
                         .fetch().size()
         );
     }
 
-    public Page<Content> findPopularContentByCategory(String category, Pageable pageable, Long popularId, int from, int to) {
+    public Page<Content> findPopularContentByCategory(List<Long> categoryIdList, Pageable pageable, Long popularId, int from, int to) {
         BooleanBuilder whereCondition = new BooleanBuilder();
 
         // 조인 조건
-        whereCondition.and(qContent.category.id.eq(qCategory.id));
+        whereCondition.and(qContent.id.eq(qContentCategory.content.id));
         whereCondition.and(qContent.id.eq(qContentView.contentId));
 
         // 카테고리 서치
-        whereCondition.and(qCategory.mainName.like(category).or(qCategory.subName.like(category)));
+        whereCondition.and(qContentCategory.category.id.in(categoryIdList));
 
         // 페이징 조건
         whereCondition.and(qContentView.id.lt(popularId));
@@ -95,7 +96,7 @@ public class ContentRepositorySupport {
 
         List<Content> contentList = jpaQueryFactory
                 .select(qContent)
-                .from(qContent, qContentView, qCategory)
+                .from(qContent, qContentView, qContentCategory)
                 .where(whereCondition)
                 .orderBy(qContentView.id.desc())
                 .offset(0)
@@ -107,7 +108,7 @@ public class ContentRepositorySupport {
                 pageable,
                 jpaQueryFactory
                         .select(qContent)
-                        .from(qContent, qContentView, qCategory)
+                        .from(qContent, qContentView, qContentCategory)
                         .where(whereCondition)
                         .orderBy(qContentView.id.desc())
                         .fetch().size()
@@ -213,5 +214,13 @@ public class ContentRepositorySupport {
             orderSpecifiers.add(new OrderSpecifier<>(Order.DESC, orderByExpression.get(prop)));
         });
         return orderSpecifiers;
+    }
+
+    public List<Long> findCategoryIdByCategory(String category) {
+        return jpaQueryFactory
+                .select(qCategory.id)
+                .from(qCategory)
+                .where(qCategory.mainName.like(category).or(qCategory.subName.like(category)))
+                .fetch();
     }
 }

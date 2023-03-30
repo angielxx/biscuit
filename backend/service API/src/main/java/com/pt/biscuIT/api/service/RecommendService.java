@@ -43,7 +43,8 @@ public class RecommendService {
             ContentInfoListCategoryDto content = new ContentInfoListCategoryDto().builder()
                                                                                  .category(category)
                                                                                  .build();
-            Page<Content> contentList = contentRepositorySupport.findRecentContentByCategory(category, pageable, Long.MAX_VALUE, from, to);
+            List<Long> categoryIdList = contentRepositorySupport.findCategoryIdByCategory(category);
+            Page<Content> contentList = contentRepositorySupport.findRecentContentByCategory(categoryIdList, pageable, Long.MAX_VALUE, from, to);
 
             content.setCategory(category);
             content.setItems(contentList.map(ContentInfoDto::new).getContent());
