@@ -14,10 +14,10 @@ const HomeContents = ({}: Object) => {
     <HomeContentsContainer>
       {isAuth
         ? authContent?.map((category) => {
-            return <HomeContentList category={category} />;
+            return <HomeContentList key={category} category={category} />;
           })
         : unAuthContents?.map((category) => {
-            return <HomeContentList category={category} />;
+            return <HomeContentList key={category} category={category} />;
           })}
     </HomeContentsContainer>
   );

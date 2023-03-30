@@ -98,9 +98,9 @@ const HomeContentList = ({ category }: HomeComentListProps) => {
     <>
       {category === 'category' ? (
         <>
-          {data?.map((result) => {
+          {data?.map((result, index) => {
             return (
-              <>
+              <div key={index}>
                 <ListTitleContatiner>
                   <MyLogo category={'items' in result ? result.category : ''} />
                   <Title>{'items' in result ? result.category : ''}</Title>
@@ -118,7 +118,7 @@ const HomeContentList = ({ category }: HomeComentListProps) => {
                       : null}
                   </RowListContainer>
                 </ContentListContainer>
-              </>
+              </div>
             );
           })}
         </>

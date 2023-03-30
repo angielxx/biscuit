@@ -11,9 +11,10 @@ import { useInView } from 'react-intersection-observer';
 import { homeFilterBtnState, homeFilterTimeState } from '../recoils/Home/Atoms';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { get_search } from '../api/api';
+import Loading from '../components/common/Loading';
 
 const ResultContainer = styled.div`
-  ${tw`flex flex-col px-4 gap-10 overflow-scroll pt-4 mt-20`}
+  ${tw`flex flex-col px-4 gap-10 overflow-scroll pt-4`}
   ${css`
     height: calc(100vh - 148px);
   `}
@@ -62,13 +63,26 @@ const Search = () => {
     const temp = serchParams.get('q');
     // null이 아닐 떄만 저장
     if (temp) query = temp;
+    console.log(temp);
     setSearchKey(query);
   }, [serchParams]);
+
+  useEffect(() => {
+    if (searchKey !== '') {
+      fetchNextPage({ pageParam: 0 });
+    }
+  }, [searchKey]);
+
+  useEffect(() => {
+    if (inView && !isFetchingNextPage && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView]);
 
   // 무한스크롤 데이터 패칭
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ['get_search'],
+      queryKey: ['get_search', searchKey],
       enabled: !!searchKey,
       queryFn: ({ pageParam = 0 }) =>
         get_search(searchKey, sort, time, pageParam, size),
@@ -90,8 +104,14 @@ const Search = () => {
         setFilterTimeState={setFilterTimeState}
       />
       <ResultContainer>
-        {searchResult &&
-          searchResult.map((content) => <ContentCardItem content={content} />)}
+        {data?.pages.map((page, index: number) => (
+          <React.Fragment key={index}>
+            {page?.content?.map((content) => (
+              <ContentCardItem key={content.id} content={content} />
+            ))}
+          </React.Fragment>
+        ))}
+        {isFetchingNextPage ? <Loading /> : <div ref={ref} />}
       </ResultContainer>
     </div>
   );
