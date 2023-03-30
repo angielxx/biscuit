@@ -3,6 +3,7 @@ import { RecoilRoot, useRecoilState } from 'recoil';
 import Routers from './Routers';
 import Navbar from './components/common/Navbar';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import './styles/App.css';
 
@@ -20,6 +21,7 @@ function App() {
             </div>
           </BrowserRouter>
         </RecoilRoot>
+        <ReactQueryDevtools initialIsOpen={true} />
       </QueryClientProvider>
     </div>
   );

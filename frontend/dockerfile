@@ -13,6 +13,7 @@ RUN yarn install
 
 # b. 소스를 작업폴더로 복사하고 빌드
 COPY . /usr/src/app
+RUN yarn add tailwindcss@3.2.7
 RUN yarn build
 
 ###### run stage ######
