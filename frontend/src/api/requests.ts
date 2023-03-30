@@ -35,14 +35,14 @@ export const requests = {
   // 키워드 검색
   GET_SEARCH(
     keyword: string,
+    type: string,
     sort: string | null,
     time: number | null,
     lastContentId: number,
     size: number
   ) {
-    // return `/api/search?keyword=${keyword}&sort=${sort}&time=${time}&lastContentId=${lastContentId}&size=${size}`;
     return (
-      `/api/search?keyword=${keyword}&lastContentId=${lastContentId}&size=${size}` +
+      `/api/search/recent?keyword=${keyword}&type=${type}&lastContentId=${lastContentId}&size=${size}` +
       `${sort ? `&sort=${sort}` : ''}` +
       `${time ? `&time=${time}` : ''}`
     );
@@ -54,9 +54,16 @@ export const requests = {
   },
 
   // 홈 인기/최신/랜덤 컨텐츠 추천 목록 조회
-  GET_HOME_CONTENTS(classification: string, categoryCount?: number, fromTo?: {start: number; end: number;}) {
-    let route = "/api/recommends/random";
-    route += classification === "category" ? `/${classification}?categoryCount=${categoryCount}` : `?sort=${classification}`;
+  GET_HOME_CONTENTS(
+    classification: string,
+    categoryCount?: number,
+    fromTo?: { start: number; end: number }
+  ) {
+    let route = '/api/recommends/random';
+    route +=
+      classification === 'category'
+        ? `/${classification}?categoryCount=${categoryCount}`
+        : `?sort=${classification}`;
     route += `&from=${fromTo?.start}&to=${fromTo?.end}`;
     return route;
   },
