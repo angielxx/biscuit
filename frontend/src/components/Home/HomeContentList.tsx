@@ -151,7 +151,7 @@ const HomeContentList = ({ category }: HomeComentListProps) => {
                       : null}
                   </RowListContainer>
                 </ContentListContainer>
-              </div>
+              </>
             );
           })}
         </>
