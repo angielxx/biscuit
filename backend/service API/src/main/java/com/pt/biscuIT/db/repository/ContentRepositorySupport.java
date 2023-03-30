@@ -53,7 +53,6 @@ public class ContentRepositorySupport {
 
         whereCondition.and(qContent.id.lt(lastContentId));
         whereCondition.and(qContent.id.eq(qContentCategory.content.id));
-        whereCondition.and(qContentCategory.category.id.eq(qCategory.id));
         whereCondition.and(qContentCategory.category.id.in(categoryIdList));
         whereCondition.and(qContent.timeCost.between(from, to));
 
@@ -200,6 +199,7 @@ public class ContentRepositorySupport {
                         .selectFrom(qContent)
                         .where(qContent.timeCost.between(from, to))
                         .orderBy(ORDERS.stream().toArray(OrderSpecifier[]::new))
+                        .limit(pageable.getPageSize())
                         .fetch()
                         .size()
         );

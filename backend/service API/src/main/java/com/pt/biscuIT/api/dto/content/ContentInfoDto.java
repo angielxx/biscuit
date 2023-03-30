@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -23,7 +22,7 @@ import java.util.List;
 public class ContentInfoDto {
     private Long id;
     private String title;
-    private String url;
+    private String source;
     private String creditBy;
     private LocalDate createdDate;
     private Integer timeCost;
@@ -35,11 +34,11 @@ public class ContentInfoDto {
     public ContentInfoDto(Content content) {
         this.id = content.getId();
         this.title = content.getTitle();
-        this.url = content.getSource();
+        this.source = content.getSource();
         this.creditBy = content.getChannel();
         this.createdDate = content.getCreatedDate();
         this.timeCost = content.getTimeCost();
-        this.type = Type.POST.toString();
+        this.type = Type.ARTICLE.toString();
         this.isMarked = false;
         this.hit = content.getHit();
     }
