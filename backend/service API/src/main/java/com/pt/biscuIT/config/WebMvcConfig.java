@@ -1,9 +1,12 @@
 package com.pt.biscuIT.config;
 
+import com.pt.biscuIT.common.util.CaseInsensitiveEnumConverter;
 import com.pt.biscuIT.common.util.JwtTokenUtil;
+import com.pt.biscuIT.db.entity.Type;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -14,6 +17,7 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.Filter;
+import java.util.List;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -75,5 +79,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
         FilterRegistrationBean registration = new FilterRegistrationBean(requestLoggingFilter());
         registration.addUrlPatterns("/api/*");
         return registration;
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        List<Class<? extends Enum>> enums = List.of(Type.class);
+        enums.forEach(enumClass -> registry.addConverter(String.class, enumClass,
+                new CaseInsensitiveEnumConverter<>(enumClass)));
     }
 }
