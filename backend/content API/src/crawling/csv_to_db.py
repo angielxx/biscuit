@@ -4,7 +4,7 @@ import datetime
 import config
 
 
-def insert_content():
+def insert_article():
     conn = config.connect()
 
     curs = conn.cursor()
@@ -14,54 +14,59 @@ def insert_content():
     csvReader = csv.reader(f)
 
     for row in csvReader:
-
-        url = row[0]
+        if len(row) == 0:
+            continue
+        source = row[0]
         title = row[1]
         channel = row[2]
         created_date = datetime.datetime.strptime(row[3], "%Y-%m-%d")
-        tags = row[4]
+        categories = row[4]
 
-        content_insert_sql = """insert ignore into content (url, title, writer, channel, created_date) values (%s, %s, %s, %s, %s)"""
+        # article data 삽입
+        article_insert_sql = """insert ignore into content (source, title, writer, channel, created_date, type) values (%s, %s, %s, %s, %s, article)"""
+        curs.execute(
+            article_insert_sql, (source, title, channel, channel, created_date)
+        )
 
-        curs.execute(content_insert_sql, (url, title, channel, channel, created_date))
-
-        for tag in tags.split():
+        for category in categories.split():
             print("title", title)
             print("channel", channel)
             print("created_date", created_date)
-            print("tag", tag)
+            print("category", category)
 
-            tag_insert_sql = """
-                    insert ignore into tag (name) values (%s)
+            category_insert_sql = """
+                    insert ignore into category (name) values (%s)
                 """
+            curs.execute(category_insert_sql, (category))
+
             content_select_sql = """
-                    select id from content where url = %s
+                    select id from content where source = %s
                 """
-            tag_select_sql = """
-                    select id from tag where name = %s
+            curs.execute(content_select_sql, (source))
+
+            category_select_sql = """
+                    select id from category where name = %s
                 """
 
-            curs.execute(tag_insert_sql, (tag))
-            curs.execute(content_select_sql, (url))
-            content_id, tag_id = None, None
+            content_id, category_id = None, None
             content_row = curs.fetchone()
             print(content_row)
             if content_row:
                 content_id = content_row[0]
                 print("content_id", content_id)
-            curs.execute(tag_select_sql, (tag))
-            tag_row = curs.fetchone()
-            print(tag_row)
-            if tag_row:
-                tag_id = tag_row[0]
-                print("tag_id", tag_id)
-            if content_id and tag_id:
-                content_tag_sql = """
-                        insert into content_tag (content_id, tag_id) values ((select id from content where url = %s), (select id from tag where name = %s))
+            curs.execute(category_select_sql, (category))
+            category_row = curs.fetchone()
+            print(category_row)
+            if category_row:
+                category_id = category_row[0]
+                print("category_id", category_id)
+            if content_id and category_id:
+                content_category_sql = """
+                        insert into content_category (content_id, category_id) values ((select id from content where source = %s), (select id from category where name = %s))
                     """
-                tag_update_sql = """update biscuit.tag set content_cnt = content_cnt + 1 where name = %s"""
-                curs.execute(content_tag_sql, (url, tag))
-                curs.execute(tag_update_sql, (tag))
+                category_update_sql = """update biscuit.category set content_cnt = content_cnt + 1 where name = %s"""
+                curs.execute(content_category_sql, (source, category))
+                curs.execute(category_update_sql, (category))
 
         # db의 변화 저장
 
@@ -70,3 +75,27 @@ def insert_content():
     f.close()
 
     conn.close()
+
+
+def insert_video():
+    conn = config.connect()
+
+    curs = conn.cursor()
+
+    f = open("data/youtube_to_db.csv", "r", encoding="utf-8")
+
+    csvReader = csv.reader(f)
+
+    for row in csvReader:
+
+        video_id = row[0]
+        title = row[1]
+        channel = row[2]
+        created_date = datetime.datetime.strptime(row[3], "%Y-%m-%d")
+        category_id = row[4]
+
+        content_insert_sql = """insert ignore into content (source, title, writer, channel, created_date) values (%s, %s, %s, %s, %s)"""
+
+        curs.execute(
+            content_insert_sql, (source, title, channel, channel, created_date)
+        )

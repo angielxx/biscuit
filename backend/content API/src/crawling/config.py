@@ -1,11 +1,14 @@
 import configparser
 
 import pymysql
+import os
 
 
 def connect():
+    ini_path = os.getcwd().split("src")[0] + "src/config.ini"
     config = configparser.ConfigParser()
-    config.read("src/config.ini", encoding="utf-8")
+    config.read(ini_path, encoding="utf-8")
+    print(ini_path)
 
     conn = pymysql.connect(
         host=config["DB"]["HOST"],
