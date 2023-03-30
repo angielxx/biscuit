@@ -7,6 +7,7 @@ import com.pt.biscuIT.common.model.response.PageMetaData;
 import com.pt.biscuIT.api.dto.content.ContentInfoDto;
 import com.pt.biscuIT.api.response.RandomRecentContentRes;
 import com.pt.biscuIT.api.service.RecommendService;
+import com.pt.biscuIT.db.entity.Type;
 import com.pt.biscuIT.db.repository.ContentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +42,10 @@ public class RecommendController {
     public ResponseEntity<? extends BaseResponseBody> getRandomRecentContent(
             @PageableDefault(size = 30) Pageable pageable,
             @RequestParam(required = false, defaultValue = "0") int from,
-            @RequestParam(required = false, defaultValue = "1440") int to
+            @RequestParam(required = false, defaultValue = "1440") int to,
+            @RequestParam Type type
     ) {
-        Page<ContentInfoDto> contentList = recommendService.getRandomContent(pageable, from, to);
+        Page<ContentInfoDto> contentList = recommendService.getRandomContent(pageable, from, to, type);
 
         PageMetaData metaData = PageMetaData.builder()
                 .lastContentId(contentList.getContent().get(contentList.getContent().size() - 1).getId())
@@ -65,9 +67,10 @@ public class RecommendController {
             @PageableDefault(size = 30) Pageable pageable,
             @RequestParam(required = false, defaultValue = "5") int categoryCount,
             @RequestParam(required = false, defaultValue = "0") int from,
-            @RequestParam(required = false, defaultValue = "1440") int to
+            @RequestParam(required = false, defaultValue = "1440") int to,
+            @RequestParam Type type
     ) {
-        Page<ContentInfoListCategoryDto> contentList = recommendService.getRandomCategoryContent(categoryCount, pageable, from, to);
+        Page<ContentInfoListCategoryDto> contentList = recommendService.getRandomCategoryContent(categoryCount, pageable, from, to, type);
 
         return ResponseEntity.status(200).body(RandomCategoryContentRes.of(
                 HttpStatus.OK.value(),

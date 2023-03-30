@@ -3,6 +3,7 @@ package com.pt.biscuIT.api.service;
 import com.pt.biscuIT.api.dto.content.ContentInfoDto;
 import com.pt.biscuIT.api.dto.content.ContentInfoListCategoryDto;
 import com.pt.biscuIT.db.entity.Content;
+import com.pt.biscuIT.db.entity.Type;
 import com.pt.biscuIT.db.repository.ContentRepository;
 import com.pt.biscuIT.db.repository.ContentRepositorySupport;
 import lombok.extern.slf4j.Slf4j;
@@ -28,14 +29,14 @@ public class RecommendService {
     @Autowired
     ContentRepositorySupport contentRepositorySupport;
 
-    public Page<ContentInfoDto> getRandomContent(Pageable pageable, int from, int to) {
-        Page<Content> contentList = contentRepositorySupport.findContentByRandom(pageable, from, to);
+    public Page<ContentInfoDto> getRandomContent(Pageable pageable, int from, int to, Type type) {
+        Page<Content> contentList = contentRepositorySupport.findContentByRandom(pageable, from, to, type);
         Page<ContentInfoDto> res = contentList.map(ContentInfoDto::new);
 
         return res;
     }
 
-    public Page<ContentInfoListCategoryDto> getRandomCategoryContent(int categoryCount, Pageable pageable, int from, int to) {
+    public Page<ContentInfoListCategoryDto> getRandomCategoryContent(int categoryCount, Pageable pageable, int from, int to, Type type) {
         List<String> categories = contentRepository.findRandomCategoryByCount(categoryCount);
         List<ContentInfoListCategoryDto> contentCategoryList = new ArrayList<>();
 
@@ -44,7 +45,7 @@ public class RecommendService {
                                                                                  .category(category)
                                                                                  .build();
             List<Long> categoryIdList = contentRepositorySupport.findCategoryIdByCategory(category);
-            Page<Content> contentList = contentRepositorySupport.findRecentContentByCategory(categoryIdList, pageable, Long.MAX_VALUE, from, to);
+            Page<Content> contentList = contentRepositorySupport.findRecentContentByCategory(categoryIdList, pageable, Long.MAX_VALUE, from, to, type);
 
             content.setCategory(category);
             content.setItems(contentList.map(ContentInfoDto::new).getContent());

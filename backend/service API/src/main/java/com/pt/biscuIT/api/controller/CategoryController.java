@@ -11,6 +11,7 @@ import com.pt.biscuIT.common.exception.BiscuitException;
 import com.pt.biscuIT.common.exception.ErrorCode;
 import com.pt.biscuIT.common.model.response.BaseResponseBody;
 import com.pt.biscuIT.common.model.response.PageMetaData;
+import com.pt.biscuIT.db.entity.Type;
 import com.pt.biscuIT.db.repository.CategoryRepository;
 import com.pt.biscuIT.db.repository.ContentRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -52,9 +53,10 @@ public class CategoryController {
             @RequestParam(defaultValue = "999999") Long lastContentId,
             @RequestParam(required = false, defaultValue = "0") int from,
             @RequestParam(required = false, defaultValue = "1440") int to,
-            @PathVariable String condition
+            @PathVariable String condition,
+            @RequestParam Type type
     ) {
-        Page<ContentInfoDto> contentList = contentService.getCategoryContent(category, pageable, lastContentId, from, to, condition);
+        Page<ContentInfoDto> contentList = contentService.getCategoryContent(category, pageable, lastContentId, from, to, condition, type);
         if(contentList.getContent().size() == 0) throw new BiscuitException(ErrorCode.CONTENT_NOT_FOUND);
 
         PageMetaData metaData = PageMetaData.builder()

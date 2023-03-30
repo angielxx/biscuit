@@ -48,13 +48,14 @@ public class ContentRepositorySupport {
      * @param pageable
      * @return
      */
-    public Page<Content> findRecentContentByCategory(List<Long> categoryIdList, Pageable pageable, Long lastContentId, int from, int to) {
+    public Page<Content> findRecentContentByCategory(List<Long> categoryIdList, Pageable pageable, Long lastContentId, int from, int to, Type type) {
         BooleanBuilder whereCondition = new BooleanBuilder();
 
         whereCondition.and(qContent.id.lt(lastContentId));
         whereCondition.and(qContent.id.eq(qContentCategory.content.id));
         whereCondition.and(qContentCategory.category.id.in(categoryIdList));
         whereCondition.and(qContent.timeCost.between(from, to));
+        whereCondition.and(qContent.type.eq(type));
 
         List<Content> contentList = jpaQueryFactory
                 .select(qContent)
@@ -77,7 +78,7 @@ public class ContentRepositorySupport {
         );
     }
 
-    public Page<Content> findPopularContentByCategory(List<Long> categoryIdList, Pageable pageable, Long popularId, int from, int to) {
+    public Page<Content> findPopularContentByCategory(List<Long> categoryIdList, Pageable pageable, Long popularId, int from, int to, Type type) {
         BooleanBuilder whereCondition = new BooleanBuilder();
 
         // 조인 조건
@@ -92,6 +93,9 @@ public class ContentRepositorySupport {
 
         // 시간 조건
         whereCondition.and(qContent.timeCost.between(from, to));
+
+        // 컨텐츠 타입
+        whereCondition.and(qContent.type.eq(type));
 
         List<Content> contentList = jpaQueryFactory
                 .select(qContent)
@@ -114,11 +118,12 @@ public class ContentRepositorySupport {
         );
     }
 
-    public Page<Content> findRecentContentByTitleAndTag(String keyword, Pageable pageable, Long lastContentId, int from, int to) {
+    public Page<Content> findRecentContentByTitleAndTag(String keyword, Pageable pageable, Long lastContentId, int from, int to, Type type) {
         BooleanBuilder whereCondition = new BooleanBuilder();
         whereCondition.and(qContent.id.lt(lastContentId));
         whereCondition.and(containTitle(keyword).or(cotainTag(keyword)));
         whereCondition.and(qContent.timeCost.between(from, to));
+        whereCondition.and(qContent.type.eq(type));
 
         List<Content> contents = jpaQueryFactory
             .selectFrom(qContent)
@@ -139,13 +144,14 @@ public class ContentRepositorySupport {
                 .fetch().size());
     }
 
-    public Page<Content> findPopularContentByTitleAndTag(String keyword, Pageable pageable, Long popularId, int from, int to) {
+    public Page<Content> findPopularContentByTitleAndTag(String keyword, Pageable pageable, Long popularId, int from, int to, Type type) {
         BooleanBuilder whereCondition = new BooleanBuilder();
         whereCondition.and(qContentTag.content.id.eq(qContent.id));
         whereCondition.and(qContent.id.eq(qContentView.contentId));
         whereCondition.and(containTitle(keyword).or(cotainTag(keyword)));
         whereCondition.and(qContentView.id.lt(popularId));
         whereCondition.and(qContent.timeCost.between(from, to));
+        whereCondition.and(qContent.type.eq(type));
         List<Content> contents = jpaQueryFactory
                 .select(qContent)
                 .from(qContent, qContentView, qContentTag)
@@ -179,12 +185,15 @@ public class ContentRepositorySupport {
         return qContentTag.tag.name.containsIgnoreCase(keyword);
     }
 
-    public Page<Content> findContentByRandom (Pageable pageable, int from, int to) {
+    public Page<Content> findContentByRandom (Pageable pageable, int from, int to, Type type) {
         List<OrderSpecifier> ORDERS = getOrderSpecifiers(pageable.getSort());
 
         List<Content> contentList = jpaQueryFactory
                 .selectFrom(qContent)
-                .where(qContent.timeCost.between(from, to))
+                .where(
+                        qContent.timeCost.between(from, to),
+                        qContent.type.eq(type)
+                )
                 .orderBy(ORDERS.stream().toArray(OrderSpecifier[]::new))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
