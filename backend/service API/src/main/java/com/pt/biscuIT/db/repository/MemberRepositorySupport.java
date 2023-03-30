@@ -23,11 +23,4 @@ public class MemberRepositorySupport {
 
     QMember qMember = QMember.member;
 
-
-    public Member findByEmail(String email) {
-        return jpaQueryFactory
-                .selectFrom(qMember)
-                .where(qMember.email.eq(email))
-                .fetchOne();
-    }
 }
