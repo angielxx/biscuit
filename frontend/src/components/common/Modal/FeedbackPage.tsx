@@ -1,4 +1,10 @@
 import React, { useState } from 'react';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import {
+  endTimeState,
+  getTimeSelector,
+  isStartState,
+} from '../../../recoils/Contents/Atoms';
 
 // image
 import neutral_face from '../../../assets/image/neutral-face.png';
@@ -9,8 +15,7 @@ import grinning_face from '../../../assets/image/grinning-face.png';
 import tw, { styled, css, TwStyle } from 'twin.macro';
 import Button from '../Button';
 import FeedBackButton from './FeedBackButton';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { endTimeState, getTimeSelector, isStartState } from '../../../recoils/Contents/Atoms';
+import PageTitle from './PageTitle';
 
 const FeedbackBtns = styled.div`
   ${tw`flex justify-center items-start p-6 gap-4 h-fit w-full`}
@@ -45,21 +50,21 @@ const FeedbackPage = ({ onSubmit }: FeedbackPageProps) => {
   const [feedback, setFeedback] = useState<number | null>(null);
   const [isStart, setIsStart] = useRecoilState(isStartState);
   const getTime = useRecoilValue(getTimeSelector);
-  const setEndTime = useSetRecoilState(endTimeState)
+  const setEndTime = useSetRecoilState(endTimeState);
 
   const endTimeHandler = () => {
-    if(isStart === true) {
+    if (isStart === true) {
       setIsStart(false);
       setEndTime(Number(Date.now().toString()));
     }
-  }
+  };
 
   return (
     <>
-      <div className="flex flex-col gap-2">
-        <h4>방금 본 컨텐츠가 어땠는지 알려주세요.</h4>
-        <p>피드백을 주시면 더 정확한 컨텐츠를 받아보실 수 있어요.</p>
-      </div>
+      <PageTitle
+        title="방금 본 컨텐츠가 어땠는지 알려주세요."
+        desc="피드백을 주시면 더 정확한 컨텐츠를 받아보실 수 있어요."
+      />
       <FeedbackBtns>
         {['쉬웠어요', '적당해요', '어려웠어요'].map((text, index) => {
           const emoji = [neutral_face, smiling_face, grinning_face];
@@ -69,13 +74,12 @@ const FeedbackPage = ({ onSubmit }: FeedbackPageProps) => {
               <FeedbackBtn
                 status={feedback === index ? 'clicked' : 'default'}
                 onClick={() => {
-                    setFeedback((prev) => {
-                      if (prev === index) return null;
-                      else return index;
-                    })
-                    endTimeHandler();
-                  }
-                }
+                  setFeedback((prev) => {
+                    if (prev === index) return null;
+                    else return index;
+                  });
+                  endTimeHandler();
+                }}
               >
                 <img src={emoji[index]} alt="너무 쉬워요 이모티콘" />
               </FeedbackBtn>
@@ -85,11 +89,11 @@ const FeedbackPage = ({ onSubmit }: FeedbackPageProps) => {
         })}
       </FeedbackBtns>
       <Button
-        title="퀴즈 풀래요"
-        status="active"
+        title="선택 완료"
+        status={feedback !== null ? 'active' : 'disabled'}
         onClick={() => {
+          if (feedback !== null) onSubmit(feedback);
           endTimeHandler();
-          onSubmit(feedback);
         }}
       />
     </>

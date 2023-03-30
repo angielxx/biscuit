@@ -11,7 +11,7 @@ export const requests = {
   ) {
     // return `/api/contents/${categoryName}?size=${size}&lastContentId=${lastContentId}&sort=${sort}&time=${time}`;
     return (
-      `/api/categories/${categoryName}/contents?size=${size}&lastContentId=${lastContentId}` +
+      `/api/categories/${categoryName}/contents/recent?size=${size}&lastContentId=${lastContentId}` +
       `${sort ? `&sort=${sort}` : ''}` +
       `${time ? `&time=${time}` : ''}`
     );
@@ -28,7 +28,9 @@ export const requests = {
   },
 
   // 피드백 저장
-  POST_FEEDBACK: `/api/feedbacks`,
+  POST_FEEDBACK(contentId: number) {
+    return `/api/contents/${contentId}/feedback`;
+  },
 
   // 키워드 검색
   GET_SEARCH(

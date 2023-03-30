@@ -57,9 +57,9 @@ const Category = () => {
   // 무한스크롤 데이터 패칭
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ['get_catetory_contents'],
+      queryKey: ['get_catetory_contents', categoryName],
       enabled: !!categoryName,
-      queryFn: ({ pageParam = 0 }) =>
+      queryFn: ({ pageParam = 999 }) =>
         get_category_contents(categoryName, sort, time, pageParam, size),
       getNextPageParam: (lastPage) =>
         lastPage?.isLast ? undefined : lastPage?.nextLastContentId,

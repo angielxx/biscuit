@@ -49,26 +49,19 @@ const BookmarkSvg = styled.svg`
   ${tw`fill-primary h-8 cursor-pointer`}
 `;
 
-const ContentInfo = styled.div<{ image: string }>`
-  ${tw`flex gap-2 relative`}
+const ContentInfo = styled.div`
+  ${tw`flex gap-2 relative w-full justify-between`}
   p {
     ${tw`text-main`}
   }
   span {
     ${tw`text-sub text-subColor`}
   }
-
-  #channel {
-    ${tw`bg-primary w-10 h-10 rounded-full min-w-[40px] min-h-[40px]`}
-    ${({ image }) => css`
-      background-image: url(${image});
-    `}
-  }
 `;
 
 const TextInfo = styled.div`
   ${css`
-    width: calc(100% - 80px);
+    word-break: keep-all;
   `}
 `;
 
@@ -93,8 +86,6 @@ interface ContentCardItemProps {
 const ContentCardItem = ({ content }: ContentCardItemProps) => {
   // 북마크 저장 여부
   const [isMarked, setIsMarked] = useState<boolean>(content.marked);
-  // 북마크 버튼 숨김
-  const [hideMark, setHideMark] = useState<boolean>(true);
   // 요약
   const [desc, setDesc] = useState<string | null>('');
   // 로그인 여부
@@ -165,17 +156,16 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
         onClick={() => clickContentHandler(content.url)}
         className="w-full"
       >
-        <Thumbnail
-          image={thumbImg ? thumbImg : ''}
-          onMouseEnter={() => setHideMark(false)}
-          onMouseLeave={() => setHideMark(true)}
-        />
+        <Thumbnail image={thumbImg ? thumbImg : ''} />
       </button>
 
-      <ContentInfo image="">
-        <div id="channel"></div>
+      <ContentInfo>
+        {/* <div id="channel"></div> */}
         <TextInfo id="text">
-          <p className="leading-5 max-h-[40px] overflow-hidden">
+          <p
+            className="leading-5 max-h-[40px] overflow-hidden cursor-pointer text-main-bold hover:text-main-bold hover:text-primary"
+            onClick={() => clickContentHandler(content.url)}
+          >
             {content.title}
           </p>
           <span>
@@ -183,7 +173,7 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
           </span>
         </TextInfo>
         {isAuth && (
-          <div onClick={changeMarkHandler} className="absolute right-0">
+          <div onClick={changeMarkHandler}>
             {isMarked ? (
               <BookmarkSvg
                 xmlns="http://www.w3.org/2000/svg"
