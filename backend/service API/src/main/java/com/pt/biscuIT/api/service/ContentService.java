@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service("contentService")
 public class ContentService {
     @Autowired
@@ -25,11 +27,13 @@ public class ContentService {
     public Page<ContentInfoDto> getCategoryContent (String category, Pageable pageable, Long lastContentId, int from, int to, String condition) {
         Page<Content> contentList = null;
         if("recent".equals(condition)) {
-            contentList = contentRepositorySupport.findRecentContentByCategory(category, pageable, lastContentId, from, to);
+            List<Long> categoryIdList = contentRepositorySupport.findCategoryIdByCategory(category);
+            contentList = contentRepositorySupport.findRecentContentByCategory(categoryIdList, pageable, lastContentId, from, to);
         }
         else if("hit".equals(condition)) {
             Long popularId = contentViewRepositorySupport.findIdByContentId(lastContentId);
-            contentList = contentRepositorySupport.findPopularContentByCategory(category, pageable, popularId, from, to);
+            List<Long> categoryIdList = contentRepositorySupport.findCategoryIdByCategory(category);
+            contentList = contentRepositorySupport.findPopularContentByCategory(categoryIdList, pageable, popularId, from, to);
         } else throw new BiscuitException(ErrorCode.INVALID_PARAMETER);
         if(contentList == null || contentList.getContent().size() == 0) throw new BiscuitException(ErrorCode.CONTENT_NOT_FOUND);
 
@@ -43,5 +47,4 @@ public class ContentService {
         contentRepository.save(content);
 
     }
-
 }
