@@ -15,27 +15,26 @@ type BoxTheme = {
 
 const boxColorChip: BoxTheme = {
   default: [
-    `bg-[#254648]`,
-    `bg-[#2b6e72]`,
-    `bg-[#32959b]`,
-    `bg-[#38bdc5]`,
-    `bg-[#3fe5ef]`,
-    `bg-[#3fe5ef]`,
-    `bg-[#3fe5ef]`,
-    `bg-[#3fe5ef]`,
+    `#484E55`,
+    `#254648`,
+    `#2b6e72`,
+    `#32959b`,
+    `#38bdc5`,
+    `#3fe5ef`,
+    `#3fe5ef`,
   ]
 };
 
 const Box = styled.div((props: { theme: string, count: number }) => [
   tw`w-[80%] pb-[80%] mx-[10%] my-[20%] rounded`,
-  tw`${boxColorChip[props.theme][props.count]}`
+  css`background: ${boxColorChip[props.theme][props.count]}`
 ]);
 
 export default function Contributions() {
   const tmpData: number[][] = [];
   for(let i=0; i<16; i++) {
     tmpData.push([]);
-    tmpData[i].push(0, 1, 2, 3, 4, 5, 6, 7);
+    tmpData[i].push(0, 1, 2, 3, 4, 5, 6);
   }
   
   return (

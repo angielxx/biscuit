@@ -32,6 +32,7 @@ export default function MyPage() {
           </div>
         </div>
         <Contributions />
+        <Span>님이 비스킷에서 가장 많이 본 콘텐츠에요.</Span>
       </DashboardContainer>
     </HomeContainer>
   )
