@@ -74,7 +74,7 @@ const Search = () => {
   }, [searchKey]);
 
   useEffect(() => {
-    if (inView && !isFetchingNextPage && hasNextPage) {
+    if (inView && hasNextPage) {
       fetchNextPage();
     }
   }, [inView]);
@@ -86,8 +86,9 @@ const Search = () => {
       enabled: !!searchKey,
       queryFn: ({ pageParam = 0 }) =>
         get_search(searchKey, sort, time, pageParam, size),
-      getNextPageParam: (lastPage) =>
-        lastPage?.isLast ? undefined : lastPage?.nextLastContentId,
+      getNextPageParam: (lastPage) => {
+        return lastPage?.isLast ? undefined : lastPage?.nextLastContentId;
+      },
     });
 
   return (
@@ -103,7 +104,7 @@ const Search = () => {
         filterTimeState={filterTimeState}
         setFilterTimeState={setFilterTimeState}
       />
-      <ResultContainer>
+      <ResultContainer id="result-container">
         {data?.pages.map((page, index: number) => (
           <React.Fragment key={index}>
             {page?.content?.map((content) => (
@@ -111,7 +112,7 @@ const Search = () => {
             ))}
           </React.Fragment>
         ))}
-        {isFetchingNextPage ? <Loading /> : <div ref={ref} />}
+        {isFetchingNextPage ? <Loading /> : <div ref={ref} id="observer"></div>}
       </ResultContainer>
     </div>
   );

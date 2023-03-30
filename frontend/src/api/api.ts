@@ -65,6 +65,7 @@ export const get_search = async (
     }
   | undefined
 > => {
+  if (!keyword) return;
   const { data } = await baseInstance.get(
     requests.GET_SEARCH(keyword, sort, time, lastContentId, size)
   );

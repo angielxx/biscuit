@@ -29,15 +29,22 @@ function scrap(doc: Document, url: string) {
   // 글요약
   let descEl = doc.querySelector("meta[property='og:description']");
   let desc = descEl ? descEl.getAttribute('content') : '';
+
   return { image, desc };
 }
 
 export const useGetMetaData = async (url: string) => {
-  const html = await fetch(url, {
-    mode: 'cors',
-  }).then((res) => res.text());
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
-  const { image, desc } = scrap(doc, url);
-  return { image, desc };
+  try {
+    const html = await fetch(url, {
+      mode: 'cors',
+    }).then((res) => {
+      return res.text();
+    });
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const { image, desc } = scrap(doc, url);
+    return { image, desc };
+  } catch (error) {
+    console.log(url, error);
+  }
 };
