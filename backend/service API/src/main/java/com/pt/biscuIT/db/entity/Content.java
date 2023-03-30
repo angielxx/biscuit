@@ -17,8 +17,6 @@ public class Content implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Category category;
 	@Column(unique = true)
 	private String source;
 	private String title;
@@ -31,5 +29,4 @@ public class Content implements Serializable {
 	private Integer timeCost;
 	@Enumerated(EnumType.STRING)
 	private Type type;
-
 }
