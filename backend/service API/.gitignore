@@ -1,11 +1,9 @@
 HELP.md
 .gradle
-.idea
 build/
 !service API/gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-.idea
 
 ### STS ###
 .apt_generated
@@ -28,6 +26,8 @@ service API/src/main/resources/*.properties
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+*.idea
+
 
 ### NetBeans ###
 /nbproject/private/
@@ -38,3 +38,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+
+### secret ###
+application.yml
