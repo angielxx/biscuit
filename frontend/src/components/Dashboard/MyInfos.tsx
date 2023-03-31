@@ -5,7 +5,12 @@ const TitleContainer = tw.div`flex w-[20%] h-14 items-center`;
 const Span = tw.p`text-white text-main`;
 const TextBox = tw.div`w-[80%] h-14 p-4 bg-dark-grey20 rounded-10 text-main text-primary`;
 
-const Info = ({title, content}) => {
+interface InfoProps {
+  title: string;
+  content: string;
+}
+
+const Info = ({title, content}: InfoProps) => {
   return (
     <InfoContainer>
       <TitleContainer>
