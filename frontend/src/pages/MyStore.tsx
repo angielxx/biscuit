@@ -4,14 +4,97 @@ import TabBar from '../components/MyStore/TabBar';
 // Icons
 import historyIcon from '../assets/icons/history.svg';
 import bookmarkIcon from '../assets/icons/bookmark.svg';
+import { useQueries } from '@tanstack/react-query';
+import { get_bookmark } from '../api/bookmark';
+import { get_history } from '../api/history';
+import StoreItem from '../components/MyStore/StoreItem';
+
+interface content {
+  id: number;
+  title: string;
+  url: string;
+  creditBy: string;
+  createdDate: string;
+  timeCost: number;
+  type: string;
+  marked: boolean;
+  tags: Array<string> | null;
+  hit: number;
+}
 
 const MyStore = (props) => {
   // 탭
   const [clickedTab, setClickedTab] = useState<number>(0);
   // 북마크
-  const [bookmarks, setBookmarks] = useState();
+  const [bookmarks, setBookmarks] = useState<content[]>([
+    {
+      id: 52,
+      title: '더 똑똑해진 GPT-4 발표! 무엇이 달라졌을까?',
+      url: 'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
+      creditBy: '데보션',
+      createdDate: '2023-03-16 00:00:00.000000',
+      timeCost: 0,
+      type: 'POST',
+      tags: [],
+      hit: 0,
+      marked: false,
+    },
+    {
+      id: 53,
+      title: '더 똑똑해진 GPT-4 발표! 무엇이 달라졌을까?',
+      url: 'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
+      creditBy: '데보션',
+      createdDate: '2023-03-16 00:00:00.000000',
+      timeCost: 0,
+      type: 'POST',
+      tags: [],
+      hit: 0,
+      marked: false,
+    },
+  ]);
   // 히스토리
-  const [histories, setHistories] = useState();
+  const [histories, setHistories] = useState<content[]>([
+    {
+      id: 52,
+      title: '더 똑똑해진 GPT-4 발표! 무엇이 달라졌을까?',
+      url: 'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
+      creditBy: '데보션',
+      createdDate: '2023-03-16 00:00:00.000000',
+      timeCost: 0,
+      type: 'POST',
+      tags: [],
+      hit: 0,
+      marked: false,
+    },
+    {
+      id: 53,
+      title: '더 똑똑해진 GPT-4 발표! 무엇이 달라졌',
+      url: 'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
+      creditBy: '데보션',
+      createdDate: '2023-03-16 00:00:00.000000',
+      timeCost: 0,
+      type: 'POST',
+      tags: [],
+      hit: 0,
+      marked: false,
+    },
+  ]);
+
+  // 북마크, 히스토리 get
+  const result = useQueries({
+    queries: [
+      {
+        queryKey: ['get_bookmark'],
+        queryFn: () => get_bookmark(),
+        // onSuccess: (data) => setBookmarks(data),
+      },
+      {
+        queryKey: ['get_history'],
+        queryFn: () => get_history(),
+        // onSuccess: (data) => setHistories(data),
+      },
+    ],
+  });
 
   const tabList = [
     {
@@ -49,7 +132,18 @@ const MyStore = (props) => {
         onClick={setClickedTab}
         clickedTab={clickedTab}
       />
-      <div></div>
+      <div className="flex flex-col gap-2 rounded p-4">
+        {clickedTab === 0 &&
+          Array.isArray(bookmarks) &&
+          bookmarks?.map((content) => (
+            <StoreItem key={content.id} content={content} />
+          ))}
+        {clickedTab === 1 &&
+          Array.isArray(histories) &&
+          histories?.map((content) => (
+            <StoreItem key={content.id} content={content} />
+          ))}
+      </div>
     </div>
   );
 };

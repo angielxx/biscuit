@@ -23,6 +23,7 @@ const TabBar = ({ tabList, onClick, clickedTab }: TabBarProps) => {
     <TabContainer>
       {tabList.map((tab, index) => (
         <TabBarItem
+          key={index}
           title={tab.title}
           icon={tab.icon}
           status={clickedTab === index ? 'active' : 'inactive'}
