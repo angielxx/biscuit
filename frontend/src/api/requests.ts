@@ -1,5 +1,5 @@
 export const requests = {
-  base_url: 'http://j8a706.p.ssafy.io:8080',
+  base_url: 'http://j8a706.p.ssafy.io',
 
   // 카테고리별 컨텐츠 목록 조회
   GET_CATEGORY_CONTENTS(
