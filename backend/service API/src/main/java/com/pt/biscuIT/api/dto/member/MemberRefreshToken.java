@@ -15,15 +15,15 @@ public class MemberRefreshToken {
     private String refreshToken;
 
     @Indexed // 필드 값으로 데이터 찾을 수 있게 하는 어노테이션(findByAccessToken)
-    private String useremail;
+    private String userIdentifier;
 
     @TimeToLive
     private Long expiration; // seconds
 
     @Builder
-    public MemberRefreshToken(String refreshToken, String useremail, Long expiration) {
+    public MemberRefreshToken(String refreshToken, String userIdentifier, Long expiration) {
         this.refreshToken = refreshToken;
-        this.useremail = useremail;
+        this.userIdentifier = userIdentifier;
         this.expiration = expiration;
     }
 
