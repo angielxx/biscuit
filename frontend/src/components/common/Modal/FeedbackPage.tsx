@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   endTimeState,
-  getTimeSelector,
   isStartState,
 } from '../../../recoils/Contents/Atoms';
 
@@ -49,7 +48,6 @@ const FeedbackPage = ({ onSubmit }: FeedbackPageProps) => {
   // 선택된 피드백 번호
   const [feedback, setFeedback] = useState<number | null>(null);
   const [isStart, setIsStart] = useRecoilState(isStartState);
-  const getTime = useRecoilValue(getTimeSelector);
   const setEndTime = useSetRecoilState(endTimeState);
 
   const endTimeHandler = () => {

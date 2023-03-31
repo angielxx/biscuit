@@ -5,6 +5,7 @@ import { get_home_contents } from '../../api/contents';
 import { useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { homeFilterTimeState } from '../../recoils/Home/Atoms';
+import Icon from '../common/Icon';
 
 const ContentListContainer = tw.div`
   flex-col w-full overflow-scroll snap-x mx-4 mb-4
@@ -13,27 +14,6 @@ const ContentListContainer = tw.div`
 const ListTitleContatiner = tw.div`
   flex mx-4 mt-2
 `;
-
-const Logo = tw.img`w-9 h-9 mr-2`;
-
-const MyLogo = ({ category }: { category: string }) => {
-  const imgSrc = `src/assets/icons/${category}.svg`;
-  const [isExists, setIsExists] = useState(false);
-
-  function checkLocalImgFileExists(imgSrc: string) {
-    let img = new Image();
-    img.src = imgSrc;
-    img.onload = function () {
-      setIsExists(true);
-    };
-    img.onerror = function () {
-      setIsExists(false);
-    };
-  }
-  checkLocalImgFileExists(imgSrc);
-
-  return isExists === true ? <Logo src={imgSrc} /> : <Logo />;
-};
 
 const Title = tw.span`text-white text-h2 mb-2`;
 
@@ -135,7 +115,7 @@ const HomeContentList = ({ category }: HomeComentListProps) => {
             return (
               <>
                 <ListTitleContatiner key={idx}>
-                  <MyLogo category={'items' in result ? result.category : ''} />
+                  <Icon category={'items' in result ? result.category : ''} />
                   <Title>{'items' in result ? result.category : ''}</Title>
                 </ListTitleContatiner>
                 <ContentListContainer>
@@ -158,7 +138,7 @@ const HomeContentList = ({ category }: HomeComentListProps) => {
       ) : (
         <>
           <ListTitleContatiner>
-            <MyLogo category={category} />
+            <Icon category={category} />
             <Title>{CategoryObj[category]}</Title>
           </ListTitleContatiner>
           <ContentListContainer>
