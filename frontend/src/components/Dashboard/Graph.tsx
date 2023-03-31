@@ -3,9 +3,14 @@ import GraphContent from "./GraphContent";
 
 const GraphContainer = tw.div`w-full h-fit`;
 
+interface DataProps {
+  category: string;
+  count: number;
+}
+
 export default function Graph() {
-  const tmpData = [
-    { category: "React", count: 100 },
+  const tmpData: DataProps[] = [
+    { category: "React", count: 101 },
     { category: "Javascript", count: 85 },
     { category: "Typescript", count: 70 },
     { category: "Vue", count: 55 },

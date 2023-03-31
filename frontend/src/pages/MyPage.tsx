@@ -1,5 +1,6 @@
 import tw from "twin.macro";
 import Contributions from "../components/Dashboard/Contributions";
+import Graph from "../components/Dashboard/Graph";
 
 const HomeContainer = tw.div`
   flex-col w-screen justify-center px-6 pt-4
@@ -33,6 +34,7 @@ export default function MyPage() {
         </div>
         <Contributions />
         <Span>님이 비스킷에서 가장 많이 본 콘텐츠에요.</Span>
+        <Graph />
       </DashboardContainer>
     </HomeContainer>
   )

@@ -1,7 +1,7 @@
 import tw, { styled, css } from 'twin.macro';
 
 const Container = tw.div`
-  w-full h-fit flex
+  w-full h-fit flex mb-4
 `
 
 const ColContainer = tw.div`
