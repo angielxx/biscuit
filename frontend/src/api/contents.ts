@@ -21,10 +21,14 @@ interface randomContent {
 
 const get_home_contents = async (
   classification: string,
-  categoryCount: number
+  categoryCount?: number,
+  fromTo?: {
+    start: number;
+    end: number;
+  },
 ): Promise<content[] | randomContent[] | undefined> => {
   const response = await baseInstance.get(
-    requests.GET_HOME_CONTENTS(classification, categoryCount)
+    requests.GET_HOME_CONTENTS(classification, categoryCount, fromTo)
   );
   return response.data.results;
 };

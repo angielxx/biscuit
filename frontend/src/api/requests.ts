@@ -54,9 +54,20 @@ export const requests = {
   },
 
   // 홈 인기/최신/랜덤 컨텐츠 추천 목록 조회
-  GET_HOME_CONTENTS(classification: string, categoryCount: number) {
-    return categoryCount > 0
-      ? `/api/recommands/random/${classification}?categoryCount=${categoryCount}`
-      : `/api/recommands/random/${classification}`;
+  GET_HOME_CONTENTS(classification: string, categoryCount?: number, fromTo?: {start: number; end: number;}) {
+    let route = "/api/recommends/random";
+    route += classification === "category" ? `/${classification}?categoryCount=${categoryCount}` : `?sort=${classification}`;
+    route += `&from=${fromTo?.start}&to=${fromTo?.end}`;
+    return route;
   },
+
+  // 구글 로그인 인가코드 전달
+  GOOGLE_LOGIN(authorizationCode: string) {
+    return `/api/auth/signin/google`;
+  },
+
+  // 가입 설문조사 전달
+  POST_ABOUT_USER() {
+    return `/api/members/research`;
+  }
 };
