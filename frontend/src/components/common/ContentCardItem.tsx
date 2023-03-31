@@ -127,12 +127,10 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
   const clickContentHandler = (url: string) => {
     window.open(url, '_blank', 'noopener, noreferrer');
     setStartTime(Number(Date.now().toString()));
-    // console.log(Date.now().toString());
     setIsStart(true);
     if (!isModalOpen) {
       setIsModalOpen(true);
       setContent(content);
-      // console.log('content :', content);
     }
   };
 
