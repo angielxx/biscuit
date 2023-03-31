@@ -17,7 +17,7 @@ import AsideLogin from './AsideLogin';
 import { useRecoilState } from 'recoil';
 
 const Aside = styled.div`
-  ${tw`h-full z-20 flex flex-col items-start p-2 fixed w-[314px] right-0 top-0 bg-[#1A1B1E]`}
+  ${tw`h-full z-20 flex flex-col items-start p-2 fixed w-[314px] right-0 top-0 bg-black`}
 
   &.open {
     ${css`
@@ -103,6 +103,8 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
                   : setIsCategory(true)
                 : setIsCategory(true);
             }}
+            selectList={[]}
+            locate="aside"
           />
         );
       })}

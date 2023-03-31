@@ -60,4 +60,14 @@ export const requests = {
     route += `&from=${fromTo?.start}&to=${fromTo?.end}`;
     return route;
   },
+
+  // 구글 로그인 인가코드 전달
+  GOOGLE_LOGIN(authorizationCode: string) {
+    return `/api/auth/signin/google`;
+  },
+
+  // 가입 설문조사 전달
+  POST_ABOUT_USER() {
+    return `/api/members/research`;
+  }
 };

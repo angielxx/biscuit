@@ -29,4 +29,3 @@ COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
     # nginx라서 기본 80번
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
-
