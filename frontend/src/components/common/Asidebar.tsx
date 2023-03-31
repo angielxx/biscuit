@@ -46,7 +46,7 @@ interface AsidebarStatus {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-type ClickHanlder = (item: string) => void;
+type ClickHanlder = (event: any, item: string) => void;
 
 const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
   const [isCategory, setIsCategory] = useState<boolean>(false);
@@ -59,7 +59,7 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
     () => get_categories()
   )
 
-  const isClicked: ClickHanlder = (item: string) => {
+  const isClicked: ClickHanlder = (event: any, item: string) => {
     navigate(`/category/${item}`);
     setIsOpen(false);
   };
