@@ -26,7 +26,7 @@ public class ContentInfoDto {
     private String creditBy;
     private LocalDate createdDate;
     private Integer timeCost;
-    private String type;
+    private Type type;
     private boolean isMarked;
     private List<String> tags;
     private Integer hit;
@@ -38,7 +38,7 @@ public class ContentInfoDto {
         this.creditBy = content.getChannel();
         this.createdDate = content.getCreatedDate();
         this.timeCost = content.getTimeCost();
-        this.type = Type.ARTICLE.toString();
+        this.type = content.getType();
         this.isMarked = false;
         this.hit = content.getHit();
     }
