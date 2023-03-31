@@ -1,5 +1,5 @@
 package com.pt.biscuIT.db.entity;
 
-public enum SocialDomain {
+public enum Provider {
 	GOOGLE, GITHUB
 }
