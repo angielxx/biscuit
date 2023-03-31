@@ -28,4 +28,20 @@ public class MemberService {
             throw new IllegalArgumentException("해당 회원이 존재하지 않습니다.");
         }
     }
+
+    public Member findMemberByEmail(String email) {
+        if (memberRepository.findByEmail(email).isPresent()) {
+            return (Member) memberRepository.findByEmail(email).get();
+        }else {
+            throw new IllegalArgumentException("해당 회원이 존재하지 않습니다.");
+        }
+    }
+
+    public Member findMemberByIdentifier(String identifier) {
+        if (memberRepository.findByIdentifier(identifier).isPresent()) {
+            return (Member) memberRepository.findByIdentifier(identifier).get();
+        }else {
+            throw new IllegalArgumentException("해당 회원이 존재하지 않습니다.");
+        }
+    }
 }
