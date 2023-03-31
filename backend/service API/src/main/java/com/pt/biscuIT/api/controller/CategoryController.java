@@ -11,6 +11,7 @@ import com.pt.biscuIT.common.exception.BiscuitException;
 import com.pt.biscuIT.common.exception.ErrorCode;
 import com.pt.biscuIT.common.model.response.BaseResponseBody;
 import com.pt.biscuIT.common.model.response.PageMetaData;
+import com.pt.biscuIT.db.entity.Type;
 import com.pt.biscuIT.db.repository.CategoryRepository;
 import com.pt.biscuIT.db.repository.ContentRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -45,15 +46,17 @@ public class CategoryController {
         return ResponseEntity.status(200).body(CategoryInfoListRes.of(HttpStatus.OK.value(), "SUCCESS", res));
     }
 
-    @GetMapping("/{category}/contents")
+    @GetMapping("/{category}/contents/{condition}")
     public ResponseEntity<? extends BaseResponseBody> getContentByCategory(
             @PathVariable String category,
-            @PageableDefault(size = 30, sort = "createdDate", page = 0) Pageable pageable,
+            @PageableDefault(size = 30, page = 0) Pageable pageable,
             @RequestParam(defaultValue = "999999") Long lastContentId,
-            @RequestParam(required = false, defaultValue = "0") int time,
-            @RequestParam(required = false, defaultValue = "999999") int hitRate
+            @RequestParam(required = false, defaultValue = "0") int from,
+            @RequestParam(required = false, defaultValue = "1440") int to,
+            @PathVariable String condition,
+            @RequestParam Type type
     ) {
-        Page<ContentInfoDto> contentList = contentService.getCategoryContent(category, pageable, lastContentId, time, hitRate);
+        Page<ContentInfoDto> contentList = contentService.getCategoryContent(category, pageable, lastContentId, from, to, condition, type);
         if(contentList.getContent().size() == 0) throw new BiscuitException(ErrorCode.CONTENT_NOT_FOUND);
 
         PageMetaData metaData = PageMetaData.builder()
