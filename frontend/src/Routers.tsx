@@ -10,10 +10,12 @@ import RecentContentModal from './components/common/Modal/RecontContentModal';
 import Modal from './components/common/Modal/Modal';
 import { isStartModalState } from './recoils/Start/Atoms';
 import Login from './components/Start/Login';
+import MyStore from './pages/MyStore';
 
 export default function Routers() {
   const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState);
-  const [isStartModalOpen, setIsStartModalOpen] = useRecoilState(isStartModalState);
+  const [isStartModalOpen, setIsStartModalOpen] =
+    useRecoilState(isStartModalState);
 
   return (
     <div>
@@ -24,14 +26,12 @@ export default function Routers() {
         />
       ) : null}
       {isStartModalOpen ? (
-        <Modal
-          onClose={() => setIsStartModalOpen(false)}
-          content={<Login />}
-        />
+        <Modal onClose={() => setIsStartModalOpen(false)} content={<Login />} />
       ) : null}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/search" element={<Search />} />
+        <Route path="/myStore" element={<MyStore />} />
         <Route path="/category/:name" element={<Category />} />
         <Route path="admin" element={<Admin />} />
       </Routes>
