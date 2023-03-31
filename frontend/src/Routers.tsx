@@ -13,10 +13,12 @@ import { isStartModalState } from './recoils/Start/Atoms';
 import Start from './components/Start/Start';
 import GoogleLogin from './components/Start/GoogleLogin';
 import MyPage from './pages/MyPage';
+import MyStore from './pages/MyStore';
 
 export default function Routers() {
   const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState);
-  const [isStartModalOpen, setIsStartModalOpen] = useRecoilState(isStartModalState);
+  const [isStartModalOpen, setIsStartModalOpen] =
+    useRecoilState(isStartModalState);
 
   return (
     <div>
@@ -27,14 +29,12 @@ export default function Routers() {
         />
       ) : null}
       {isStartModalOpen ? (
-        <Modal
-          onClose={() => setIsStartModalOpen(false)}
-          content={<Start />}
-        />
+        <Modal onClose={() => setIsStartModalOpen(false)} content={<Start />} />
       ) : null}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/search" element={<Search />} />
+        <Route path="/myStore" element={<MyStore />} />
         <Route path="/category/:name" element={<Category />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/admin" element={<Admin />} />

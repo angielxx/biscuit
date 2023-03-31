@@ -57,7 +57,7 @@ export const requests = {
   GET_HOME_CONTENTS(classification: string, categoryCount?: number, fromTo?: {start: number; end: number;}) {
     let route = "/api/recommends/random";
     route += classification === "category" ? `/${classification}?categoryCount=${categoryCount}` : `?sort=${classification}`;
-    route += `&from=${fromTo?.start}&to=${fromTo?.end}`;
+    route += `&type=all&from=${fromTo?.start}&to=${fromTo?.end}`;
     return route;
   },
 

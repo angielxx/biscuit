@@ -67,7 +67,7 @@ const Category = () => {
 
   return (
     <div className="mt-20">
-      <SmallCategory title={categoryName} />
+      <SmallCategory title={categoryName} selectList={[]} />
       <CategoryContainer>
         {data?.pages.map((page, index: number) => (
           <React.Fragment key={index}>
