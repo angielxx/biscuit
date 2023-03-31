@@ -17,6 +17,13 @@ interface DropDownProps {
   setSelected: React.Dispatch<React.SetStateAction<string>>;
 }
 
+const DropDownContainer = styled.div`
+  ${tw`h-[160px] w-full overflow-scroll overflow-x-hidden z-20 fixed`};
+  ${css`
+    width: calc(100% - 80px);
+  `}
+`
+
 const DropDownBtn = tw.button
   `w-full h-14 rounded-10 flex justify-between items-center bg-dark-grey20 px-4`;
 
@@ -59,13 +66,13 @@ const DropDown = ({itemList, placeHolder, selected, setSelected}: DropDownProps)
       </DropDownBtn>
       {isClicked
         ? 
-        <div className="h-[160px] w-[271px] overflow-scroll overflow-x-hidden z-20 fixed">
+        <DropDownContainer>
           <DropDownList 
             itemList={itemList}
             setSelected={setSelected}
             setIsClicked={setIsClicked} 
           />
-        </div>
+        </DropDownContainer>
         : null
       }
     </div>

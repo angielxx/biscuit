@@ -7,6 +7,7 @@ interface TextInputProps {
   status: StatusType;
   isCount: number;
   onChange: ChangeHanlder;
+  value: string;
 }
 
 type StatusType = 'primary' | 'error' | 'success';
@@ -32,7 +33,7 @@ const Input = styled.input((props: { status: StatusType }) => [
   InputStatus[props.status]
 ]);
 
-const TextInput = ({status, isCount, onChange}: TextInputProps) => {
+const TextInput = ({status, isCount, onChange, value}: TextInputProps) => {
 
   return (
     <div className="w-full flex flex-col items-start p-2 gap-2">
@@ -41,6 +42,7 @@ const TextInput = ({status, isCount, onChange}: TextInputProps) => {
         maxLength={10}
         status={status}
         onChange={onChange}
+        value={value}
       />
       <div className="w-full flex justify-end px-1">
         <span className="text-subColor text-tiny">{isCount} / 10</span>

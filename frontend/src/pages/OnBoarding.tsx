@@ -5,22 +5,19 @@ import Nickname from "../components/OnBoarding/Nickname";
 import AboutUser from "../components/OnBoarding/AboutUser";
 import AboutInterest from "../components/OnBoarding/AboutInterest";
 
-type ClickHanlder = (event: any, item: string) => void;
-
 const OnBoarding = () => {
   const [userData, setUserData] = useState({
     nickname: "",
     period: "",
     job: "",
-    interests: [],
+    interests: [""],
   });
-
-  const [page, setPage] = useState<number>(0);
 
   const isClose = () => {
     return ;
   }
 
+  const [page, setPage] = useState<number>(0);
   const isBack = () => {
     if (page === 1) {
       setPage(0);
@@ -38,12 +35,7 @@ const OnBoarding = () => {
       currentTarget: { value },
     } = e;
 
-    const space = /\s/;
-    if (space.exec(value)) {
-      setIsName(value.replace(' ', ''));
-    } else {
-      setIsName(value);
-    }
+    setIsName(value.trim());
     setIsCount(e.target.value.replace(/<br\s*\/?>/gm, "\n").length);
   }
 
@@ -64,45 +56,34 @@ const OnBoarding = () => {
   const aboutUser = () => {
     if (jobSelected !== "" && periodSelected !== "") {
       setUserData({...userData, job: jobSelected, period: periodSelected})
-      console.log(jobSelected, periodSelected);
       setPage(2);
+      console.log(jobSelected, periodSelected);
     } else {
       return ;
     }
   }
 
   // 2. 닉네임, 직무/연차, 관심사 JSON 전달
-  // const [selectList, setSelectList] = useState<string[]>([]);
-
-  // const isClicked: ClickHanlder = (event: any, item: string) => {
-  //   event.stopPropagation();
-  //   if (selectList.includes(item)) {
-  //     // 이미 리스트에 들어있다면 해당 item 삭제
-  //     const arr = selectList.filter((element) => element !== item);
-  //     setSelectList(arr);
-  //   } else {
-  //     // 없으면 해당 item 추가
-  //     setSelectList(selectList => [...selectList, item]);
-  //   }
-  //   console.log(selectList);
-  // }
-
-  const [selectList, setSelectList] = useState([]);
+  const [selectList, setSelectList] = useState<string[]>([]);
 
   const isClicked = (event: any, item: string) => {
     event.stopPropagation();
 
-    const nextId = useRef(0);
-    const interest = {
-      id: nextId.current + 1,
-      title: item
+    if (selectList.includes(item)) {
+      const newArr = selectList.filter((element) => element !== item);
+      setSelectList(newArr);
+    } else {
+      setSelectList([...selectList, item]);
     }
-    
   }
 
   const isSend = () => {
-    setUserData({...userData, interests: selectList})
+    setUserData({...userData, interests: selectList});
+
+    // userData 백으로 전달
+
     console.log(userData);
+    console.log(selectList);
   }
 
   return (

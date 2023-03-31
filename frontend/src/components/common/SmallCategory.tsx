@@ -1,6 +1,5 @@
-import { MouseEventHandler, useState } from 'react';
-
 // css
+import { useState } from 'react';
 import tw, { styled } from 'twin.macro';
 
 const Category = ({ category }: { category: string }) => {
@@ -8,7 +7,7 @@ const Category = ({ category }: { category: string }) => {
 };
 
 const CategoryBox = styled.li`
-  ${tw`flex flex-col items-start order-5 w-full px-4 py-3 gap-[10px] text-white border-b border-solid border-dark-grey10`}
+  ${tw`flex flex-col items-start order-5 w-full px-4 py-3 gap-[10px] text-white border-b border-solid border-dark-grey10 cursor-pointer`}
 
   &:hover {
     ${tw`bg-dark-primary-var`}
@@ -26,13 +25,13 @@ const SubCategory = styled.div`
 interface SmallProps {
   isClicked?: React.MouseEventHandler<HTMLLIElement>;
   title: string;
-  isChoose: boolean;
+  selectList: string[];
 }
 
-const SmallCategory = ({ isClicked, title, isChoose }: SmallProps) => {
+const SmallCategory = ({ isClicked, title, selectList }: SmallProps) => {
 
   return (
-    <CategoryBox onClick={isClicked} className={isChoose ? "choose" : ""}>
+    <CategoryBox onClick={isClicked} className={selectList.includes(title) ? "choose" : ""}>
       <SubCategory>
         <Category category={title} />
         <p className="text-h3">{title}</p>

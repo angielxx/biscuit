@@ -33,7 +33,7 @@ const Nickname = ({ isClicked, isChange, isName, isCount }: NicknameProps) => {
       <hr className="my-4 border-[1px] border-dark-grey20" />
       <NicknameBox>
         <span className="text-h3 text-white">닉네임을 설정해주세요.</span>
-        <TextInput status={isName === "" ? "primary" : "success"} onChange={isChange} isCount={isCount} />
+        <TextInput status={isName === "" ? "primary" : "success"} onChange={isChange} isCount={isCount} value={isName} />
       </NicknameBox>
       <div className="flex justify-center px-2 gap-2 mb-4">
         <Button title="설정 완료" status={isName !== "" ? "active" : "disabled"} onClick={isClicked} />   

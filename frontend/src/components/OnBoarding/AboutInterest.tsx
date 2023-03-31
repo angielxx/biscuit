@@ -52,6 +52,8 @@ const AboutInterest = ({isBack, isSend, isClicked, selectList}: AboutInterestPro
                     : setIsCategory(true)
                   : setIsCategory(true);
               }}
+              selectList={selectList}
+              locate="onboard"
             />
           );
         })}

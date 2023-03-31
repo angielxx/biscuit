@@ -19,13 +19,13 @@ const Img = styled.img`
   &.open {
     ${css`
       transform: rotate(180deg);
-      animation: open-rotate 0.5s;    
+      animation: open-rotate 0.6s;    
     `}
   }
 
   &.close {
     ${css`
-      animation: close-rotate 0.5s;    
+      animation: close-rotate 0.6s;    
     `}
   }
 
@@ -50,6 +50,44 @@ const Img = styled.img`
   `}
 `
 
+const SubCategory = styled.div`
+  &.show {
+    max-height: 100vh;
+    display: block;
+    animation: show 0.5s;
+  }
+
+  &.hide {
+    max-height: 0;
+    display: none;
+    animation: hide 0.5s;
+  }
+
+  ${css`
+      @keyframes show {
+        from {
+          max-height: 0;
+          display: none;
+        }
+        to {
+          max-height: 110px;
+          display: block;
+        }
+      }
+
+      @keyframes hide {
+        from {
+          max-height: 100vh;
+          display: block;
+        }
+        to {
+          max-height: 0;
+          display: none;
+        }
+      }
+  `}
+`
+
 type Content = {
   id: number;
   mainName: string;
@@ -66,14 +104,15 @@ interface BigCategoryProps {
   onClick: React.MouseEventHandler<HTMLLIElement>;
   isClicked: ClickHanlder;
   isCategory: boolean;
+  selectList: string[];
+  locate: string;
 }
 
-const BigCategory = ({item, onClick, isClicked, isCategory}: BigCategoryProps) => {
-  const [isChoose, setIsChoose] = useState<boolean>(false);
+const BigCategory = ({item, onClick, isClicked, isCategory, selectList, locate}: BigCategoryProps) => {
 
   return (
     <CategoryBox onClick={onClick}>
-      <Category>
+      <Category className={locate === "aside" ? "bg-black" : "bg-dark-evaluated"}>
         <p className="text-h3">{item.mainName}</p>
         <Img 
           src={dropdown} 
@@ -83,31 +122,24 @@ const BigCategory = ({item, onClick, isClicked, isCategory}: BigCategoryProps) =
           }
         />
       </Category>
-      <div>
-        <ul>
-          {isCategory ? (
-            <>
-              {item.subCategories.map((content, index) => {
-                return (
-                  <SmallCategory 
-                    key={index}
-                    isClicked={(e) => {
-                      isClicked(e, content.subName);
-                      
-                      isChoose
-                        ? setIsChoose(false) 
-                        : setIsChoose(true)
-
-                    }} 
-                    title={content.subName}
-                    isChoose={isChoose}
-                  />
-                )
-              })}
-            </>
-          ) : null}
-        </ul>
-      </div>
+      <SubCategory className={isCategory ? "show" : "hide"}>
+        <div>
+          <ul>
+            {item.subCategories.map((content, index) => {
+              return (
+                <SmallCategory 
+                  key={index}
+                  isClicked={(e) => {
+                    isClicked(e, content.subName);
+                  }} 
+                  title={content.subName}
+                  selectList={selectList}
+                />
+              )
+            })}
+          </ul>
+        </div>
+      </SubCategory>
     </CategoryBox>
   )
 }
