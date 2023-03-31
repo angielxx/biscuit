@@ -55,7 +55,7 @@ public class ContentRepositorySupport {
         whereCondition.and(qContent.id.eq(qContentCategory.content.id));
         whereCondition.and(qContentCategory.category.id.in(categoryIdList));
         whereCondition.and(qContent.timeCost.between(from, to));
-        whereCondition.and(qContent.type.eq(type));
+        if(type != Type.ALL) whereCondition.and(qContent.type.eq(type));
 
         List<Content> contentList = jpaQueryFactory
                 .select(qContent)
@@ -95,7 +95,7 @@ public class ContentRepositorySupport {
         whereCondition.and(qContent.timeCost.between(from, to));
 
         // 컨텐츠 타입
-        whereCondition.and(qContent.type.eq(type));
+        if(type != Type.ALL) whereCondition.and(qContent.type.eq(type));
 
         List<Content> contentList = jpaQueryFactory
                 .select(qContent)
@@ -123,7 +123,8 @@ public class ContentRepositorySupport {
         whereCondition.and(qContent.id.lt(lastContentId));
         whereCondition.and(containTitle(keyword).or(cotainTag(keyword)));
         whereCondition.and(qContent.timeCost.between(from, to));
-        whereCondition.and(qContent.type.eq(type));
+        if(type != Type.ALL) whereCondition.and(qContent.type.eq(type));
+
 
         List<Content> contents = jpaQueryFactory
             .selectFrom(qContent)
@@ -151,7 +152,7 @@ public class ContentRepositorySupport {
         whereCondition.and(containTitle(keyword).or(cotainTag(keyword)));
         whereCondition.and(qContentView.id.lt(popularId));
         whereCondition.and(qContent.timeCost.between(from, to));
-        whereCondition.and(qContent.type.eq(type));
+        if(type != Type.ALL) whereCondition.and(qContent.type.eq(type));
         List<Content> contents = jpaQueryFactory
                 .select(qContent)
                 .from(qContent, qContentView, qContentTag)
@@ -186,14 +187,15 @@ public class ContentRepositorySupport {
     }
 
     public Page<Content> findContentByRandom (Pageable pageable, int from, int to, Type type) {
+        BooleanBuilder whereCondition = new BooleanBuilder();
+        whereCondition.and(qContent.timeCost.between(from, to));
+
+        if(type != Type.ALL) whereCondition.and(qContent.type.eq(type));
         List<OrderSpecifier> ORDERS = getOrderSpecifiers(pageable.getSort());
 
         List<Content> contentList = jpaQueryFactory
                 .selectFrom(qContent)
-                .where(
-                        qContent.timeCost.between(from, to),
-                        qContent.type.eq(type)
-                )
+                .where(whereCondition)
                 .orderBy(ORDERS.stream().toArray(OrderSpecifier[]::new))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -206,7 +208,7 @@ public class ContentRepositorySupport {
                 pageable,
                 jpaQueryFactory
                         .selectFrom(qContent)
-                        .where(qContent.timeCost.between(from, to))
+                        .where(whereCondition)
                         .orderBy(ORDERS.stream().toArray(OrderSpecifier[]::new))
                         .limit(pageable.getPageSize())
                         .fetch()
