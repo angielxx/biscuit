@@ -1,5 +1,6 @@
 package com.pt.biscuIT.api.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -16,6 +17,8 @@ import com.pt.biscuIT.common.model.response.PageMetaData;
 import com.pt.biscuIT.db.entity.Content;
 import com.pt.biscuIT.db.entity.Type;
 import com.pt.biscuIT.db.repository.ContentRepositorySupport;
+import com.pt.biscuIT.db.repository.ContentTagRepository;
+import com.pt.biscuIT.db.repository.ContentTageRepositorySupport;
 import com.pt.biscuIT.db.repository.ContentViewRepositorySupport;
 
 import lombok.RequiredArgsConstructor;
@@ -28,6 +31,7 @@ public class SearchServiceImpl implements SearchService {
 
 	private final ContentRepositorySupport contentRepositorySupport;
 	private final ContentViewRepositorySupport contentViewRepositorySupport;
+	private final ContentTageRepositorySupport contentTageRepositorySupport;
 
 	@Override
 	public SearchContentRes search(String keyword, int from, int to, Long lastContentId, Pageable pageable, String condition, Type type) {
@@ -49,9 +53,17 @@ public class SearchServiceImpl implements SearchService {
 			)
 			.build();
 
+		List<ContentInfoDto> contentInfoDtoList = new ArrayList<>();
+		for(Content content : contentList.getContent()) {
+			List<String> tags = contentTageRepositorySupport.findByTagsByContentId(content.getId());
+			ContentInfoDto contentInfoDto = new ContentInfoDto(content);
+			contentInfoDto.setTags(tags);
+			contentInfoDtoList.add(contentInfoDto);
+		}
+
 		SearchContentRes res = SearchContentRes.builder()
 			.metaData(metaData)
-			.results(contentList.map(ContentInfoDto::new).getContent())
+			.results(contentInfoDtoList)
 			.build();
 
 		return res;
