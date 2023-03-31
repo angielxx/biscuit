@@ -1,14 +1,21 @@
 // css
+import { useState } from 'react';
 import tw, { styled } from 'twin.macro';
-
-// icons
 
 const Category = ({ category }: { category: string }) => {
   return <img src={`/src/assets/icons/category/${category}.svg`} />;
 };
 
-const CategoryBox = styled.div`
-  ${tw`flex flex-col items-start order-5 w-full px-4 py-3 gap-[10px] text-white border-b border-solid border-dark-grey10`}
+const CategoryBox = styled.li`
+  ${tw`flex flex-col items-start order-5 w-full px-4 py-3 gap-[10px] text-white border-b border-solid border-dark-grey10 cursor-pointer`}
+
+  &:hover {
+    ${tw`bg-dark-primary-var`}
+  }
+
+  &.choose {
+    ${tw`bg-dark-primary-var`}
+  }
 `;
 
 const SubCategory = styled.div`
@@ -16,13 +23,15 @@ const SubCategory = styled.div`
 `;
 
 interface SmallProps {
-  isClick?: React.MouseEventHandler<HTMLDivElement>;
+  isClicked?: React.MouseEventHandler<HTMLLIElement>;
   title: string;
+  selectList: string[];
 }
 
-const SmallCategory = ({ isClick, title }: SmallProps) => {
+const SmallCategory = ({ isClicked, title, selectList }: SmallProps) => {
+
   return (
-    <CategoryBox onClick={isClick}>
+    <CategoryBox onClick={isClicked} className={selectList.includes(title) ? "choose" : ""}>
       <SubCategory>
         <Category category={title} />
         <p className="text-h3">{title}</p>

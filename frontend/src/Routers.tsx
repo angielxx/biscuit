@@ -8,6 +8,7 @@ import { useRecoilState } from 'recoil';
 import { isModalOpenState } from './recoils/Contents/Atoms';
 import RecentContentModal from './components/common/Modal/RecontContentModal';
 import Modal from './components/common/Modal/Modal';
+import OnBoarding from './pages/OnBoarding';
 import { isStartModalState } from './recoils/Start/Atoms';
 import Start from './components/Start/Start';
 import GoogleLogin from './components/Start/GoogleLogin';
@@ -35,6 +36,7 @@ export default function Routers() {
         <Route path="/search" element={<Search />} />
         <Route path="/category/:name" element={<Category />} />
         <Route path="admin" element={<Admin />} />
+        <Route path="/onboarding" element={<OnBoarding />} />
         <Route path="/login/oauth2/code/google" element={<GoogleLogin />} />
       </Routes>
     </div>
