@@ -4,7 +4,7 @@ import { requests } from './requests';
 interface content {
   id: number;
   title: string;
-  url: string;
+  source: string; // 영상: video_id, 글: url
   creditBy: string;
   createdDate: string;
   timeCost: number;
@@ -25,7 +25,7 @@ const get_home_contents = async (
   fromTo?: {
     start: number;
     end: number;
-  },
+  }
 ): Promise<content[] | randomContent[] | undefined> => {
   const response = await baseInstance.get(
     requests.GET_HOME_CONTENTS(classification, categoryCount, fromTo)

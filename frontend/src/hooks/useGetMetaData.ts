@@ -48,5 +48,6 @@ export const useGetMetaData = async (url: string) => {
     return { image, desc };
   } catch (error) {
     console.log(url, error);
+    return;
   }
 };

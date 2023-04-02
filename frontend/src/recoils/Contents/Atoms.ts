@@ -9,7 +9,7 @@ const startTimeState = atom({
 const endTimeState = atom({
   key: 'endTimeState',
   default: 0,
-})
+});
 
 const isStartState = atom({
   key: 'isStartState',
@@ -24,7 +24,7 @@ const isModalOpenState = atom({
 interface content {
   id: number;
   title: string;
-  url: string;
+  source: string; // 영상: video_id, 글: url
   creditBy: string;
   createdDate: string;
   timeCost: number;
@@ -38,7 +38,7 @@ const recentContentState = atom<content>({
   default: {
     id: 0,
     title: '',
-    url: '',
+    source: '',
     creditBy: '',
     createdDate: '',
     timeCost: 0,
@@ -51,10 +51,10 @@ const recentContentState = atom<content>({
 
 const getTimeSelector = selector({
   key: 'getTimeSelector',
-  get: ({get}) => {
+  get: ({ get }) => {
     return Number(get(endTimeState)) - Number(get(startTimeState));
-  }
-})
+  },
+});
 
 export {
   startTimeState,
