@@ -48,7 +48,7 @@ const StoreItemContainer = styled.div`
 interface content {
   id: number;
   title: string;
-  url: string;
+  source: string; // 영상: video_id, 글: url
   creditBy: string;
   createdDate: string;
   timeCost: number;
