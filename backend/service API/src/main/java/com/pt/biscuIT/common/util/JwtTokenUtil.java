@@ -6,6 +6,7 @@ import com.auth0.jwt.exceptions.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.jsonwebtoken.Jwts;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -32,6 +33,8 @@ public class JwtTokenUtil {
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
     public static final String ISSUER = "biscuit";
+    public static final String ACCESS_TOKEN_NAME = "access-token";
+    public static final String REFRESH_TOKEN_NAME = "refresh-token";
 
     @Autowired
     public JwtTokenUtil(@Value("${jwt.secret}") String secretKey, @Value("${jwt.expiration.atk}") Integer atkExpirationTime, @Value("${jwt.expiration.rtk}") Integer rtkExpirationTime) {
@@ -53,37 +56,37 @@ public class JwtTokenUtil {
                 .build();
     }
 
-    public static String getToken(String email) {
-//        int expirationTime = (type.equals("access-token")) ? atkExpirationTime : rtkExpirationTime;
+    public static String getToken(String type, String identifier) {
+        int expirationTime = (type.equals(ACCESS_TOKEN_NAME)) ? atkExpirationTime : rtkExpirationTime;
 
-        Date expires = JwtTokenUtil.getTokenExpiration(rtkExpirationTime);
+        Date expires = JwtTokenUtil.getTokenExpiration(expirationTime);
         return JWT.create()
-                .withSubject(email)
+                .withSubject(identifier)
                 .withExpiresAt(expires)
                 .withIssuer(ISSUER)
                 .withIssuedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
                 .sign(Algorithm.HMAC512(secretKey.getBytes()));
     }
 
-    public static String getToken(int expiresToken, String email) {
-        Date expires = JwtTokenUtil.getTokenExpiration(expiresToken);
-        return JWT.create()
-                .withSubject(email)
-                .withExpiresAt(expires)
-                .withIssuer(ISSUER)
-                .withIssuedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
-                .sign(Algorithm.HMAC512(secretKey.getBytes()));
-    }
+//    public static String getToken(int expiresToken, String identifier) {
+//        Date expires = JwtTokenUtil.getTokenExpiration(expiresToken);
+//        return JWT.create()
+//                .withSubject(identifier)
+//                .withExpiresAt(expires)
+//                .withIssuer(ISSUER)
+//                .withIssuedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
+//                .sign(Algorithm.HMAC512(secretKey.getBytes()));
+//    }
 
     public static Date getTokenExpiration(int expirationTime) {
         Date now = new Date();
         return new Date(now.getTime() + expirationTime);
     }
 
-    public static Long getExpiration(String accessToken){
+    public static Long getExpiration(String Token){
         Date expiration = Jwts.parser()
                 .setSigningKey(secretKey.getBytes())
-                .parseClaimsJws(accessToken)
+                .parseClaimsJws(Token)
                 .getBody()
                 .getExpiration();
 
@@ -99,19 +102,8 @@ public class JwtTokenUtil {
 
         try {
             verifier.verify(token.replace(TOKEN_PREFIX, ""));
-        } catch (AlgorithmMismatchException ex) {
-            throw ex;
-        } catch (InvalidClaimException ex) {
-            throw ex;
-        } catch (SignatureGenerationException ex) {
-            throw ex;
-        } catch (SignatureVerificationException ex) {
-            throw ex;
-        } catch (TokenExpiredException ex) {
-            throw ex;
-        } catch (JWTCreationException ex) {
-            throw ex;
-        } catch (JWTDecodeException ex) {
+        } catch (AlgorithmMismatchException | InvalidClaimException | SignatureVerificationException |
+                 TokenExpiredException | JWTCreationException | JWTDecodeException ex) {
             throw ex;
         } catch (JWTVerificationException ex) {
             throw ex;
@@ -123,19 +115,8 @@ public class JwtTokenUtil {
     public static void handleError(JWTVerifier verifier, String token) {
         try {
             verifier.verify(token.replace(TOKEN_PREFIX, ""));
-        } catch (AlgorithmMismatchException ex) {
-            throw ex;
-        } catch (InvalidClaimException ex) {
-            throw ex;
-        } catch (SignatureGenerationException ex) {
-            throw ex;
-        } catch (SignatureVerificationException ex) {
-            throw ex;
-        } catch (TokenExpiredException ex) {
-            throw ex;
-        } catch (JWTCreationException ex) {
-            throw ex;
-        } catch (JWTDecodeException ex) {
+        } catch (AlgorithmMismatchException | InvalidClaimException | SignatureVerificationException |
+                 JWTCreationException | TokenExpiredException | JWTDecodeException ex) {
             throw ex;
         } catch (JWTVerificationException ex) {
             throw ex;
