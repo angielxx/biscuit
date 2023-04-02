@@ -68,9 +68,9 @@ export const requests = {
     return route;
   },
 
-  // 구글 로그인 인가코드 전달
+  // 구글 로그인
   GOOGLE_LOGIN(authorizationCode: string) {
-    return `/api/auth/signin/google`;
+    return `/api/auth/signin/google?code=${authorizationCode}`;
   },
 
   // 가입 설문조사 전달
