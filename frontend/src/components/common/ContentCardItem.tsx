@@ -97,13 +97,13 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
 
   // 타입에 따라 썸네일, url 설정
   useEffect(() => {
-    if (content.type === 'video') {
+    if (content.type === 'VIDEO') {
       setUrl(`https://youtu.be/${content.source}`);
       setThumbImg(`https://img.youtube.com/vi/${content.source}/0.jpg`);
     } else {
       setUrl(content.source);
     }
-  }, []);
+  }, [content]);
 
   // 썸네일 가져오는 함수 (queryFn)
   const getMetaData = async (url: string) => {
@@ -137,19 +137,6 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
     });
   };
 
-  // 썸네일 가져오는 함수
-  const getMetaData = async (url: string) => {
-    const { image } = await useGetMetaData(url);
-    return image;
-  };
-
-  // 리액트 쿼리로 썸네일 가져오기
-  const { data: thumbImg } = useQuery({
-    queryKey: ['thumbnail', content.id],
-    queryFn: () => getMetaData(content.url),
-    staleTime: 1000 * 60 * 30,
-  });
-
   const startTime = useRecoilValue(startTimeState);
   const setStartTime = useSetRecoilState(startTimeState);
   const setIsStart = useSetRecoilState(isStartState);
@@ -182,12 +169,8 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
           ))}
       </div>
 
-      <button
-        onClick={() => clickContentHandler(content.url)}
-        className="w-full"
-      >
-        <Thumbnail image={thumbImg ? thumbImg : ''} />
-        <Thumbnail image={thumbImg ? thumbImg : ''} />
+      <button onClick={() => clickContentHandler(url)} className="w-full">
+        <Thumbnail image={thumbImg} />
       </button>
 
       <ContentInfo>
@@ -195,7 +178,7 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
         <TextInfo id="text">
           <p
             className="leading-5 max-h-[40px] overflow-hidden cursor-pointer text-main-bold hover:text-main-bold hover:text-primary"
-            onClick={() => clickContentHandler(content.url)}
+            onClick={() => clickContentHandler(url)}
           >
             {content.title}
           </p>
