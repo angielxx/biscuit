@@ -12,7 +12,7 @@ import StoreItem from '../components/MyStore/StoreItem';
 interface content {
   id: number;
   title: string;
-  url: string;
+  source: string; // 영상: video_id, 글: url
   creditBy: string;
   createdDate: string;
   timeCost: number;
@@ -30,7 +30,8 @@ const MyStore = () => {
     {
       id: 52,
       title: '더 똑똑해진 GPT-4 발표! 무엇이 달라졌을까?',
-      url: 'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
+      source:
+        'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
       creditBy: '데보션',
       createdDate: '2023-03-16 00:00:00.000000',
       timeCost: 0,
@@ -42,7 +43,8 @@ const MyStore = () => {
     {
       id: 53,
       title: '더 똑똑해진 GPT-4 발표! 무엇이 달라졌을까?',
-      url: 'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
+      source:
+        'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
       creditBy: '데보션',
       createdDate: '2023-03-16 00:00:00.000000',
       timeCost: 0,
@@ -57,7 +59,8 @@ const MyStore = () => {
     {
       id: 52,
       title: '더 똑똑해진 GPT-4 발표! 무엇이 달라졌을까?',
-      url: 'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
+      source:
+        'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
       creditBy: '데보션',
       createdDate: '2023-03-16 00:00:00.000000',
       timeCost: 0,
@@ -69,7 +72,8 @@ const MyStore = () => {
     {
       id: 53,
       title: '더 똑똑해진 GPT-4 발표! 무엇이 달라졌',
-      url: 'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
+      source:
+        'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
       creditBy: '데보션',
       createdDate: '2023-03-16 00:00:00.000000',
       timeCost: 0,
