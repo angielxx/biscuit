@@ -48,7 +48,7 @@ interface FeedbackModalProps {
 interface content {
   id: number;
   title: string;
-  url: string;
+  source: string; // 영상: video_id, 글: url
   creditBy: string;
   createdDate: string;
   timeCost: number;
@@ -134,7 +134,7 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   // 피드백 제출
   const feedbackSubmitHandler = (feedback: number | null) => {
     // timecost 설정 필요
-    const timecost = Math.ceil(getTime/(60*1000));
+    const timecost = Math.ceil(getTime / (60 * 1000));
     // API POST 요청 : 피드백 저장
     feedbackMutate({ contentId: recentContent.id, feedback, timecost });
     onClose();
