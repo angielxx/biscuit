@@ -35,14 +35,13 @@ function scrap(doc: Document, url: string) {
 
 export const useGetMetaData = async (url: string) => {
   try {
-    console.log('url :', url);
-    const html = await fetch(`https://cors-anywhere.herokuapp.com/${url}`, {
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-      },
+    const html = await fetch(`${url}`, {
+      mode: 'cors',
     }).then((res) => {
+      console.log(res);
       return res.text();
     });
+    console.log('html :', html);
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
     const { image, desc } = scrap(doc, url);

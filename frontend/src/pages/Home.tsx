@@ -24,15 +24,27 @@ export default function Home() {
   const content = {
     id: 3333,
     title: '물리 퍼즐게임 - 물리이벤트로 동글 합치기 [유니티 기초 강좌 B56]',
-    source: 'RvDaDt-469E',
+    source: 'https://blog.toss.im/article/outsight-polarbear',
     creditBy: '골드메탈',
     createdDate: '2021-09-12',
     timeCost: 26,
-    type: 'VIDEO',
+    type: 'ARTICLE',
     marked: false,
     tags: null,
     hit: 2998,
   };
+  // const content = {
+  //   id: 3333,
+  //   title: '물리 퍼즐게임 - 물리이벤트로 동글 합치기 [유니티 기초 강좌 B56]',
+  //   source: 'RvDaDt-469E',
+  //   creditBy: '골드메탈',
+  //   createdDate: '2021-09-12',
+  //   timeCost: 26,
+  //   type: 'VIDEO',
+  //   marked: false,
+  //   tags: null,
+  //   hit: 2998,
+  // };
   return (
     <HomeContainer>
       {/* { functionToggle.buttonToggle ? <Button title="퀴즈 풀래요" status="active" onClick={clickBtn}/> : null} */}

@@ -111,7 +111,7 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
     return image;
   };
 
-  if (content.type === 'article') {
+  if (content.type === 'ARTICLE') {
     // 리액트 쿼리로 썸네일 가져오기
     const { data: thumbImg } = useQuery({
       queryKey: ['thumbnail', content.id],
