@@ -6,7 +6,6 @@ import {
   isStartState,
   isModalOpenState,
   recentContentState,
-  endTimeState,
 } from '../../recoils/Contents/Atoms';
 
 // twin macro
@@ -137,6 +136,19 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
     });
   };
 
+  // 썸네일 가져오는 함수
+  const getMetaData = async (url: string) => {
+    const { image } = await useGetMetaData(url);
+    return image;
+  };
+
+  // 리액트 쿼리로 썸네일 가져오기
+  const { data: thumbImg } = useQuery({
+    queryKey: ['thumbnail', content.id],
+    queryFn: () => getMetaData(content.url),
+    staleTime: 1000 * 60 * 30,
+  });
+
   const startTime = useRecoilValue(startTimeState);
   const setStartTime = useSetRecoilState(startTimeState);
   const setIsStart = useSetRecoilState(isStartState);
@@ -146,12 +158,10 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
   const clickContentHandler = (url: string) => {
     window.open(url, '_blank', 'noopener, noreferrer');
     setStartTime(Number(Date.now().toString()));
-    // console.log(Date.now().toString());
     setIsStart(true);
     if (!isModalOpen) {
       setIsModalOpen(true);
       setContent(content);
-      // console.log('content :', content);
     }
   };
 

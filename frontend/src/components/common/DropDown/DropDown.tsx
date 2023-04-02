@@ -13,10 +13,19 @@ type ItemObj = {
 interface DropDownProps {
   itemList: ItemObj[];
   placeHolder: string;
+  selected: string;
+  setSelected: React.Dispatch<React.SetStateAction<string>>;
 }
 
+const DropDownContainer = styled.div`
+  ${tw`h-[160px] w-full overflow-scroll overflow-x-hidden z-20 fixed`};
+  ${css`
+    width: calc(100% - 80px);
+  `}
+`
+
 const DropDownBtn = tw.button
-  `w-full h-14 rounded flex justify-between items-center bg-dark-evaluated px-4`;
+  `w-full h-14 rounded-10 flex justify-between items-center bg-dark-grey20 px-4`;
 
 const ArrowDropDown = styled.div
   `${css`
@@ -37,9 +46,10 @@ const DropDownHolder = styled.span((props: { selected: string }) => [
 /** itemList는 드롭다운 아이템 리스트 {id: number, content:string},
  * placeHolder는 드롭다운 기본 홀더(string)
 */
-const DropDown = ({itemList, placeHolder}: DropDownProps) => {
+const DropDown = ({itemList, placeHolder, selected, setSelected}: DropDownProps) => {
   const [isClicked, setIsClicked] = useState<boolean>(false);
-  const [selected, setSelected] = useState<string>("");
+
+
   const ref = useRef<HTMLDivElement>(null);
 
   const onClick = () => {
@@ -49,16 +59,20 @@ const DropDown = ({itemList, placeHolder}: DropDownProps) => {
   useOnClickOutside(ref, () => setIsClicked(false));
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className="relative">
       <DropDownBtn onClick={onClick}>
         <DropDownHolder selected={selected}>{selected !== "" ? selected : placeHolder}</DropDownHolder>
         <ArrowDropDown />
       </DropDownBtn>
       {isClicked
-        ? <DropDownList 
-          itemList={itemList}
-          setSelected={setSelected}
-          setIsClicked={setIsClicked} />
+        ? 
+        <DropDownContainer>
+          <DropDownList 
+            itemList={itemList}
+            setSelected={setSelected}
+            setIsClicked={setIsClicked} 
+          />
+        </DropDownContainer>
         : null
       }
     </div>
