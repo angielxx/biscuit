@@ -91,7 +91,6 @@ const OnBoarding = () => {
   const isSend = () => {
     setUserData({...userData, interests: selectList});
     userDataPost(userData);
-    console.log(userData);
     console.log(selectList);
 
     // 홈으로 이동
