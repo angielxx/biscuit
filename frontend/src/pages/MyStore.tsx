@@ -22,7 +22,7 @@ interface content {
   hit: number;
 }
 
-const MyStore = (props) => {
+const MyStore = () => {
   // 탭
   const [clickedTab, setClickedTab] = useState<number>(0);
   // 북마크

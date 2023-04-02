@@ -65,11 +65,12 @@ export const get_search = async (
     }
   | undefined
 > => {
+  if (!keyword) return;
   const { data } = await baseInstance.get(
-    requests.GET_SEARCH(keyword, sort, time, lastContentId, size)
+    requests.GET_SEARCH(keyword, 'content', sort, time, lastContentId, size)
   );
   const { last: isLast } = data.metaData;
-  const { content } = data.results;
+  const content = data.results;
   console.log(data);
   const nextLastContentId = content[content.length - 1]?.id;
 
