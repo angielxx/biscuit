@@ -50,13 +50,13 @@ const CategoryObj: CategoryObjType = {
 interface content {
   id: number;
   title: string;
-  url: string;
+  source: string; // 영상: video_id, 글: url
   creditBy: string;
   createdDate: string;
   timeCost: number;
   type: string;
-  isMarked: boolean;
-  tags: Array<string>;
+  marked: boolean;
+  tags: Array<string> | null;
   hit: number;
 }
 
@@ -69,7 +69,7 @@ type filterItem = {
   id: number;
   content: string;
   status: boolean;
-}
+};
 
 const timeFilterArr = [
   { start: 0, end: 5 },
@@ -78,31 +78,30 @@ const timeFilterArr = [
   { start: 20, end: 30 },
   { start: 30, end: 60 },
   { start: 60, end: 180 },
-  { start: 0, end: 1440 }
-]
+  { start: 0, end: 1440 },
+];
 
 const HomeContentList = ({ category }: HomeComentListProps) => {
-
   const timeFilter = useRecoilValue(homeFilterTimeState);
   const [timeFilterIdx, setTimeFilterIdx] = useState(6);
 
   useEffect(() => {
     let timeIdx: number = 6;
     timeFilter.forEach((time: filterItem) => {
-      if(time.status === true) timeIdx = time.id;
-    })
+      if (time.status === true) timeIdx = time.id;
+    });
     setTimeFilterIdx(timeIdx);
-  }, [timeFilter])
+  }, [timeFilter]);
 
   // 해당 카테고리에 맞는 글들 불러오기
   const { data } = useQuery({
     queryKey: ['get_home_contents', category, timeFilterIdx],
     queryFn: async () => {
-      const categoryCount = (category === 'category' ? 5 : undefined);
+      const categoryCount = category === 'category' ? 5 : undefined;
       const fromTo = timeFilterArr[timeFilterIdx];
-      return await get_home_contents(category, categoryCount, fromTo)
+      return await get_home_contents(category, categoryCount, fromTo);
     },
-    enabled: !!(timeFilterIdx!==undefined),
+    enabled: !!(timeFilterIdx !== undefined),
     staleTime: 60 * 60 * 1000,
     cacheTime: Infinity,
   });

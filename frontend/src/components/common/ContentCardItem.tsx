@@ -6,6 +6,7 @@ import {
   isStartState,
   isModalOpenState,
   recentContentState,
+  endTimeState,
 } from '../../recoils/Contents/Atoms';
 
 // twin macro
@@ -18,7 +19,7 @@ const Tag = styled.div`
   ${tw`rounded-full text-tiny px-[10px] py-1 bg-dark-grey50 w-fit `}
 `;
 
-const Thumbnail = styled.div<{ image: string | null }>`
+const Thumbnail = styled.div<{ image: string | undefined }>`
   ${tw`aspect-w-16 aspect-h-9 bg-center rounded-10 relative cursor-pointer`}
   ${({ image }) =>
     image
@@ -88,7 +89,7 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
   // 요약
   const [desc, setDesc] = useState<string | null>('');
   // 썸네일 이미지
-  const [thumbImg, setThumbImg] = useState<string>('');
+  const [thumbImg, setThumbImg] = useState<string | undefined>('');
   // url
   const [url, setUrl] = useState<string>('');
   // 로그인 여부
@@ -106,8 +107,8 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
 
   // 썸네일 가져오는 함수 (queryFn)
   const getMetaData = async (url: string) => {
-    const { image } = await useGetMetaData(url);
-    return image;
+    const data = await useGetMetaData(url);
+    return data?.image;
   };
 
   if (content.type === 'ARTICLE') {
@@ -136,19 +137,6 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
     });
   };
 
-  // 썸네일 가져오는 함수
-  const getMetaData = async (url: string) => {
-    const { image } = await useGetMetaData(url);
-    return image;
-  };
-
-  // 리액트 쿼리로 썸네일 가져오기
-  const { data: thumbImg } = useQuery({
-    queryKey: ['thumbnail', content.id],
-    queryFn: () => getMetaData(content.url),
-    staleTime: 1000 * 60 * 30,
-  });
-
   const startTime = useRecoilValue(startTimeState);
   const setStartTime = useSetRecoilState(startTimeState);
   const setIsStart = useSetRecoilState(isStartState);
@@ -158,10 +146,12 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
   const clickContentHandler = (url: string) => {
     window.open(url, '_blank', 'noopener, noreferrer');
     setStartTime(Number(Date.now().toString()));
+    // console.log(Date.now().toString());
     setIsStart(true);
     if (!isModalOpen) {
       setIsModalOpen(true);
       setContent(content);
+      // console.log('content :', content);
     }
   };
 
