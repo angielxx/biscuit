@@ -13,7 +13,6 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   getTimeSelector,
   recentContentState,
-  startTimeState,
 } from '../../../recoils/Contents/Atoms';
 import QuizResultPage from './QuizResultPage';
 import QuizPage from './QuizPage';
@@ -49,7 +48,7 @@ interface FeedbackModalProps {
 interface content {
   id: number;
   title: string;
-  url: string;
+  source: string; // 영상: video_id, 글: url
   creditBy: string;
   createdDate: string;
   timeCost: number;
@@ -101,6 +100,8 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
       answer: 0,
     },
   ]);
+  // 콘텐츠 소비 시간
+  const getTime = useRecoilValue(getTimeSelector);
 
   useEffect(() => {
     // API get 요청 : 퀴즈 제공
@@ -133,7 +134,7 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   // 피드백 제출
   const feedbackSubmitHandler = (feedback: number | null) => {
     // timecost 설정 필요
-    const timecost = 1;
+    const timecost = Math.ceil(getTime / (60 * 1000));
     // API POST 요청 : 피드백 저장
     feedbackMutate({ contentId: recentContent.id, feedback, timecost });
     onClose();

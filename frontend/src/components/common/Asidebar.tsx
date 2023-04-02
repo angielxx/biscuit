@@ -17,7 +17,7 @@ import AsideLogin from './AsideLogin';
 import { useRecoilState } from 'recoil';
 
 const Aside = styled.div`
-  ${tw`h-full z-20 flex flex-col items-start p-2 fixed w-[314px] right-0 top-0 bg-[#1A1B1E]`}
+  ${tw`h-full z-20 flex flex-col items-start p-2 fixed w-[314px] right-0 top-0 bg-black`}
 
   &.open {
     ${css`
@@ -46,7 +46,7 @@ interface AsidebarStatus {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-type ClickHanlder = (item: string) => void;
+type ClickHanlder = (event: any, item: string) => void;
 
 const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
   const [isCategory, setIsCategory] = useState<boolean>(false);
@@ -59,7 +59,7 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
     () => get_categories()
   )
 
-  const isClicked: ClickHanlder = (item: string) => {
+  const isClicked: ClickHanlder = (event: any, item: string) => {
     navigate(`/category/${item}`);
     setIsOpen(false);
   };
@@ -103,6 +103,8 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
                   : setIsCategory(true)
                 : setIsCategory(true);
             }}
+            selectList={[]}
+            locate="aside"
           />
         );
       })}

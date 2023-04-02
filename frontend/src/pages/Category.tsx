@@ -18,7 +18,7 @@ const CategoryContainer = styled.div`
 interface content {
   id: number;
   title: string;
-  url: string;
+  source: string; // 영상: video_id, 글: url
   creditBy: string;
   createdDate: string;
   timeCost: number;
@@ -67,7 +67,7 @@ const Category = () => {
 
   return (
     <div className="mt-20">
-      <SmallCategory title={categoryName} />
+      <SmallCategory title={categoryName} selectList={[]} />
       <CategoryContainer>
         {data?.pages.map((page, index: number) => (
           <React.Fragment key={index}>

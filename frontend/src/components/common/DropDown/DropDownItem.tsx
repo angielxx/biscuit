@@ -19,10 +19,10 @@ const onClick = ({content, setSelected, setIsClicked}: onClickProps) => {
 }
 
 const DropDownItemBtn = styled.button((props: { isHovering: boolean }) => [
-  tw`w-full h-14 rounded flex justify-between items-center`,
+  tw`w-full h-14 rounded-10 flex justify-between items-center`,
   props.isHovering === true
     ? tw`bg-dark-primary-var px-4 text-main-bold text-black`
-    : tw`bg-dark-evaluated px-4 text-main text-dark-primary`
+    : tw`bg-dark-grey20 px-4 text-main text-dark-primary`
 ])
 
 const DropDownItem = ({content, setSelected, setIsClicked}: DropDownItemProps) => {
@@ -30,10 +30,10 @@ const DropDownItem = ({content, setSelected, setIsClicked}: DropDownItemProps) =
 
   return (
     <DropDownItemBtn
-    onMouseOver={() => setIsHovering(true)}
-    onMouseOut={() => setIsHovering(false)}
-    onClick={() => onClick({content, setSelected, setIsClicked})}
-    isHovering={isHovering}>
+      onMouseOver={() => setIsHovering(true)}
+      onMouseOut={() => setIsHovering(false)}
+      onClick={() => onClick({content, setSelected, setIsClicked})}
+      isHovering={isHovering}>
       {content}
     </DropDownItemBtn>
   );

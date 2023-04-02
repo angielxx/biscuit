@@ -19,7 +19,7 @@ const Tag = styled.div`
   ${tw`rounded-full text-tiny px-[10px] py-1 bg-dark-grey50 w-fit `}
 `;
 
-const Thumbnail = styled.div<{ image: string | null }>`
+const Thumbnail = styled.div<{ image: string | undefined }>`
   ${tw`aspect-w-16 aspect-h-9 bg-center rounded-10 relative cursor-pointer`}
   ${({ image }) =>
     image
@@ -69,7 +69,7 @@ const TextInfo = styled.div`
 interface content {
   id: number;
   title: string;
-  url: string;
+  source: string; // 영상: video_id, 글: url
   creditBy: string;
   createdDate: string;
   timeCost: number;
@@ -88,8 +88,38 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
   const [isMarked, setIsMarked] = useState<boolean>(content.marked);
   // 요약
   const [desc, setDesc] = useState<string | null>('');
+  // 썸네일 이미지
+  const [thumbImg, setThumbImg] = useState<string | undefined>('');
+  // url
+  const [url, setUrl] = useState<string>('');
   // 로그인 여부
   const isAuth = false;
+
+  // 타입에 따라 썸네일, url 설정
+  useEffect(() => {
+    if (content.type === 'VIDEO') {
+      setUrl(`https://youtu.be/${content.source}`);
+      setThumbImg(`https://img.youtube.com/vi/${content.source}/0.jpg`);
+    } else {
+      setUrl(content.source);
+    }
+  }, [content]);
+
+  // 썸네일 가져오는 함수 (queryFn)
+  const getMetaData = async (url: string) => {
+    const data = await useGetMetaData(url);
+    return data?.image;
+  };
+
+  if (content.type === 'ARTICLE') {
+    // 리액트 쿼리로 썸네일 가져오기
+    const { data: thumbImg } = useQuery({
+      queryKey: ['thumbnail', content.id],
+      queryFn: () => getMetaData(content.source),
+      staleTime: 1000 * 60 * 30,
+      onSuccess: (image) => setThumbImg(image),
+    });
+  }
 
   // 날짜 포맷
   const stringToDate = (date: string) => {
@@ -106,19 +136,6 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
       return !prev;
     });
   };
-
-  // 썸네일 가져오는 함수
-  const getMetaData = async (url: string) => {
-    const { image } = await useGetMetaData(url);
-    return image;
-  };
-
-  // 리액트 쿼리로 썸네일 가져오기
-  const { data: thumbImg } = useQuery({
-    queryKey: ['thumbnail', content.id],
-    queryFn: () => getMetaData(content.url),
-    staleTime: 1000 * 60 * 30,
-  });
 
   const startTime = useRecoilValue(startTimeState);
   const setStartTime = useSetRecoilState(startTimeState);
@@ -152,11 +169,8 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
           ))}
       </div>
 
-      <button
-        onClick={() => clickContentHandler(content.url)}
-        className="w-full"
-      >
-        <Thumbnail image={thumbImg ? thumbImg : ''} />
+      <button onClick={() => clickContentHandler(url)} className="w-full">
+        <Thumbnail image={thumbImg} />
       </button>
 
       <ContentInfo>
@@ -164,7 +178,7 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
         <TextInfo id="text">
           <p
             className="leading-5 max-h-[40px] overflow-hidden cursor-pointer text-main-bold hover:text-main-bold hover:text-primary"
-            onClick={() => clickContentHandler(content.url)}
+            onClick={() => clickContentHandler(url)}
           >
             {content.title}
           </p>
