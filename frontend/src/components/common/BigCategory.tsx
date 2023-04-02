@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 // css
 import tw, { css, styled } from 'twin.macro';
 
@@ -5,25 +7,25 @@ import tw, { css, styled } from 'twin.macro';
 import dropdown from '../../assets/icons/arrow_drop_down.svg';
 import SmallCategory from './SmallCategory';
 
-const CategoryBox = styled.button`
-  ${tw`flex flex-col`}
+const CategoryBox = styled.li`
+  ${tw`w-full flex flex-col`}
 `
 
-const Category = styled.div`
-  ${tw`flex justify-between items-center w-[298px] h-13 box-border px-3 py-4 text-white self-stretch border-b border-solid border-dark-evaluated`}
+const Category = styled.button`
+  ${tw`flex justify-between items-center w-full h-13 box-border px-3 py-4 text-white self-stretch border-b border-solid border-dark-evaluated`}
 `
 
 const Img = styled.img`
   &.open {
     ${css`
       transform: rotate(180deg);
-      animation: open-rotate 0.5s;    
+      animation: open-rotate 0.6s;    
     `}
   }
 
   &.close {
     ${css`
-      animation: close-rotate 0.5s;    
+      animation: close-rotate 0.6s;    
     `}
   }
 
@@ -48,6 +50,44 @@ const Img = styled.img`
   `}
 `
 
+const SubCategory = styled.div`
+  &.show {
+    max-height: 100vh;
+    display: block;
+    animation: show 0.5s;
+  }
+
+  &.hide {
+    max-height: 0;
+    display: none;
+    animation: hide 0.5s;
+  }
+
+  ${css`
+      @keyframes show {
+        from {
+          max-height: 0;
+          display: none;
+        }
+        to {
+          max-height: 110px;
+          display: block;
+        }
+      }
+
+      @keyframes hide {
+        from {
+          max-height: 100vh;
+          display: block;
+        }
+        to {
+          max-height: 0;
+          display: none;
+        }
+      }
+  `}
+`
+
 type Content = {
   id: number;
   mainName: string;
@@ -57,20 +97,22 @@ type Content = {
   }[]
 }
 
-type ClickHanlder = (item: string) => void;
+type ClickHanlder = (event: any, item: string) => void;
 
 interface BigCategoryProps {
   item: Content;
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  onClick: React.MouseEventHandler<HTMLLIElement>;
   isClicked: ClickHanlder;
   isCategory: boolean;
+  selectList: string[];
+  locate: string;
 }
 
-const BigCategory = ({item, onClick, isClicked, isCategory}: BigCategoryProps) => {
+const BigCategory = ({item, onClick, isClicked, isCategory, selectList, locate}: BigCategoryProps) => {
 
   return (
     <CategoryBox onClick={onClick}>
-      <Category>
+      <Category className={locate === "aside" ? "bg-black" : "bg-dark-evaluated"}>
         <p className="text-h3">{item.mainName}</p>
         <Img 
           src={dropdown} 
@@ -80,18 +122,24 @@ const BigCategory = ({item, onClick, isClicked, isCategory}: BigCategoryProps) =
           }
         />
       </Category>
-      {isCategory ? (
-        <>
-          {item.subCategories.map((content, idx) => {
-            return (
-              <SmallCategory 
-                key={idx} 
-                isClick={() => isClicked(content.subName)} title={content.subName} 
-              />
-            )
-          })}
-        </>
-      ) : null}
+      <SubCategory className={isCategory ? "show" : "hide"}>
+        <div>
+          <ul>
+            {item.subCategories.map((content, index) => {
+              return (
+                <SmallCategory 
+                  key={index}
+                  isClicked={(e) => {
+                    isClicked(e, content.subName);
+                  }} 
+                  title={content.subName}
+                  selectList={selectList}
+                />
+              )
+            })}
+          </ul>
+        </div>
+      </SubCategory>
     </CategoryBox>
   )
 }

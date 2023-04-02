@@ -6,7 +6,6 @@ import {
   isStartState,
   isModalOpenState,
   recentContentState,
-  endTimeState,
 } from '../../recoils/Contents/Atoms';
 
 // twin macro
@@ -120,7 +119,6 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
     staleTime: 1000 * 60 * 30,
   });
 
-  const startTime = useRecoilValue(startTimeState);
   const setStartTime = useSetRecoilState(startTimeState);
   const setIsStart = useSetRecoilState(isStartState);
   const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState);
@@ -129,12 +127,10 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
   const clickContentHandler = (url: string) => {
     window.open(url, '_blank', 'noopener, noreferrer');
     setStartTime(Number(Date.now().toString()));
-    // console.log(Date.now().toString());
     setIsStart(true);
     if (!isModalOpen) {
       setIsModalOpen(true);
       setContent(content);
-      // console.log('content :', content);
     }
   };
 

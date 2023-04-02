@@ -1,5 +1,5 @@
 export const requests = {
-  base_url: 'http://j8a706.p.ssafy.io:8080',
+  base_url: 'http://j8a706.p.ssafy.io',
 
   // 카테고리별 컨텐츠 목록 조회
   GET_CATEGORY_CONTENTS(
@@ -57,7 +57,7 @@ export const requests = {
   GET_HOME_CONTENTS(classification: string, categoryCount?: number, fromTo?: {start: number; end: number;}) {
     let route = "/api/recommends/random";
     route += classification === "category" ? `/${classification}?categoryCount=${categoryCount}` : `?sort=${classification}`;
-    route += `&from=${fromTo?.start}&to=${fromTo?.end}`;
+    route += `&type=all&from=${fromTo?.start}&to=${fromTo?.end}`;
     return route;
   },
 
@@ -65,4 +65,9 @@ export const requests = {
   GOOGLE_LOGIN(authorizationCode: string) {
     return `/api/auth/signin/google`;
   },
+
+  // 가입 설문조사 전달
+  POST_ABOUT_USER() {
+    return `/api/members/research`;
+  }
 };
