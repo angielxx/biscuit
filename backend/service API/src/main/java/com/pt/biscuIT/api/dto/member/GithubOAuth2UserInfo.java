@@ -9,11 +9,11 @@ public class GithubOAuth2UserInfo extends OAuth2UserInfo{
 
     @Override
     public String getId() {
-        return (String) attributes.get("id");
+        return "github"+attributes.get("id").toString();
     }
 
     @Override
-    public String getNickname() {
+    public String getName() {
         return (String) attributes.get("login");
         //TODO: Github에서 제공하는 nickname이 없음. login을 nickname으로 사용 맞는지 확인 필요
     }
@@ -21,5 +21,10 @@ public class GithubOAuth2UserInfo extends OAuth2UserInfo{
     @Override
     public String getEmail() {
         return (String) attributes.get("email");
+    }
+
+    @Override
+    public String getProvider() {
+        return "github";
     }
 }

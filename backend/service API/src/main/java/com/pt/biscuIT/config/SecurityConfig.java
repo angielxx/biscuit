@@ -7,21 +7,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 /**
  * Spring Security 설정
  */
 @Configuration
-@RequiredArgsConstructor
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     // 인증이 필요없는 API 목록
@@ -37,26 +36,13 @@ public class SecurityConfig {
             "/api/auth/signin/**",
     };
 
-    private AuthService authService;
-
-    private MemberService memberService;
+    private final AuthService authService;
+    private final SavedRequestAwareAuthenticationSuccessHandler successHandler;
 
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
-
-    // DAO 기반으로 Authentication Provider를 생성
-    // BCrypt Password Encoder와 UserDetailService 구현체를 설정
-//    @Bean
-//    DaoAuthenticationProvider authenticationProvider() {
-//        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-//        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-//        daoAuthenticationProvider.setUserDetailsService(this.authService);
-//        return daoAuthenticationProvider;
-//    }
-
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -70,7 +56,9 @@ public class SecurityConfig {
                     .and()
                 .oauth2Login()          // OAuth2기반의 로그인인 경우
                 .userInfoEndpoint()     // OAuth2 로그인 성공 이후 사용자 정보를 가져올 때의 설정들을 담당
-                .userService(authService);  // 소셜 로그인 성공 시 후속 조치를 진행할 UserService 인터페이스의 구현체를 등록;
+                .userService(authService)  // 소셜 provider에서 인가 성공 시 후속 조치를 진행할 OAuth2UserService 인터페이스의 구현체를 등록
+                    .and()
+                .successHandler(successHandler);    // 로그인 성공 시 후속 조치를 진행할 핸들러를 등록
 
 //        http
 //                .httpBasic().disable()

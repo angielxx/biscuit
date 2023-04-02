@@ -10,9 +10,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    @GetMapping("/callback/{provider}")
-    public void signIn(@RequestParam String code, @PathVariable String provider) {
-        log.info("code: " + code);
+    @GetMapping("/login/oauth2/code/{provider}")
+    public void signIn(@PathVariable String provider) {
+        log.info("provider: " + provider);
+    }
+
+    @GetMapping("/login")
+    public void login(@PathVariable String provider) {
         log.info("provider: " + provider);
     }
 

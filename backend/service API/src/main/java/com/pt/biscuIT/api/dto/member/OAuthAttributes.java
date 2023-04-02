@@ -1,9 +1,6 @@
 package com.pt.biscuIT.api.dto.member;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import lombok.*;
 
 import java.util.Map;
 
@@ -14,9 +11,9 @@ import java.util.Map;
  */
 @Getter
 @Builder
-@RequiredArgsConstructor
 public class OAuthAttributes {
-    private String nameAttributeKey;
+
+    private String userNameAttributeName;
     private OAuth2UserInfo oAuth2UserInfo;
     public static OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
         if ("google".equals(registrationId)) {
@@ -29,14 +26,14 @@ public class OAuthAttributes {
 
     private static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
         return OAuthAttributes.builder()
-                .nameAttributeKey(userNameAttributeName)
+                .userNameAttributeName(userNameAttributeName)
                 .oAuth2UserInfo(new GoogleOAuth2UserInfo(attributes))
                 .build();
     }
 
     private static OAuthAttributes ofGithub(String userNameAttributeName, Map<String, Object> attributes) {
         return OAuthAttributes.builder()
-                .nameAttributeKey(userNameAttributeName)
+                .userNameAttributeName(userNameAttributeName)
                 .oAuth2UserInfo(new GithubOAuth2UserInfo(attributes))
                 .build();
     }

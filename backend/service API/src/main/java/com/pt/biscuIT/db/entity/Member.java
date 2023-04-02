@@ -21,8 +21,10 @@ public class Member implements Serializable {
 	@Column(unique = true)
 	private String identifier;		// provider + provider에서 제공하는 고유 식별자
 	private String email;
+	@Enumerated(EnumType.STRING)
 	private Provider provider;
 	private String nickname;
+	@Enumerated(EnumType.STRING)
 	private Role role;
 	@CreatedDate
 	private LocalDateTime signupDate;
@@ -30,4 +32,17 @@ public class Member implements Serializable {
 	@OneToOne(fetch = FetchType.LAZY)
 	private MemberProfile memberProfile;
 
+	@Override
+	public String toString() {
+		return "Member{" +
+				"id=" + id +
+				", identifier='" + identifier + '\'' +
+				", email='" + email + '\'' +
+				", provider=" + provider +
+				", nickname='" + nickname + '\'' +
+				", role=" + role +
+				", signupDate=" + signupDate +
+				", withdrawDate=" + withdrawDate +
+				'}';
+	}
 }
