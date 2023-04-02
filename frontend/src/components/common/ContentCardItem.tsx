@@ -69,7 +69,7 @@ const TextInfo = styled.div`
 interface content {
   id: number;
   title: string;
-  url: string;
+  source: string; // 영상: video_id, 글: url
   creditBy: string;
   createdDate: string;
   timeCost: number;
@@ -88,9 +88,39 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
   const [isMarked, setIsMarked] = useState<boolean>(content.marked);
   // 요약
   const [desc, setDesc] = useState<string | null>('');
+  // 썸네일 이미지
+  const [thumbImg, setThumbImg] = useState<string>('');
+  // url
+  const [url, setUrl] = useState<string>('');
   // 로그인 여부
   const isAuth = false;
-  // console.log('content in card :', content);
+
+  // 타입에 따라 썸네일, url 설정
+  useEffect(() => {
+    if (content.type === 'video') {
+      setUrl(`https://youtu.be/${content.source}`);
+      setThumbImg(`https://img.youtube.com/vi/${content.source}/0.jpg`);
+    } else {
+      setUrl(content.source);
+    }
+  }, []);
+
+  // 썸네일 가져오는 함수 (queryFn)
+  const getMetaData = async (url: string) => {
+    const { image } = await useGetMetaData(url);
+    return image;
+  };
+
+  if (content.type === 'article') {
+    // 리액트 쿼리로 썸네일 가져오기
+    const { data: thumbImg } = useQuery({
+      queryKey: ['thumbnail', content.id],
+      queryFn: () => getMetaData(content.source),
+      staleTime: 1000 * 60 * 30,
+      onSuccess: (image) => setThumbImg(image),
+    });
+  }
+
   // 날짜 포맷
   const stringToDate = (date: string) => {
     const year = date.slice(0, 4);
@@ -156,6 +186,7 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
         onClick={() => clickContentHandler(content.url)}
         className="w-full"
       >
+        <Thumbnail image={thumbImg ? thumbImg : ''} />
         <Thumbnail image={thumbImg ? thumbImg : ''} />
       </button>
 
