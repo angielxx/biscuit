@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import tw, { styled, css } from 'twin.macro';
 import {
   startTimeState,
@@ -64,6 +64,21 @@ interface StoreItemProps {
 
 const StoreItem = ({ content }: StoreItemProps) => {
   const [showMore, setShowMore] = useState<boolean>(false);
+  // 썸네일 이미지
+  const [thumbImg, setThumbImg] = useState<string | undefined>('');
+  // url
+  const [url, setUrl] = useState<string>('');
+
+  // 타입에 따라 썸네일, url 설정
+  useEffect(() => {
+    if (content.type === 'VIDEO') {
+      setUrl(`https://youtu.be/${content.source}`);
+      setThumbImg(`https://img.youtube.com/vi/${content.source}/0.jpg`);
+    } else {
+      setUrl(content.source);
+    }
+  }, [content]);
+
   // 날짜 포맷
   const stringToDate = (date: string) => {
     const year = date.slice(0, 4);
@@ -88,7 +103,7 @@ const StoreItem = ({ content }: StoreItemProps) => {
   return (
     <StoreItemContainer
       onClick={(e) => {
-        if (e.target === e.currentTarget) clickContentHandler(content.url);
+        if (e.target === e.currentTarget) clickContentHandler(url);
       }}
     >
       <div className="w-10 h-10 shrink-0 bg-primary rounded-full"></div>
@@ -96,7 +111,7 @@ const StoreItem = ({ content }: StoreItemProps) => {
         <p
           className="truncate text-main-bold"
           onClick={(e) => {
-            if (e.target === e.currentTarget) clickContentHandler(content.url);
+            if (e.target === e.currentTarget) clickContentHandler(url);
           }}
         >
           {content.title}
