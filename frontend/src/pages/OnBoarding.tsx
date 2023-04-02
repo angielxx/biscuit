@@ -1,11 +1,15 @@
 import { useRef, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 
 import Modal from "../components/common/Modal/Modal";
 import Nickname from "../components/OnBoarding/Nickname";
 import AboutUser from "../components/OnBoarding/AboutUser";
 import AboutInterest from "../components/OnBoarding/AboutInterest";
+import { post_about_user } from "../api/login";
+import { useNavigate } from "react-router-dom";
 
 const OnBoarding = () => {
+  const navigate = useNavigate();
   const [userData, setUserData] = useState({
     nickname: "",
     period: "",
@@ -42,6 +46,8 @@ const OnBoarding = () => {
   const nickname = () => {
     if (isName !== "") {
       setUserData({...userData, nickname: isName});
+      // 유저 닉네임 저장
+      localStorage.setItem("nickname", isName);
       setPage(1);
       console.log(isName);
     } else {
@@ -77,13 +83,18 @@ const OnBoarding = () => {
     }
   }
 
+  // userData 전달
+  const { mutate: userDataPost } = useMutation({
+    mutationFn: (userData: {}) => post_about_user(userData),
+  });
+
   const isSend = () => {
     setUserData({...userData, interests: selectList});
-
-    // userData 백으로 전달
-
-    console.log(userData);
+    userDataPost(userData);
     console.log(selectList);
+
+    // 홈으로 이동
+    navigate(`/`);
   }
 
   return (
