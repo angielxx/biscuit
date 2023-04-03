@@ -2,27 +2,22 @@ package com.pt.biscuIT.api.service;
 
 import com.pt.biscuIT.api.dto.member.OAuth2UserInfo;
 import com.pt.biscuIT.api.dto.member.OAuthAttributes;
+import com.pt.biscuIT.common.exception.MemberNotFoundException;
+import com.pt.biscuIT.common.util.JwtTokenUtil;
+import com.pt.biscuIT.db.entity.Member;
 import com.pt.biscuIT.db.entity.Provider;
 import com.pt.biscuIT.db.entity.Role;
 import com.pt.biscuIT.db.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-//import org.springframework.security.core.userdetails.UserDetails;
-//import org.springframework.security.core.userdetails.UserDetailsService;
-//import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.stereotype.Component;
-
-import com.pt.biscuIT.db.entity.Member;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -34,8 +29,9 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AuthService implements OAuth2UserService {
+public class MemberAuthServiceImpl implements MemberAuthService {
     private final MemberRepository memberRepository;
+    private final JwtTokenUtil jwtTokenUtil;
 
 //    public MemberAuthDto loadMemberByEmail(String email) {
 //        Member member = memberService.getMemberByEmail(email);
@@ -84,6 +80,17 @@ public class AuthService implements OAuth2UserService {
         }
 
         return member;
+    }
+
+    @Override
+    public Member getMember(String token) {
+        String identifier = jwtTokenUtil.getIdentifier(token);
+        Optional<Member> findMember = memberRepository.findByIdentifier(identifier);
+        if (findMember.isPresent()) {
+            return findMember.get();
+        } else{
+            throw new MemberNotFoundException();
+        }
     }
 
 }
