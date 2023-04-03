@@ -24,7 +24,7 @@ const LoginBox = styled.button`
 const Start = () => {
   // github 로그인으로 이동
   const GithubLogin = () => {
-    window.location.href = "http://j8a706.p.ssafy.io/oauth2/authorization/github";
+    window.location.href = "https://j8a706.p.ssafy.io/oauth2/authorization/github";
   }
 
   // const client_id = "1028867835633-rk5376oovhs02qvm3qgkg5oep0tb7l6c.apps.googleusercontent.com";
@@ -35,7 +35,7 @@ const Start = () => {
   // 구글 로그인으로 이동
   const GoogleLogin = () => {
     // window.location.href = GOOGLE_LOGIN_URL;
-    window.location.href = "http://j8a706.p.ssafy.io/oauth2/authorization/google";
+    window.location.href = "https://j8a706.p.ssafy.io/oauth2/authorization/google";
   }
 
   return (
