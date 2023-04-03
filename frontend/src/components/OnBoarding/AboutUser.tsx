@@ -64,6 +64,7 @@ const AboutUser = ({ isClicked, jobSelected, setJobSelected, periodSelected, set
             placeHolder="직무 선택" 
             selected={jobSelected}
             setSelected={setJobSelected}
+            isOnboarding={true}
           />
         </ChooseItem>
         <ChooseItem>
@@ -73,6 +74,7 @@ const AboutUser = ({ isClicked, jobSelected, setJobSelected, periodSelected, set
             placeHolder="연차 선택"
             selected={periodSelected}
             setSelected={setPeriodSelected}
+            isOnboarding={true}
           />
         </ChooseItem>
       </ChooseContent>
