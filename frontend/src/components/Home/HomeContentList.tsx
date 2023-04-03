@@ -107,7 +107,7 @@ const HomeContentList = ({ category }: HomeComentListProps) => {
       const fromTo = timeFilterArr[timeFilterIdx];
       return await get_home_contents(category, categoryCount, fromTo, type);
     },
-    enabled: !!(timeFilterIdx !== undefined),
+    enabled: !!(timeFilterIdx !== undefined && typeFilter !== undefined),
     staleTime: 60 * 60 * 1000,
     cacheTime: Infinity,
   });

@@ -32,6 +32,7 @@ const Box = styled.div((props: { theme: string, count: number }) => [
 
 export default function Contributions() {
   const tmpData: number[][] = [];
+  const startDate = Date.now();
   for(let i=0; i<16; i++) {
     tmpData.push([]);
     tmpData[i].push(0, 1, 2, 3, 4, 5, 6);
