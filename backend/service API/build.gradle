@@ -88,4 +88,5 @@ compileQuerydsl {
 
 jar {
 	enabled = false
+	duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
 }
