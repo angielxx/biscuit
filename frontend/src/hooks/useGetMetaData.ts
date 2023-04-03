@@ -35,7 +35,7 @@ function scrap(doc: Document, url: string) {
 
 export const useGetMetaData = async (url: string) => {
   try {
-    const html = await fetch(`${url}`, {
+    const html = await fetch(url, {
       mode: 'cors',
     }).then((res) => {
       console.log(res);
