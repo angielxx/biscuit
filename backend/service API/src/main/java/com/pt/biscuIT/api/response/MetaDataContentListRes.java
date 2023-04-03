@@ -5,8 +5,6 @@ import com.pt.biscuIT.common.model.response.BaseResponseBody;
 import com.pt.biscuIT.common.model.response.PageMetaData;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
@@ -19,13 +17,15 @@ import java.util.List;
 
 @Data
 @Builder
-public class RandomRecentContentRes extends BaseResponseBody {
+public class MetaDataContentListRes extends BaseResponseBody {
     PageMetaData metaData;
     List<ContentInfoDto> results;
 
-    public static RandomRecentContentRes of(Integer status, String message, RandomRecentContentRes randomRecentContentRes) {
-        randomRecentContentRes.setMessage(message);
-        randomRecentContentRes.setStatus(status);
-        return randomRecentContentRes;
+    public static MetaDataContentListRes of(Integer status, String message, MetaDataContentListRes metaDataContentListRes) {
+        metaDataContentListRes.setMessage(message);
+        metaDataContentListRes.setStatus(status);
+        metaDataContentListRes.setMetaData(metaDataContentListRes.getMetaData());
+        metaDataContentListRes.setResults(metaDataContentListRes.getResults());
+        return metaDataContentListRes;
     }
 }
