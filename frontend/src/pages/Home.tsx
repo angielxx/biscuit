@@ -23,9 +23,8 @@ export default function Home() {
   // 임시
   const content = {
     id: 3333,
-    title: '파이썬을 처음 사용하는 동료와 효율적으로 일하는 방법',
-    source:
-      'https://medium.com/daangn/%ED%8C%8C%EC%9D%B4%EC%8D%AC%EC%9D%84-%EC%B2%98%EC%9D%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94-%EB%8F%99%EB%A3%8C%EC%99%80-%ED%9A%A8%EC%9C%A8%EC%A0%81%EC%9C%BC%EB%A1%9C-%EC%9D%BC%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95-bb52c3a433fa',
+    title: '목적 조직에서의 DA가 하는 일',
+    source: 'https://ui.toast.com/posts/ko_chrome_report_202303',
     creditBy: '임성묵(steve)',
     createdDate: '2021-09-12',
     timeCost: 26,
@@ -34,18 +33,7 @@ export default function Home() {
     tags: null,
     hit: 2998,
   };
-  // const content = {
-  //   id: 3333,
-  //   title: '물리 퍼즐게임 - 물리이벤트로 동글 합치기 [유니티 기초 강좌 B56]',
-  //   source: 'RvDaDt-469E',
-  //   creditBy: '골드메탈',
-  //   createdDate: '2021-09-12',
-  //   timeCost: 26,
-  //   type: 'VIDEO',
-  //   marked: false,
-  //   tags: null,
-  //   hit: 2998,
-  // };
+
   return (
     <HomeContainer>
       {/* { functionToggle.buttonToggle ? <Button title="퀴즈 풀래요" status="active" onClick={clickBtn}/> : null} */}
@@ -59,7 +47,7 @@ export default function Home() {
           setFilterTimeState={setFilterTimeState}
         />
       ) : null}
-      <ContentCardItem content={content} />
+      {/* <ContentCardItem content={content} /> */}
       {functionToggle.homeContentsToggle ? <HomeContents /> : null}
     </HomeContainer>
   );
