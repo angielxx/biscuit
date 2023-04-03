@@ -8,16 +8,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.pt.biscuIT.api.dto.member.MemberAuthDto;
-import com.pt.biscuIT.api.service.AuthService;
-import com.pt.biscuIT.db.entity.Member;
+import com.pt.biscuIT.api.service.MemberAuthService;
 import com.pt.biscuIT.api.service.MemberService;
-import lombok.RequiredArgsConstructor;
+import com.pt.biscuIT.db.entity.Member;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.auth0.jwt.JWTVerifier;
@@ -31,12 +29,12 @@ import com.pt.biscuIT.common.util.ResponseBodyWriteUtil;
  * 요청 헤더에 jwt 토큰이 있는 경우, 토큰 검증 및 인증 처리 로직 정의.
  */
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
-    private AuthService authService;
+    private MemberAuthService memberAuthService;
     private MemberService memberService;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, AuthService authService) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, MemberAuthService memberAuthService) {
         super(authenticationManager);
-        this.authService = authService;
+        this.memberAuthService = memberAuthService;
     }
 
     @Override
