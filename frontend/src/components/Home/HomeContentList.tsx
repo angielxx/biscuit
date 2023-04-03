@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { get_home_contents } from '../../api/contents';
 import { useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
-import { homeFilterTimeState } from '../../recoils/Home/Atoms';
+import { homeFilterBtnState, homeFilterTimeState } from '../../recoils/Home/Atoms';
 import Icon from '../common/Icon';
 
 const ContentListContainer = tw.div`
@@ -84,6 +84,7 @@ const timeFilterArr = [
 const HomeContentList = ({ category }: HomeComentListProps) => {
   const timeFilter = useRecoilValue(homeFilterTimeState);
   const [timeFilterIdx, setTimeFilterIdx] = useState(6);
+  const typeFilter = useRecoilValue(homeFilterBtnState);
 
   useEffect(() => {
     let timeIdx: number = 6;
@@ -95,11 +96,16 @@ const HomeContentList = ({ category }: HomeComentListProps) => {
 
   // 해당 카테고리에 맞는 글들 불러오기
   const { data } = useQuery({
-    queryKey: ['get_home_contents', category, timeFilterIdx],
+    queryKey: ['get_home_contents', category, timeFilterIdx, typeFilter],
     queryFn: async () => {
       const categoryCount = category === 'category' ? 5 : undefined;
+      const type = typeFilter[0] === true
+        ? "video" 
+        : typeFilter[1] === true
+          ? "article"
+          : "all";
       const fromTo = timeFilterArr[timeFilterIdx];
-      return await get_home_contents(category, categoryCount, fromTo);
+      return await get_home_contents(category, categoryCount, fromTo, type);
     },
     enabled: !!(timeFilterIdx !== undefined),
     staleTime: 60 * 60 * 1000,

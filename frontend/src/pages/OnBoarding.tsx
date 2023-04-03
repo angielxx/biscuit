@@ -18,7 +18,7 @@ const OnBoarding = () => {
   });
 
   const isClose = () => {
-    return ;
+    return alert("온보딩을 완료하셔야 비스킷을 시작할 수 있어요!");
   }
 
   const [page, setPage] = useState<number>(0);
