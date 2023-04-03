@@ -24,14 +24,14 @@ const Start = () => {
   }
 
   const client_id = "1028867835633-rk5376oovhs02qvm3qgkg5oep0tb7l6c.apps.googleusercontent.com";
-  // const redirect_uri = "http://localhost:5173/login/oauth2/code/google";
-  const redirect_uri = "http://j8a706.p.ssafy.io/oauth2/authorization/google";
+  const redirect_uri = "http://localhost:5173/login/oauth2/code/google";
   const scope = "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid";
   const GOOGLE_LOGIN_URL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code&scope=${scope}`;
   
   // 구글 로그인으로 이동 & 인가코드 받기
   const GoogleLogin = () => {
-    window.location.href = GOOGLE_LOGIN_URL;
+    // window.location.href = GOOGLE_LOGIN_URL;
+    window.location.href = "http://j8a706.p.ssafy.io/oauth2/authorization/google";
   }
 
   return (
