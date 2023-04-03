@@ -1,9 +1,13 @@
 package com.pt.biscuIT.common.util;
 
 import com.pt.biscuIT.api.dto.member.MemberRefreshToken;
+import com.pt.biscuIT.common.exception.MemberNotFoundException;
+import com.pt.biscuIT.db.entity.Member;
 import com.pt.biscuIT.db.repository.MemberRefreshTokenRedisRepository;
+import com.pt.biscuIT.db.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -23,10 +27,12 @@ import static com.pt.biscuIT.common.util.JwtTokenUtil.REFRESH_TOKEN;
 @Component
 public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-//    private String clientUrl = "http://localhost:5173";
-    private String clientUrl = "https://j8a706.p.ssafy.io";
+    private String clientUrl = "http://localhost:5173";
+//    private String clientUrl = "https://j8a706.p.ssafy.io";
     MemberRefreshTokenRedisRepository memberRefreshTokenRedisRepository;
 //    private RequestCache requestCache = new HttpSessionRequestCache();
+
+    private final MemberRepository memberRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -52,14 +58,22 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
 
         String accesstoken = JwtTokenUtil.createToken(ACCESS_TOKEN, oAuth2AuthenticationToken.getAuthorizedClientRegistrationId() + oAuth2User.getName());
         String refreshtoken = JwtTokenUtil.createToken(REFRESH_TOKEN, oAuth2AuthenticationToken.getAuthorizedClientRegistrationId() + oAuth2User.getName());
-        MemberRefreshToken memberRefreshToken = new MemberRefreshToken(oAuth2AuthenticationToken.getAuthorizedClientRegistrationId() + oAuth2User.getName(), refreshtoken, JwtTokenUtil.getExpiration(refreshtoken));
-//        memberRefreshTokenRedisRepository.save(memberRefreshToken);
+
         response.addHeader(ACCESS_TOKEN, accesstoken);
         response.addHeader(REFRESH_TOKEN, refreshtoken);
         response.addCookie(CookieUtil.createCookie(clientUrl, ACCESS_TOKEN, accesstoken));
         response.addCookie(CookieUtil.createCookie(clientUrl, REFRESH_TOKEN, refreshtoken));
-//        getRedirectStrategy().sendRedirect(request, response, clientUrl + "/login/oauth2/redirect");
-        getRedirectStrategy().sendRedirect(request, response, clientUrl + "/");
+        Member member = memberRepository.findByIdentifier(oAuth2AuthenticationToken.getAuthorizedClientRegistrationId() + oAuth2User.getName()).orElse(null);
+        if (member == null){
+            throw new MemberNotFoundException("정상적으로 가입되지 않은 회원입니다.");
+        }
+        else if("ROLE_NEWBIE".equals(member.getRole())) {
+            log.info("redirect to onboarding");
+            getRedirectStrategy().sendRedirect(request, response, clientUrl + "/onboarding");
+        } else{
+            log.info("redirect to home");
+            getRedirectStrategy().sendRedirect(request, response, clientUrl + "/");
+        }
     }
 
 
