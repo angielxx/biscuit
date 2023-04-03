@@ -38,10 +38,10 @@ export const useGetMetaData = async (url: string) => {
     const html = await fetch(url, {
       mode: 'cors',
     }).then((res) => {
-      console.log(res);
+      // console.log(res);
       return res.text();
     });
-    console.log('html :', html);
+    // console.log('html :', html);
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
     const { image, desc } = scrap(doc, url);
