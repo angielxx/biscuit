@@ -9,7 +9,7 @@ import AboutUser from "../components/OnBoarding/AboutUser";
 import AboutInterest from "../components/OnBoarding/AboutInterest";
 import { post_about_user } from "../api/login";
 
-import { isLoginState, isNameState } from "../recoils/Start/Atoms";
+import { isMemberState, isNameState } from "../recoils/Start/Atoms";
 
 const OnBoarding = () => {
   const navigate = useNavigate();
@@ -91,13 +91,13 @@ const OnBoarding = () => {
     mutationFn: (userData: {}) => post_about_user(userData),
   });
 
-  const [isLogin, setIsLogin] = useRecoilState(isLoginState);
+  const [isMember, setIsMember] = useRecoilState(isMemberState);
 
   const isSend = () => {
     setUserData({...userData, interests: selectList});
     userDataPost(userData);
     console.log(selectList);
-    setIsLogin(true);
+    setIsMember(true);
 
     // 홈으로 이동
     navigate(`/`);
