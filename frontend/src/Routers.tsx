@@ -14,6 +14,7 @@ import Start from './components/Start/Start';
 import GoogleLogin from './components/Start/GoogleLogin';
 import MyPage from './pages/MyPage';
 import MyStore from './pages/MyStore';
+import EditProfile from './pages/EditProfile';
 
 export default function Routers() {
   const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState);
@@ -37,6 +38,7 @@ export default function Routers() {
         <Route path="/myStore" element={<MyStore />} />
         <Route path="/category/:name" element={<Category />} />
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/editProfile" element={<EditProfile />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/onboarding" element={<OnBoarding />} />
         <Route path="/login/oauth2/code/google" element={<GoogleLogin />} />

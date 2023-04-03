@@ -25,10 +25,11 @@ const get_home_contents = async (
   fromTo?: {
     start: number;
     end: number;
-  }
+  },
+  type?: string,
 ): Promise<content[] | randomContent[] | undefined> => {
   const response = await baseInstance.get(
-    requests.GET_HOME_CONTENTS(classification, categoryCount, fromTo)
+    requests.GET_HOME_CONTENTS(classification, categoryCount, fromTo, type)
   );
   return response.data.results;
 };
