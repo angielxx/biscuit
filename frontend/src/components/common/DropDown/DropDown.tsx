@@ -34,7 +34,6 @@ const ArrowDropDown = styled.div
     height: 24px;
     background-size: cover;
     background-image: url("${arrowDropDown}");
-    
   `}
 `;
 

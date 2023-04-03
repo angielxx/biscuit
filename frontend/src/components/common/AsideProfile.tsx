@@ -21,7 +21,11 @@ const AsideBtn = styled.div`
   ${tw`flex justify-between items-start self-stretch gap-2`}
 `;
 
-const AsideProfile = () => {
+interface ProfileProps {
+  isName: string;
+}
+
+const AsideProfile = ({isName}: ProfileProps) => {
   const navigate = useNavigate();
 
   const goToMypage = () => {
@@ -31,22 +35,22 @@ const AsideProfile = () => {
 
   return (
     <ProfileBox>
-      <Nickname onClick={goToMypage}>유저네임 님</Nickname>
+      <Nickname onClick={goToMypage}>{isName} 님</Nickname>
       <AsideBtn>
         <AsideButton
-          to="/setting"
+          to="/editProfile"
           src={setting}
           alt="setting"
           title="계정설정"
         />
         <AsideButton
-          to="/bookmark"
+          to="/mystore"
           src={bookmark}
           alt="bookmark"
           title="북마크"
         />
         <AsideButton
-          to="/history"
+          to="/mystore"
           src={history}
           alt="history"
           title="히스토리"
