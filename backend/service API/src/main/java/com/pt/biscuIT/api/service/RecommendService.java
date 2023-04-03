@@ -7,6 +7,7 @@ import com.pt.biscuIT.db.entity.Type;
 import com.pt.biscuIT.db.repository.CategoryRepositorySupport;
 import com.pt.biscuIT.db.repository.ContentRepository;
 import com.pt.biscuIT.db.repository.ContentRepositorySupport;
+import com.pt.biscuIT.db.repository.MemberRepositorySupport;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,7 +30,6 @@ public class RecommendService {
     ContentRepository contentRepository;
     @Autowired
     ContentRepositorySupport contentRepositorySupport;
-
     @Autowired
     CategoryRepositorySupport categoryRepositorySupport;
 
@@ -79,5 +79,12 @@ public class RecommendService {
         }));
 
         return new PageImpl<>(contentCategoryList, pageable, contentCategoryList.size());
+    }
+
+    public Page<ContentInfoDto> getBookmarkedContent(Pageable pageable, int from, int to, Type type, Long id) {
+        Page<Content> contentList = contentRepositorySupport.findBookmarkedContent(pageable, from, to, type, id);
+        Page<ContentInfoDto> res = contentList.map(ContentInfoDto::new);
+
+        return res;
     }
 }
