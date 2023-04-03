@@ -1,34 +1,28 @@
 package com.pt.biscuIT.common.util;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.*;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.jsonwebtoken.Jwts;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.List;
-
-import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * jwt 토큰 유틸 정의.
  */
 @Component
 public class JwtTokenUtil {
+    @Value("${jwt.secret}")
     private static String secretKey;
-
+    @Value("${jwt.expiration.atk}")
     public static Integer atkExpirationTime;
-
+    @Value("${jwt.expiration.rtk}")
     public static Integer rtkExpirationTime;
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
@@ -56,7 +50,7 @@ public class JwtTokenUtil {
                 .build();
     }
 
-    public static String getToken(String type, String identifier) {
+    public static String createToken(String type, String identifier) {
         int expirationTime = (type.equals(ACCESS_TOKEN_NAME)) ? atkExpirationTime : rtkExpirationTime;
 
         Date expires = JwtTokenUtil.getTokenExpiration(expirationTime);
@@ -94,6 +88,14 @@ public class JwtTokenUtil {
         return (expiration.getTime() - now);
     }
 
+    public static String getIdentifier(String Token){
+        String identifier = Jwts.parser()
+                .setSigningKey(secretKey.getBytes())
+                .parseClaimsJws(Token)
+                .getBody().getSubject();
+        return identifier;
+    }
+
     public static void handleError(String token) {
         JWTVerifier verifier = JWT
                 .require(Algorithm.HMAC512(secretKey.getBytes()))
@@ -102,10 +104,7 @@ public class JwtTokenUtil {
 
         try {
             verifier.verify(token.replace(TOKEN_PREFIX, ""));
-        } catch (AlgorithmMismatchException | InvalidClaimException | SignatureVerificationException |
-                 TokenExpiredException | JWTCreationException | JWTDecodeException ex) {
-            throw ex;
-        } catch (JWTVerificationException ex) {
+        } catch (JWTCreationException | JWTVerificationException ex) {
             throw ex;
         } catch (Exception ex) {
             throw ex;

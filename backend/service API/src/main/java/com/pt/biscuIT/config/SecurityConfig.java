@@ -1,7 +1,6 @@
 package com.pt.biscuIT.config;
 
-import com.pt.biscuIT.api.service.AuthService;
-import com.pt.biscuIT.api.service.MemberService;
+import com.pt.biscuIT.api.service.MemberAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,7 +35,7 @@ public class SecurityConfig {
             "/api/auth/signin/**",
     };
 
-    private final AuthService authService;
+    private final MemberAuthService memberAuthService;
     private final SavedRequestAwareAuthenticationSuccessHandler successHandler;
 
     @Bean
@@ -56,7 +55,7 @@ public class SecurityConfig {
                     .and()
                 .oauth2Login()          // OAuth2기반의 로그인인 경우
                 .userInfoEndpoint()     // OAuth2 로그인 성공 이후 사용자 정보를 가져올 때의 설정들을 담당
-                .userService(authService)  // 소셜 provider에서 인가 성공 시 후속 조치를 진행할 OAuth2UserService 인터페이스의 구현체를 등록
+                .userService(memberAuthService)  // 소셜 provider에서 인가 성공 시 후속 조치를 진행할 OAuth2UserService 인터페이스의 구현체를 등록
                     .and()
                 .successHandler(successHandler);    // 로그인 성공 시 후속 조치를 진행할 핸들러를 등록
 
