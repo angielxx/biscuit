@@ -1,5 +1,5 @@
 export const requests = {
-  base_url: 'http://j8a706.p.ssafy.io',
+  base_url: 'https://j8a706.p.ssafy.io',
 
   // 카테고리별 컨텐츠 목록 조회
   GET_CATEGORY_CONTENTS(
@@ -57,14 +57,15 @@ export const requests = {
   GET_HOME_CONTENTS(
     classification: string,
     categoryCount?: number,
-    fromTo?: { start: number; end: number }
+    fromTo?: { start: number; end: number },
+    type?: string,
   ) {
     let route = '/api/recommends/random';
     route +=
       classification === 'category'
         ? `/${classification}?categoryCount=${categoryCount}`
         : `?sort=${classification}`;
-    route += `&type=all&from=${fromTo?.start}&to=${fromTo?.end}`;
+    route += `&type=${type}&from=${fromTo?.start}&to=${fromTo?.end}`;
     return route;
   },
 
