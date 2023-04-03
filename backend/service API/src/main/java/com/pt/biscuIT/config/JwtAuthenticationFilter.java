@@ -29,7 +29,7 @@ import com.pt.biscuIT.common.util.ResponseBodyWriteUtil;
  * 요청 헤더에 jwt 토큰이 있는 경우, 토큰 검증 및 인증 처리 로직 정의.
  */
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
-    private MemberAuthService memberAuthService;
+    private final MemberAuthService memberAuthService;
     private MemberService memberService;
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, MemberAuthService memberAuthService) {
