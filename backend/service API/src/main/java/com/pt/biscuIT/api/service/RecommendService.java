@@ -4,6 +4,7 @@ import com.pt.biscuIT.api.dto.content.ContentInfoDto;
 import com.pt.biscuIT.api.dto.content.ContentInfoListCategoryDto;
 import com.pt.biscuIT.db.entity.Content;
 import com.pt.biscuIT.db.entity.Type;
+import com.pt.biscuIT.db.repository.CategoryRepositorySupport;
 import com.pt.biscuIT.db.repository.ContentRepository;
 import com.pt.biscuIT.db.repository.ContentRepositorySupport;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,9 @@ public class RecommendService {
     @Autowired
     ContentRepositorySupport contentRepositorySupport;
 
+    @Autowired
+    CategoryRepositorySupport categoryRepositorySupport;
+
     public Page<ContentInfoDto> getRandomContent(Pageable pageable, int from, int to, Type type) {
         Page<Content> contentList = contentRepositorySupport.findContentByRandom(pageable, from, to, type);
         Page<ContentInfoDto> res = contentList.map(ContentInfoDto::new);
@@ -52,6 +56,28 @@ public class RecommendService {
 
             contentCategoryList.add(content);
         }));
+        return new PageImpl<>(contentCategoryList, pageable, contentCategoryList.size());
+    }
+
+    public Page<ContentInfoListCategoryDto> getFavoriteCategoryContent(Pageable pageable, int from, int to, Type type, Long memberId) {
+        List<Long> categoryIdList = contentRepositorySupport.findCategoryIdByFavorite(memberId);
+        List<ContentInfoListCategoryDto> contentCategoryList = new ArrayList<>();
+
+        categoryIdList.forEach((categoryId -> {
+            ContentInfoListCategoryDto content = new ContentInfoListCategoryDto().builder()
+                                                                                 .build();
+
+            List<Long> categoryIds = new ArrayList<>();
+            categoryIds.add(categoryId);
+            String category = categoryRepositorySupport.findSubNameByCategoryId(categoryId);
+            Page<Content> contentList = contentRepositorySupport.findRecentContentByCategory(categoryIds, pageable, Long.MAX_VALUE, from, to, type);
+
+            content.setCategory(category);
+            content.setItems(contentList.map(ContentInfoDto::new).getContent());
+
+            contentCategoryList.add(content);
+        }));
+
         return new PageImpl<>(contentCategoryList, pageable, contentCategoryList.size());
     }
 }

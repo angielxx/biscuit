@@ -42,6 +42,8 @@ public class ContentRepositorySupport {
 
     QContentCategory qContentCategory = QContentCategory.contentCategory;
 
+    QMemberInterest qMemberInterest = QMemberInterest.memberInterest;
+
     /**
      * 최근 등록된 컨텐츠를 랜덤으로 가져온다.
      *
@@ -233,6 +235,17 @@ public class ContentRepositorySupport {
                 .select(qCategory.id)
                 .from(qCategory)
                 .where(qCategory.mainName.like(category).or(qCategory.subName.like(category)))
+                .fetch();
+    }
+
+    public List<Long> findCategoryIdByFavorite(Long memberId) {
+        return jpaQueryFactory
+                .select(qCategory.id)
+                .from(qCategory, qMemberInterest)
+                .where(
+                        qMemberInterest.member.id.eq(memberId),
+                        qMemberInterest.category.id.eq(qCategory.id)
+                )
                 .fetch();
     }
 }

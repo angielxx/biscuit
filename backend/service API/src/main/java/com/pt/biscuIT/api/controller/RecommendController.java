@@ -2,11 +2,16 @@ package com.pt.biscuIT.api.controller;
 
 import com.pt.biscuIT.api.dto.content.ContentInfoListCategoryDto;
 import com.pt.biscuIT.api.response.RandomCategoryContentRes;
+import com.pt.biscuIT.api.service.MemberService;
+import com.pt.biscuIT.api.service.MemberServiceImpl;
+import com.pt.biscuIT.common.exception.BiscuitException;
+import com.pt.biscuIT.common.exception.ErrorCode;
 import com.pt.biscuIT.common.model.response.BaseResponseBody;
 import com.pt.biscuIT.common.model.response.PageMetaData;
 import com.pt.biscuIT.api.dto.content.ContentInfoDto;
-import com.pt.biscuIT.api.response.RandomRecentContentRes;
+import com.pt.biscuIT.api.response.MetaDataContentListRes;
 import com.pt.biscuIT.api.service.RecommendService;
+import com.pt.biscuIT.db.entity.Member;
 import com.pt.biscuIT.db.entity.Type;
 import com.pt.biscuIT.db.repository.ContentRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +33,9 @@ public class RecommendController {
 
     @Autowired
     ContentRepository contentRepositorySupport;
+
+    @Autowired
+    MemberServiceImpl memberServiceImpl;
 
     /*
         TODO: 추천 컨텐츠를 제공하는 API
@@ -52,10 +60,10 @@ public class RecommendController {
                 .last(contentList.isLast())
                 .build();
 
-        return ResponseEntity.status(200).body(RandomRecentContentRes.of(
+        return ResponseEntity.status(200).body(MetaDataContentListRes.of(
                 HttpStatus.OK.value(),
                 "SUCCESS",
-                RandomRecentContentRes.builder()
+                MetaDataContentListRes.builder()
                         .metaData(metaData)
                         .results(contentList.getContent())
                         .build())
@@ -71,6 +79,28 @@ public class RecommendController {
             @RequestParam Type type
     ) {
         Page<ContentInfoListCategoryDto> contentList = recommendService.getRandomCategoryContent(categoryCount, pageable, from, to, type);
+
+        return ResponseEntity.status(200).body(RandomCategoryContentRes.of(
+                HttpStatus.OK.value(),
+                "SUCCESS",
+                RandomCategoryContentRes.builder()
+                        .results(contentList.getContent())
+                        .build()
+        ));
+    }
+
+    @GetMapping("/personal/favorite")
+    public ResponseEntity<? extends BaseResponseBody> getFavoriteCategoryContent(
+            @PageableDefault(size = 30) Pageable pageable,
+            @RequestParam(required = false, defaultValue = "0") int from,
+            @RequestParam(required = false, defaultValue = "1440") int to,
+            @RequestParam Type type,
+            String identifier
+    ) {
+        Member member = memberServiceImpl.findMemberByIdentifier(identifier);
+        if(member == null) throw new BiscuitException(ErrorCode.USER_NOT_FOUND);
+
+        Page<ContentInfoListCategoryDto> contentList = recommendService.getFavoriteCategoryContent(pageable, from, to, type, member.getId());
 
         return ResponseEntity.status(200).body(RandomCategoryContentRes.of(
                 HttpStatus.OK.value(),
