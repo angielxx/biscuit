@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.pt.biscuIT.api.dto.content.ContentInfoDto;
-import com.pt.biscuIT.api.response.RandomRecentContentRes;
 import com.pt.biscuIT.api.response.SearchContentRes;
 import com.pt.biscuIT.common.exception.BiscuitException;
 import com.pt.biscuIT.common.exception.ErrorCode;
@@ -17,7 +15,6 @@ import com.pt.biscuIT.common.model.response.PageMetaData;
 import com.pt.biscuIT.db.entity.Content;
 import com.pt.biscuIT.db.entity.Type;
 import com.pt.biscuIT.db.repository.ContentRepositorySupport;
-import com.pt.biscuIT.db.repository.ContentTagRepository;
 import com.pt.biscuIT.db.repository.ContentTageRepositorySupport;
 import com.pt.biscuIT.db.repository.ContentViewRepositorySupport;
 
@@ -47,11 +44,11 @@ public class SearchServiceImpl implements SearchService {
 		if(contentList == null || contentList.getContent().size() == 0) throw new BiscuitException(ErrorCode.CONTENT_NOT_FOUND);
 
 		PageMetaData metaData = PageMetaData.builder()
-			.last(contentList.isLast())
-			.lastContentId(
-				contentList.getContent().get(contentList.getContent().size() - 1).getId()
-			)
-			.build();
+				.last(contentList.isLast())
+				.lastContentId(
+						contentList.getContent().get(contentList.getContent().size() - 1).getId()
+				)
+				.build();
 
 		List<ContentInfoDto> contentInfoDtoList = new ArrayList<>();
 		for(Content content : contentList.getContent()) {
@@ -62,9 +59,9 @@ public class SearchServiceImpl implements SearchService {
 		}
 
 		SearchContentRes res = SearchContentRes.builder()
-			.metaData(metaData)
-			.results(contentInfoDtoList)
-			.build();
+				.metaData(metaData)
+				.results(contentInfoDtoList)
+				.build();
 
 		return res;
 	}
