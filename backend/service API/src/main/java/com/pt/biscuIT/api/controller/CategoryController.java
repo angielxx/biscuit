@@ -3,7 +3,7 @@ package com.pt.biscuIT.api.controller;
 import com.pt.biscuIT.api.dto.category.CategoryInfoDto;
 import com.pt.biscuIT.api.dto.content.ContentInfoDto;
 import com.pt.biscuIT.api.response.CategoryInfoListRes;
-import com.pt.biscuIT.api.response.RandomRecentContentRes;
+import com.pt.biscuIT.api.response.MetaDataContentListRes;
 import com.pt.biscuIT.api.response.SearchContentRes;
 import com.pt.biscuIT.api.service.CategoryService;
 import com.pt.biscuIT.api.service.ContentService;
@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,11 +65,11 @@ public class CategoryController {
                 )
                 .build();
 
-        RandomRecentContentRes res = RandomRecentContentRes.builder()
+        MetaDataContentListRes res = MetaDataContentListRes.builder()
                 .metaData(metaData)
                 .results(contentList.getContent())
                 .build();
 
-        return ResponseEntity.status(200).body(RandomRecentContentRes.of(HttpStatus.OK.value(), "SUCCESS", res));
+        return ResponseEntity.status(200).body(MetaDataContentListRes.of(HttpStatus.OK.value(), "SUCCESS", res));
     }
 }
