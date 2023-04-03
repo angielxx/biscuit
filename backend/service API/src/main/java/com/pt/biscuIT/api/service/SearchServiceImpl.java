@@ -34,12 +34,12 @@ public class SearchServiceImpl implements SearchService {
 	private final ContentTageRepositorySupport contentTageRepositorySupport;
 
 	@Override
-	public SearchContentRes search(String keyword, int from, int to, Long lastContentId, Pageable pageable, String condition, Type type) {
+	public SearchContentRes searchContent(String keyword, int from, int to, Long lastContentId, Pageable pageable, Type type, String option) {
 		Page<Content> contentList = null;
-		if("recent".equals(condition)) {
+		if("recent".equals(option)) {
 			contentList = contentRepositorySupport.findRecentContentByTitleAndTag(keyword, pageable, lastContentId, from, to, type);
 		}
-		else if("hit".equals(condition)) {
+		else if("hit".equals(option)) {
 			Long popularId = contentViewRepositorySupport.findIdByContentId(lastContentId);
 			contentList = contentRepositorySupport.findPopularContentByTitleAndTag(keyword, pageable, popularId, from, to, type);
 		} else throw new BiscuitException(ErrorCode.INVALID_PARAMETER);
