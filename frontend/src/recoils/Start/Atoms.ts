@@ -5,8 +5,8 @@ const isStartModalState = atom({
   default: false,
 })
 
-const isLoginState = atom({
-  key: 'isLoginState',
+const isMemberState = atom({
+  key: 'isMemberState',
   default: false,
 })
 
@@ -17,6 +17,6 @@ const isNameState = atom({
 
 export { 
   isStartModalState,
-  isLoginState,
+  isMemberState,
   isNameState
 };

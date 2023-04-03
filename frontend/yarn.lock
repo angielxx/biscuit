@@ -4322,6 +4322,11 @@ type-is@~1.6.18:
     media-typer "0.3.0"
     mime-types "~2.1.24"
 
+typescript-cookie@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/typescript-cookie/-/typescript-cookie-1.0.5.tgz#daca4f30167aa2ed45d4b10a7852b8dc016cc02e"
+  integrity sha512-DT9rm3AEqpIfcocbdNJ/gyVyNMBHu8sWUk5hBF13nIaRnHrEUkypBAyvNXRlQcNNZYcEtZc4TPcblR8FVq+xqA==
+
 typescript@^4.9.5:
   version "4.9.5"
   resolved "https://registry.npmjs.org/typescript/-/typescript-4.9.5.tgz"

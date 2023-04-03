@@ -4,6 +4,8 @@ import tw, { styled } from 'twin.macro';
 // icons
 import Github from '../../assets/icons/github_login.svg';
 import Google from '../../assets/icons/google_login.svg';
+import { useRecoilState } from 'recoil';
+import { isMemberState } from '../../recoils/Start/Atoms';
 
 const Container = styled.div`
   ${tw`w-[290px] flex flex-col gap-9 py-6`}
@@ -36,6 +38,10 @@ const Start = () => {
   const GoogleLogin = () => {
     // window.location.href = GOOGLE_LOGIN_URL;
     window.location.href = "https://j8a706.p.ssafy.io/oauth2/authorization/google";
+    
+    // 백에서 넘겨주는 회원가입 유무에 따른 true/false
+    const [isMember, setIsMember] = useRecoilState(isMemberState);
+  
   }
 
   return (
