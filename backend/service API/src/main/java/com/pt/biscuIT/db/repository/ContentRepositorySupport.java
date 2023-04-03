@@ -120,6 +120,7 @@ public class ContentRepositorySupport {
 
     public Page<Content> findRecentContentByTitleAndTag(String keyword, Pageable pageable, Long lastContentId, int from, int to, Type type) {
         BooleanBuilder whereCondition = new BooleanBuilder();
+        whereCondition.and(qContentTag.content.id.eq(qContent.id));
         whereCondition.and(qContent.id.lt(lastContentId));
         whereCondition.and(containTitle(keyword).or(cotainTag(keyword)));
         whereCondition.and(qContent.timeCost.between(from, to));
@@ -127,9 +128,9 @@ public class ContentRepositorySupport {
 
 
         List<Content> contents = jpaQueryFactory
-            .selectFrom(qContent)
+            .select(qContent)
             .distinct()
-            .join(qContentTag).on(qContentTag.content.id.eq(qContent.id))
+            .from(qContent, qContentTag)
             .where(whereCondition)
             .orderBy(qContent.id.desc())
             .offset(0)
@@ -137,9 +138,9 @@ public class ContentRepositorySupport {
             .fetch();
         return new PageImpl<>(contents, pageable,
             jpaQueryFactory
-                .selectFrom(qContent)
+                .select(qContent)
                 .distinct()
-                .join(qContentTag).on(qContentTag.content.id.eq(qContent.id))
+                .from(qContent, qContentTag)
                 .where(whereCondition)
                 .orderBy(qContent.id.desc())
                 .fetch().size());
