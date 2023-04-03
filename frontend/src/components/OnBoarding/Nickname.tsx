@@ -8,7 +8,7 @@ import hello from '../../assets/icons/hello.png';
 import tw, { styled } from "twin.macro";
 
 const WelcomeBox = styled.div`
-  ${tw`w-[300px] flex flex-col justify-center items-center py-3 gap-6 text-h2 text-white`}
+  ${tw`min-w-[300px] flex flex-col justify-center items-center py-3 gap-6 text-h2 text-white`}
 `;
 
 const NicknameBox = styled.div`
