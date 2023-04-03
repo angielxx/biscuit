@@ -28,7 +28,7 @@ public class SecurityConfig {
             "/api/auth/**",
             "/api/contents/**",
             "/api/search",
-            "/api/categories",
+            "/api/categories/**",
             "/api/recommends/random/**",
     };
 
