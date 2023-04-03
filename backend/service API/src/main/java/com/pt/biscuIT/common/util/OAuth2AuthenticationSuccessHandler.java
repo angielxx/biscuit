@@ -15,12 +15,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.pt.biscuIT.common.util.JwtTokenUtil.ACCESS_TOKEN;
+import static com.pt.biscuIT.common.util.JwtTokenUtil.REFRESH_TOKEN;
+
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    private String clientUrl = "http://localhost:5173";
+//    private String clientUrl = "http://localhost:5173";
+    private String clientUrl = "https://j8a706.p.ssafy.io";
     MemberRefreshTokenRedisRepository memberRefreshTokenRedisRepository;
 //    private RequestCache requestCache = new HttpSessionRequestCache();
 
@@ -46,13 +50,16 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) authentication;
 
-        String accesstoken = JwtTokenUtil.createToken(JwtTokenUtil.ACCESS_TOKEN_NAME, oAuth2AuthenticationToken.getAuthorizedClientRegistrationId() + oAuth2User.getName());
-        String refreshtoken = JwtTokenUtil.createToken(JwtTokenUtil.REFRESH_TOKEN_NAME, oAuth2AuthenticationToken.getAuthorizedClientRegistrationId() + oAuth2User.getName());
+        String accesstoken = JwtTokenUtil.createToken(ACCESS_TOKEN, oAuth2AuthenticationToken.getAuthorizedClientRegistrationId() + oAuth2User.getName());
+        String refreshtoken = JwtTokenUtil.createToken(REFRESH_TOKEN, oAuth2AuthenticationToken.getAuthorizedClientRegistrationId() + oAuth2User.getName());
         MemberRefreshToken memberRefreshToken = new MemberRefreshToken(oAuth2AuthenticationToken.getAuthorizedClientRegistrationId() + oAuth2User.getName(), refreshtoken, JwtTokenUtil.getExpiration(refreshtoken));
 //        memberRefreshTokenRedisRepository.save(memberRefreshToken);
-        response.addCookie(CookieUtil.createCookie(clientUrl, JwtTokenUtil.ACCESS_TOKEN_NAME, accesstoken));
-        response.addCookie(CookieUtil.createCookie(clientUrl, JwtTokenUtil.REFRESH_TOKEN_NAME, refreshtoken));
+        response.addHeader(ACCESS_TOKEN, accesstoken);
+        response.addHeader(REFRESH_TOKEN, refreshtoken);
+        response.addCookie(CookieUtil.createCookie(clientUrl, ACCESS_TOKEN, accesstoken));
+        response.addCookie(CookieUtil.createCookie(clientUrl, REFRESH_TOKEN, refreshtoken));
         getRedirectStrategy().sendRedirect(request, response, clientUrl + "/login/oauth2/redirect");
+//        getRedirectStrategy().sendRedirect(request, response, clientUrl + "/");
     }
 
 

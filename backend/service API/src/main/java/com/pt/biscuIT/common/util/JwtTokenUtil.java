@@ -27,8 +27,8 @@ public class JwtTokenUtil {
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
     public static final String ISSUER = "biscuit";
-    public static final String ACCESS_TOKEN_NAME = "access-token";
-    public static final String REFRESH_TOKEN_NAME = "refresh-token";
+    public static final String ACCESS_TOKEN = "access-token";
+    public static final String REFRESH_TOKEN = "refresh-token";
 
     @Autowired
     public JwtTokenUtil(@Value("${jwt.secret}") String secretKey, @Value("${jwt.expiration.atk}") Integer atkExpirationTime, @Value("${jwt.expiration.rtk}") Integer rtkExpirationTime) {
@@ -50,10 +50,15 @@ public class JwtTokenUtil {
                 .build();
     }
 
-    public static String createToken(String type, String identifier) {
-        int expirationTime = (type.equals(ACCESS_TOKEN_NAME)) ? atkExpirationTime : rtkExpirationTime;
+    public static String createToken(String tokenType, String identifier) {
+        int expirationTime = (tokenType.equals(ACCESS_TOKEN)) ? atkExpirationTime : rtkExpirationTime;
 
         Date expires = JwtTokenUtil.getTokenExpiration(expirationTime);
+
+        // TODO: redis에 토큰 저장
+        if (tokenType.equals(REFRESH_TOKEN)) {
+
+        }
         return JWT.create()
                 .withSubject(identifier)
                 .withExpiresAt(expires)
@@ -104,7 +109,10 @@ public class JwtTokenUtil {
 
         try {
             verifier.verify(token.replace(TOKEN_PREFIX, ""));
-        } catch (JWTCreationException | JWTVerificationException ex) {
+        } catch (AlgorithmMismatchException | InvalidClaimException | SignatureVerificationException |
+                 TokenExpiredException | JWTCreationException | JWTDecodeException ex) {
+            throw ex;
+        } catch (JWTVerificationException ex) {
             throw ex;
         } catch (Exception ex) {
             throw ex;
