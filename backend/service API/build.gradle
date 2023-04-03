@@ -75,6 +75,11 @@ querydsl {
 
 sourceSets {
 	main.java.srcDir querydslDir
+	main {
+		resources {
+			srcDirs "src/main/resources"
+		}
+	}
 }
 
 compileQuerydsl {
