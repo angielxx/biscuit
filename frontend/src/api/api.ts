@@ -57,11 +57,14 @@ export const get_category_contents = async (
 
 // 키워드 검색
 export const get_search = async (
+  option: string, // "recent", "hit"
   keyword: string,
-  sort: string | null,
-  time: number | null,
+  condition: string, // "content", "company"
   lastContentId: number,
-  size: number
+  size: number,
+  from: number,
+  to: number,
+  type: string // "article", "video"
 ): Promise<
   | {
       content: Array<content>;
@@ -72,7 +75,16 @@ export const get_search = async (
 > => {
   if (!keyword) return;
   const { data } = await baseInstance.get(
-    requests.GET_SEARCH(keyword, 'content', sort, time, lastContentId, size)
+    requests.GET_SEARCH(
+      option,
+      keyword,
+      condition,
+      lastContentId,
+      size,
+      from,
+      to,
+      type
+    )
   );
   const { last: isLast } = data.metaData;
   const content = data.results;
