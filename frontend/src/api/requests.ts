@@ -3,17 +3,18 @@ export const requests = {
 
   // 카테고리별 컨텐츠 목록 조회
   GET_CATEGORY_CONTENTS(
-    categoryName: string,
-    sort: string | null = null,
-    time: number | null = null,
-    lastContentId: number = 0,
-    size: number
+    categoryName: string = '',
+    option: string = 'recent', // "recent", "hit"
+    type: string = 'all', // "all", "article", "video"
+    size: number = 20,
+    lastContentId: number = 999,
+    from?: number | null,
+    to?: number | null
   ) {
-    // return `/api/contents/${categoryName}?size=${size}&lastContentId=${lastContentId}&sort=${sort}&time=${time}`;
     return (
-      `/api/categories/${categoryName}/contents/recent?size=${size}&lastContentId=${lastContentId}` +
-      `${sort ? `&sort=${sort}` : ''}` +
-      `${time ? `&time=${time}` : ''}`
+      `/api/categories/${categoryName}/contents/${option}?type=${type}&size=${size}&lastContentId=${lastContentId}` +
+      `${from !== null ? `&from=${from}` : ''}` +
+      `${to ? `&to=${to}` : ''}`
     );
   },
 
