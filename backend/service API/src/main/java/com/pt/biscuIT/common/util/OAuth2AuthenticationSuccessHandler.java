@@ -58,8 +58,8 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
         response.addHeader(REFRESH_TOKEN, refreshtoken);
         response.addCookie(CookieUtil.createCookie(clientUrl, ACCESS_TOKEN, accesstoken));
         response.addCookie(CookieUtil.createCookie(clientUrl, REFRESH_TOKEN, refreshtoken));
-        getRedirectStrategy().sendRedirect(request, response, clientUrl + "/login/oauth2/redirect");
-//        getRedirectStrategy().sendRedirect(request, response, clientUrl + "/");
+//        getRedirectStrategy().sendRedirect(request, response, clientUrl + "/login/oauth2/redirect");
+        getRedirectStrategy().sendRedirect(request, response, clientUrl + "/");
     }
 
 
