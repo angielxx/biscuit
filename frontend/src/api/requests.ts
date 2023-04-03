@@ -72,6 +72,6 @@ export const requests = {
 
   // 가입 설문조사 전달
   POST_ABOUT_USER() {
-    return `/api/members/research`;
+    return `/api/members/onboarding`;
   },
 };
