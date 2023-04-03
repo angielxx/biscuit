@@ -67,7 +67,7 @@ public class MemberAuthServiceImpl implements MemberAuthService {
                 .identifier(oAuth2UserInfo.getId())
                 .email(oAuth2UserInfo.getEmail())
                 .provider(Provider.valueOf(provider.toUpperCase()))
-                .role(Role.MEMBER)
+                .role(Role.ROLE_MEMBER)
                 .build();
 
         Optional<Member> findMember =  memberRepository.findByIdentifier(oAuthMember.getIdentifier());
