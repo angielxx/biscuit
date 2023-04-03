@@ -66,12 +66,6 @@ tasks.named('asciidoctor') {
 	dependsOn test
 }
 
-tasks {
-	processResources {
-		duplicatesStrategy = org.gradle.api.fild.DuplicatesStrategy.INCLUDE
-	}
-}
-
 def querydslDir = "$buildDir/generated/querydsl"
 
 querydsl {
