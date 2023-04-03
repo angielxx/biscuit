@@ -25,4 +25,12 @@ public class CategoryRepositorySupport {
                 .where(qCategory.code.like(code + "%"))
                 .fetch();
     }
+
+    public String findSubNameByCategoryId(Long categoryId) {
+        return jpaQueryFactory
+                .select(qCategory.subName)
+                .from(qCategory)
+                .where(qCategory.id.eq(categoryId))
+                .fetchOne();
+    }
 }
