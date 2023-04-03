@@ -23,9 +23,10 @@ export default function Home() {
   // 임시
   const content = {
     id: 3333,
-    title: '물리 퍼즐게임 - 물리이벤트로 동글 합치기 [유니티 기초 강좌 B56]',
-    source: 'https://blog.toss.im/article/outsight-polarbear',
-    creditBy: '골드메탈',
+    title: '파이썬을 처음 사용하는 동료와 효율적으로 일하는 방법',
+    source:
+      'https://medium.com/daangn/%ED%8C%8C%EC%9D%B4%EC%8D%AC%EC%9D%84-%EC%B2%98%EC%9D%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94-%EB%8F%99%EB%A3%8C%EC%99%80-%ED%9A%A8%EC%9C%A8%EC%A0%81%EC%9C%BC%EB%A1%9C-%EC%9D%BC%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95-bb52c3a433fa',
+    creditBy: '임성묵(steve)',
     createdDate: '2021-09-12',
     timeCost: 26,
     type: 'ARTICLE',

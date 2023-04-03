@@ -27,7 +27,7 @@ const AboutInterest = ({isBack, isSend, isClicked, selectList}: AboutInterestPro
 
   return (
     <>
-      <div className='w-[323px] flex items-start'>
+      <div className='min-w-[323px] flex items-start'>
         <img src={backspace} onClick={isBack} />
       </div>
       <div className='flex flex-col gap-2 mt-4'>
