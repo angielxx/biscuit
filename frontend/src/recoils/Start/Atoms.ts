@@ -5,4 +5,18 @@ const isStartModalState = atom({
   default: false,
 })
 
-export { isStartModalState };
+const isLoginState = atom({
+  key: 'isLoginState',
+  default: false,
+})
+
+const isUserState = atom({
+  key: 'isUserState',
+  default: false,
+})
+
+export { 
+  isStartModalState,
+  isLoginState,
+  isUserState
+};

@@ -1,4 +1,9 @@
+import { isUserState } from '../../recoils/Start/Atoms';
+
+// css
 import tw, { styled } from 'twin.macro';
+
+// icons
 import Github from '../../assets/icons/github_login.svg';
 import Google from '../../assets/icons/google_login.svg';
 
@@ -30,7 +35,8 @@ const Start = () => {
   
   // 구글 로그인으로 이동 & 인가코드 받기
   const GoogleLogin = () => {
-    window.location.href = GOOGLE_LOGIN_URL;
+    // window.location.href = GOOGLE_LOGIN_URL;
+    window.location.href = "http://j8a706.p.ssafy.io/oauth2/authorization/google";
   }
 
   return (
