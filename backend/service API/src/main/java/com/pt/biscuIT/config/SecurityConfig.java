@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
@@ -23,15 +24,15 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 public class SecurityConfig {
 
     // 인증이 필요없는 API 목록
-    private static String[] OPEN_API_GET = new String[] {
+    private static final String[] OPEN_API_GET = new String[] {
             "/api/auth/**",
             "/api/contents/**",
-            "/api/search",
-            "/api/categories",
+            "/api/search/**",
+            "/api/categories/**",
             "/api/recommends/random/**",
     };
 
-    private static String[] OPEN_API_POST = new String[] {
+    private static final String[] OPEN_API_POST = new String[] {
             "/api/auth/signin/**",
     };
 
@@ -47,6 +48,9 @@ public class SecurityConfig {
         http
                 .httpBasic().disable()
                 .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 사용 하지않음
+                .and()
+//                .addFilter(new JwtAuthenticationFilter(authenticationManager(), memberService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, OPEN_API_GET).permitAll()
                 .antMatchers(HttpMethod.POST, OPEN_API_POST).permitAll()
