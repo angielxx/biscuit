@@ -44,6 +44,8 @@ public class ContentRepositorySupport {
 
     QMemberInterest qMemberInterest = QMemberInterest.memberInterest;
 
+    QMemberBookmark qMemberBookmark = QMemberBookmark.memberBookmark;
+
     /**
      * 최근 등록된 컨텐츠를 랜덤으로 가져온다.
      *
@@ -247,5 +249,39 @@ public class ContentRepositorySupport {
                         qMemberInterest.category.id.eq(qCategory.id)
                 )
                 .fetch();
+    }
+
+    public Page<Content> findBookmarkedContent(Pageable pageable, int from, int to, Type type, Long memberId) {
+        BooleanBuilder whereCondition = new BooleanBuilder();
+        whereCondition.and(qMemberBookmark.member.id.eq(memberId));
+        whereCondition.and(qContent.id.eq(qMemberBookmark.content.id));
+        whereCondition.and(qContent.timeCost.between(from, to));
+
+        if(type != Type.ALL) whereCondition.and(qContent.type.eq(type));
+        List<OrderSpecifier> ORDERS = getOrderSpecifiers(pageable.getSort());
+
+        List<Content> contentList = jpaQueryFactory
+                .select(qContent)
+                .from(qContent, qMemberBookmark)
+                .where(whereCondition)
+                .orderBy(ORDERS.stream().toArray(OrderSpecifier[]::new))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+//        Collections.shuffle(contentList);
+
+        return new PageImpl<>(
+                contentList,
+                pageable,
+                jpaQueryFactory
+                        .select(qContent)
+                        .from(qContent, qMemberBookmark)
+                        .where(whereCondition)
+                        .orderBy(ORDERS.stream().toArray(OrderSpecifier[]::new))
+                        .limit(pageable.getPageSize())
+                        .fetch()
+                        .size()
+        );
     }
 }

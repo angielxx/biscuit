@@ -110,4 +110,32 @@ public class RecommendController {
                         .build()
         ));
     }
+
+    @GetMapping("/personal/bookmarked")
+    public ResponseEntity<? extends BaseResponseBody> getContentByBookmarked(
+            @PageableDefault(size = 30) Pageable pageable,
+            @RequestParam(required = false, defaultValue = "0") int from,
+            @RequestParam(required = false, defaultValue = "1440") int to,
+            @RequestParam Type type,
+            String identifier
+    ) {
+        Member member = memberServiceImpl.findMemberByIdentifier(identifier);
+        if(member == null) throw new BiscuitException(ErrorCode.USER_NOT_FOUND);
+
+        Page<ContentInfoDto> contentList = recommendService.getBookmarkedContent(pageable, from, to, type, member.getId());
+
+        PageMetaData metaData = PageMetaData.builder()
+                .lastContentId(contentList.getContent().get(contentList.getContent().size() - 1).getId())
+                .last(contentList.isLast())
+                .build();
+
+        return ResponseEntity.status(200).body(MetaDataContentListRes.of(
+                HttpStatus.OK.value(),
+                "SUCCESS",
+                MetaDataContentListRes.builder()
+                        .metaData(metaData)
+                        .results(contentList.getContent())
+                        .build()
+        ));
+    }
 }
