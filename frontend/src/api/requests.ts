@@ -35,17 +35,20 @@ export const requests = {
 
   // 키워드 검색
   GET_SEARCH(
+    option: string, // "recent", "hit"
     keyword: string,
-    type: string,
-    sort: string | null,
-    time: number | null,
+    condition: string, // "content", "company"
     lastContentId: number,
-    size: number
+    size: number,
+    from: number,
+    to: number,
+    type: string // "article", "video"
   ) {
     return (
-      `/api/search/recent?keyword=${keyword}&type=${type}&lastContentId=${lastContentId}&size=${size}` +
-      `${sort ? `&sort=${sort}` : ''}` +
-      `${time ? `&time=${time}` : ''}`
+      `/api/search/${option}?keyword=${keyword}&condition=${condition}&lastContentId=${lastContentId}&size=${size}` +
+      `${from !== null ? `&from=${from}` : ''}` +
+      `${to ? `&to=${to}` : ''}` +
+      `${type ? `&type=${type}` : ''}`
     );
   },
 

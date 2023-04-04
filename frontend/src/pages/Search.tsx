@@ -38,15 +38,15 @@ const Search = () => {
   const [isSearch, setIsSearch] = useState<boolean>(false);
   // 검색어
   const [searchKey, setSearchKey] = useState<string>('');
-  // 정렬 필터
-  const [sort, setSort] = useState<string | null>(null);
-  // 시간 필터
-  const [time, setTime] = useState<number | null>(null);
+  // 옵션 필터 (최근순, 인기순)
+  const [option, setOption] = useState<'recent' | 'hit'>('recent');
+  // 타입 (영상, 글)
+  const [type, setType] = useState<string>('all');
   // 데이터 사이즈
   const [size, setSize] = useState<number>(20);
   // 검색 결과
-  const [searchResult, setSearchResult] = useState<Array<content> | null>();
   const [serchParams, setSearchParams] = useSearchParams();
+
   // 필터바 정보 RecoilState
   const [filterBtnState, setFilterBtnState] =
     useRecoilState(homeFilterBtnState);
@@ -61,15 +61,18 @@ const Search = () => {
   useEffect(() => {
     // 임시로 저장
     const temp = serchParams.get('q');
-    // null이 아닐 떄만 저장
+    // null이 아닐 때만 저장
     if (temp) query = temp;
-    console.log(temp);
     setSearchKey(query);
-  }, [serchParams]);
+
+    // 필터바 세팅
+    if (!filterBtnState[0] && filterBtnState[1]) setType('article');
+    if (filterBtnState[0] && !filterBtnState[1]) setType('video');
+  }, [serchParams, filterBtnState]);
 
   useEffect(() => {
     if (searchKey !== '') {
-      fetchNextPage({ pageParam: 0 });
+      fetchNextPage({ pageParam: 999 });
     }
   }, [searchKey]);
 
