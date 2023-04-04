@@ -7,7 +7,7 @@ import tw, { styled, css, TwStyle } from 'twin.macro';
 
 // icons
 import Close from '../../../assets/icons/close.svg';
-import seed from '../../../assets/image/seed.gif';
+import seed from '../../../assets/image/seed.png';
 
 // component
 import ContentCardItem from '../ContentCardItem';
@@ -37,7 +37,7 @@ const Container = styled.div`
 `;
 
 const DivideLine = styled.hr`
-  ${tw`bg-dark-grey20 h-[1px]`}
+  ${tw`bg-dark-grey20 h-[1px] my-4`}
   ${css`
     border: 0;
   `}
@@ -77,13 +77,13 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   // 퀴즈
   const [quizzes, setQuizzes] = useState<Quiz[]>([
     {
-      quizId: 0,
-      question: '두번째 질문',
+      quizId: 123,
+      question: '첫번째 질문',
       multiple_choice: ['첫번째 보기', '두번째 보기', '세번째 보기'],
       answer: 0,
     },
     {
-      quizId: 0,
+      quizId: 234,
       question: '두번째 질문',
       multiple_choice: [
         '첫번째 보기입니다.',
@@ -93,8 +93,8 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
       answer: 0,
     },
     {
-      quizId: 0,
-      question: '두번째 질문',
+      quizId: 345,
+      question: '세번째 질문',
       multiple_choice: [
         '첫번째 보기입니다.',
         '두번째 보기입니다.',
@@ -105,6 +105,8 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   ]);
   // 콘텐츠 소비 시간
   const getTime = useRecoilValue(getTimeSelector);
+  // 유저가 선택한 퀴즈의 정답
+  const [userAnswers, setUserAnswers] = useState<number[]>([]);
 
   useEffect(() => {
     // API get 요청 : 퀴즈 제공
@@ -120,11 +122,13 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   const { mutate: feedbackMutate } = useMutation({
     mutationFn: ({ contentId, feedback, timecost }: mutateParams) =>
       post_feedback(contentId, feedback, timecost),
+    onSuccess: () => setPage(1),
   });
 
   // 퀴즈 답 POST
   const { mutate: quizMutate } = useMutation({
     mutationFn: (contentId: number) => post_quizzes(contentId),
+    onSuccess: (data) => setPage(2), // 퀴즈 제출하고 포인트 정보 받아와야 함
   });
 
   // 퀴즈 GET
@@ -140,29 +144,36 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
     const timecost = Math.ceil(getTime / (60 * 1000));
     // API POST 요청 : 피드백 저장
     feedbackMutate({ contentId: recentContent.id, feedback, timecost });
-    onClose();
   };
 
   // 퀴즈 제출
   const quizSubmitHandler = (
-    firstAnswer: number | null,
-    secondAnswer: number | null,
-    thirdAnswer: number | null
+    firstAnswer: number,
+    secondAnswer: number,
+    thirdAnswer: number
   ) => {
     // API POST 요청 : 퀴즈 제출 내역 저장
-    console.log('answer :', firstAnswer, secondAnswer, thirdAnswer);
-    console.log(firstAnswer && secondAnswer);
+    quizMutate(recentContent.id);
+    setUserAnswers([firstAnswer, secondAnswer, thirdAnswer]);
   };
 
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <>
       {recentContent && page !== 2 && (
-        <>
+        <div className="flex flex-col gap-4 w-full">
           <h3 className="text-h3 text-primary">방금 본 컨텐츠</h3>
           <ContentCardItem content={recentContent} />
-        </>
+        </div>
       )}
-      {page === 2 && <img src={seed} alt="" />}
+      {page === 2 && (
+        <div className="flex flex-col justify-center items-center">
+          <img src={seed} alt="" className="aspect-ratio-1 h-20 w-20 mb-3" />
+          <span className="text-sub text-dark-grey70">
+            포인트를 획득하였습니다!
+          </span>
+          <h1 className="text-h1">130 (+1)</h1>
+        </div>
+      )}
       <DivideLine />
 
       <Container>
@@ -175,9 +186,11 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
         )}
 
         {/* 퀴즈 결과 */}
-        {page === 2 && <QuizResultPage quizzes={quizzes} />}
+        {page === 2 && (
+          <QuizResultPage quizzes={quizzes} userAnswers={userAnswers} />
+        )}
       </Container>
-    </div>
+    </>
   );
 };
 
