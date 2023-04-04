@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { useRecoilState } from "recoil";
@@ -9,7 +9,7 @@ import AboutUser from "../components/OnBoarding/AboutUser";
 import AboutInterest from "../components/OnBoarding/AboutInterest";
 import { post_about_user } from "../api/login";
 
-import { isLoginState, isNameState } from "../recoils/Start/Atoms";
+import { isNameState, isNoobState } from "../recoils/Start/Atoms";
 
 const OnBoarding = () => {
   const navigate = useNavigate();
@@ -114,18 +114,18 @@ const OnBoarding = () => {
     }
   }
 
+  const [noob, setNoob] = useRecoilState(isNoobState);
+
   // userData 전달
   const { mutate: userDataPost } = useMutation({
     mutationFn: (userData: {}) => post_about_user(userData),
   });
 
-  const [isLogin, setIsLogin] = useRecoilState(isLoginState);
-
   const isSend = () => {
     setUserData({...userData, interests: selectList});
     userDataPost(userData);
-    console.log(selectList);
-    setIsLogin(true);
+    setNoob(false);
+
     // 홈으로 이동
     navigate(`/`);
   }
