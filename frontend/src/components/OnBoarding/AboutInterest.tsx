@@ -41,7 +41,7 @@ const AboutInterest = ({
         </span>
       </div>
       <hr className="my-4 border-[1px] border-dark-grey20" />
-      <ul className="h-[440px] overflow-scroll">
+      <ul className="h-[370px] overflow-scroll">
         {data?.map((item, index) => {
           return (
             <BigCategory
@@ -64,7 +64,7 @@ const AboutInterest = ({
           );
         })}
       </ul>
-      <div className="flex justify-center px-2 gap-2 my-4">
+      <div className="flex justify-center px-2 gap-2 mt-4">
         <Button
           title="선택 완료"
           status={selectList.length !== 0 ? 'active' : 'disabled'}

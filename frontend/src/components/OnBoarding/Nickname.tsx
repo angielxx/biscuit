@@ -27,11 +27,11 @@ const Nickname = ({ isClicked, isChange, isName, isCount }: NicknameProps) => {
     <>
       <WelcomeBox>
         <img src={hello} className="w-20 h-20" />
-        <span>비스킷에 오신 걸 환영합니다</span>
+        <span className='text-h3'>비스킷에 오신 걸 환영합니다</span>
       </WelcomeBox>
       <hr className="my-4 border-[1px] border-dark-grey20" />
       <NicknameBox>
-        <span className="text-h3 text-white">닉네임을 설정해주세요.</span>
+        <span className="text-h4 text-white">닉네임을 설정해주세요.</span>
         <TextInput
           status={isName === '' ? 'primary' : 'success'}
           onChange={isChange}
