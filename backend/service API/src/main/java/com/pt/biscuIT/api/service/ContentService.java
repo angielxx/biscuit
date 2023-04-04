@@ -6,9 +6,8 @@ import com.pt.biscuIT.common.exception.ErrorCode;
 import com.pt.biscuIT.db.entity.Content;
 import com.pt.biscuIT.db.entity.ContentView;
 import com.pt.biscuIT.db.entity.Type;
-import com.pt.biscuIT.db.repository.ContentRepository;
-import com.pt.biscuIT.db.repository.ContentRepositorySupport;
-import com.pt.biscuIT.db.repository.ContentViewRepositorySupport;
+import com.pt.biscuIT.db.repository.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,14 +16,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service("contentService")
+@RequiredArgsConstructor
 public class ContentService {
-    @Autowired
-    ContentRepository contentRepository;
-    @Autowired
-    ContentRepositorySupport contentRepositorySupport;
-
-    @Autowired
-    ContentViewRepositorySupport contentViewRepositorySupport;
+    private final ContentRepository contentRepository;
+    private final ContentRepositorySupport contentRepositorySupport;
+    private final ContentViewRepositorySupport contentViewRepositorySupport;
+    private final MemberBookmarkRepositorySupport memberBookmarkRepositorySupport;
     public Page<ContentInfoDto> getCategoryContent (String category, Pageable pageable, Long lastContentId, int from, int to, String condition, Type type) {
         Page<Content> contentList = null;
         if("recent".equals(condition)) {
@@ -47,5 +44,13 @@ public class ContentService {
         content.setHit(content.getHit() + 1);
         contentRepository.save(content);
 
+    }
+
+    public void setProperty(List<ContentInfoDto> contentList, Long memberId) {
+        if(memberId == null) return;
+
+        contentList.forEach(content -> {
+            content.setMarked(memberBookmarkRepositorySupport.isMarked(memberId, content.getId()));
+        });
     }
 }
