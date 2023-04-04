@@ -7,7 +7,7 @@ interface QuizItemProps {
   options: Array<string>;
   onClick: React.Dispatch<React.SetStateAction<number>>;
   result: boolean; // 퀴즈결과 페이지라면 true
-  userAnswer: number;
+  userAnswer?: number;
   answer?: number;
 }
 
