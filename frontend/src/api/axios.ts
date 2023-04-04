@@ -44,7 +44,7 @@ authInstance.interceptors.response.use(
 
       try {
         const { data } = await axios({
-          method: 'post',
+          method: 'get',
           url: BASE_URL + `/api/auth/refresh`,
           headers: {
             Authorization: refreshToken,
@@ -52,12 +52,14 @@ authInstance.interceptors.response.use(
         });
         if (data) {
           setCookie('access-token', data);
-          return await authInstance.interceptors.request.use(setTokenHeader);
+          config.headers.Authorization = data;
+          return authInstance.request(config);
         }
       }
-      catch (err) {
-        console.log(err);
+      catch (error) {
+        console.log(error);
       }
     }
+    return Promise.reject(error);
   }
 );
