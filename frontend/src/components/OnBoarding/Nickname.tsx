@@ -1,14 +1,14 @@
 import { useState } from 'react';
 
-import Button from "../common/Button";
-import TextInput from "./TextInput";
+import Button from '../common/Button';
+import TextInput from './TextInput';
 
 // icons
 import hello from '../../assets/icons/hello.png';
-import tw, { styled } from "twin.macro";
+import tw, { styled } from 'twin.macro';
 
 const WelcomeBox = styled.div`
-  ${tw`min-w-[300px] flex flex-col justify-center items-center py-3 gap-6 text-h2 text-white`}
+  ${tw`flex flex-col justify-center items-center py-3 gap-6 text-h2 text-white`}
 `;
 
 const NicknameBox = styled.div`
@@ -23,7 +23,6 @@ interface NicknameProps {
 }
 
 const Nickname = ({ isClicked, isChange, isName, isCount }: NicknameProps) => {
-
   return (
     <>
       <WelcomeBox>
@@ -33,10 +32,19 @@ const Nickname = ({ isClicked, isChange, isName, isCount }: NicknameProps) => {
       <hr className="my-4 border-[1px] border-dark-grey20" />
       <NicknameBox>
         <span className="text-h3 text-white">닉네임을 설정해주세요.</span>
-        <TextInput status={isName === "" ? "primary" : "success"} onChange={isChange} isCount={isCount} value={isName} />
+        <TextInput
+          status={isName === '' ? 'primary' : 'success'}
+          onChange={isChange}
+          isCount={isCount}
+          value={isName}
+        />
       </NicknameBox>
       <div className="flex justify-center px-2 gap-2 mb-4">
-        <Button title="설정 완료" status={isName !== "" ? "active" : "disabled"} onClick={isClicked} />   
+        <Button
+          title="설정 완료"
+          status={isName !== '' ? 'active' : 'disabled'}
+          onClick={isClicked}
+        />
       </div>
     </>
   );

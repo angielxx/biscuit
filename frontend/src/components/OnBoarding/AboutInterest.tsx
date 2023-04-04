@@ -16,26 +16,32 @@ interface AboutInterestProps {
   selectList: string[];
 }
 
-const AboutInterest = ({isBack, isSend, isClicked, selectList}: AboutInterestProps) => {
+const AboutInterest = ({
+  isBack,
+  isSend,
+  isClicked,
+  selectList,
+}: AboutInterestProps) => {
   const [isCategory, setIsCategory] = useState<boolean>(false);
   const [page, setPage] = useState<number>();
 
-  const { data, isLoading } = useQuery(
-    ['get_categories'],
-    () => get_categories()
-  )
+  const { data, isLoading } = useQuery(['get_categories'], () =>
+    get_categories()
+  );
 
   return (
     <>
-      <div className='min-w-[323px] flex items-start'>
+      <div className="flex items-start">
         <img src={backspace} onClick={isBack} />
       </div>
-      <div className='flex flex-col gap-2 mt-4'>
-        <span className='text-h3'>어떤 기술에 관심이 있으신가요?</span>
-        <span className='text-sub text-subColor'>관심사에 맞춘 컨텐츠를 홈 화면에서 추천드려요.</span>
+      <div className="flex flex-col gap-2 mt-4">
+        <span className="text-h3">어떤 기술에 관심이 있으신가요?</span>
+        <span className="text-sub text-subColor">
+          관심사에 맞춘 컨텐츠를 홈 화면에서 추천드려요.
+        </span>
       </div>
       <hr className="my-4 border-[1px] border-dark-grey20" />
-      <ul className='h-[440px] overflow-scroll'>
+      <ul className="h-[440px] overflow-scroll">
         {data?.map((item, index) => {
           return (
             <BigCategory
@@ -59,10 +65,14 @@ const AboutInterest = ({isBack, isSend, isClicked, selectList}: AboutInterestPro
         })}
       </ul>
       <div className="flex justify-center px-2 gap-2 my-4">
-        <Button title="선택 완료" status={selectList.length !== 0 ? "active" : "disabled"} onClick={isSend} />   
+        <Button
+          title="선택 완료"
+          status={selectList.length !== 0 ? 'active' : 'disabled'}
+          onClick={isSend}
+        />
       </div>
     </>
-  )
-}
+  );
+};
 
 export default AboutInterest;
