@@ -113,6 +113,8 @@ const OnBoarding = () => {
     } else {
       setSelectList([...selectList, item]);
     }
+    console.log(selectList);
+    setUserData({...userData, interests: selectList});
   }
 
   const [noob, setNoob] = useRecoilState(isNoobState);
@@ -123,20 +125,12 @@ const OnBoarding = () => {
   });
 
   const isSend = () => {
-    console.log(selectList);
-    setUserData({...userData, interests: selectList});
     userDataPost(userData);
     setNoob(false);
 
     // 홈으로 이동
-    // navigate(`/`);
+    navigate(`/`);
   }
-
-  useEffect(() => {
-    if (!noob) {
-      navigate(`/`);
-    }
-  }, [])
 
   return (
     <>
