@@ -40,7 +40,6 @@ const Setting = ({ category }: { category: string }) => {
     : <Logo />;
 };
 
-
 export default function MyPage() {
   const navigate = useNavigate();
   const myInfoData = useQuery({

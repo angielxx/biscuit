@@ -37,7 +37,10 @@ export default function MyInfos({myInfo}: MyInfoContent) {
     <>
       <Info title="직무" content={myInfo.job} />
       <Info title="경력" content={myInfo.period} />
-      <Info title="관심사" content="React 등 10개" />
+      <Info title="관심사" content={`${myInfo.interest[0]}
+        ${myInfo.interest.length > 1
+          ? `등 ${myInfo.interest.length}개}` : ""}`}
+      />
     </>
   )
 }
