@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { isStartModalState } from '../../recoils/Start/Atoms';
+import { isNameState, isStartModalState } from '../../recoils/Start/Atoms';
 import { isNoobState } from '../../recoils/Start/Atoms';
 
 // components
@@ -55,6 +55,7 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
   const [isStartModal, setIsStartModal] = useRecoilState(isStartModalState);
   const navigate = useNavigate();
 
+  const [isName, setIsName] = useRecoilState(isNameState);
   const [isNoob, setIsNoob] = useRecoilState(isNoobState);
 
   const { data, isLoading } = useQuery(
@@ -83,7 +84,7 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
       </Closeicon>
 
       {!isNoob
-        ? <AsideProfile isName="닉네임" />
+        ? <AsideProfile isName={isName} />
         : <AsideLogin onClick={startModal} />
       }
 

@@ -1,14 +1,14 @@
-import { getCookie, setCookie } from "typescript-cookie";
-import { isNoobState } from "../../recoils/Start/Atoms";
+import { isNameState, isNoobState } from "../../recoils/Start/Atoms";
 import { useRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
-const GoogleLogin = () => {
+const SocialLogin = () => {
   const navigate = useNavigate();
   const urlParams = new URL(location.href).searchParams;
   const isNoob = urlParams.get('is-noob');
 
   const [noob, setNoob] = useRecoilState(isNoobState);
+  const [isName, setIsName] = useRecoilState(isNameState);
 
   // 뉴비가 아니면
   if (!isNoob) {
@@ -24,4 +24,4 @@ const GoogleLogin = () => {
   )
 }
 
-export default GoogleLogin;
+export default SocialLogin;
