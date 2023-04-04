@@ -15,7 +15,7 @@ import FilterBar2 from '../components/common/FilterBar/FilterBar2';
 const CategoryContainer = styled.div`
   ${tw`flex flex-col px-4 gap-10 overflow-scroll pt-4`}
   ${css`
-    height: calc(100vh - 145px);
+    height: calc(100vh - 203px);
   `}
 `;
 
@@ -100,7 +100,7 @@ const Category = () => {
   // 무한스크롤 데이터 패칭
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ['get_catetory_contents', categoryName, type],
+      queryKey: ['get_catetory_contents', categoryName, option, type],
       enabled: categoryName !== '',
       queryFn: ({ pageParam = 999999 }) =>
         get_category_contents(

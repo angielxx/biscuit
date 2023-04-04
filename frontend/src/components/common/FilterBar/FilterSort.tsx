@@ -19,6 +19,7 @@ type sort = {
 interface FilterTimeProps {
   filterSortState: sort[];
   setFilterSortState: React.Dispatch<React.SetStateAction<sort[]>>;
+  setOption: React.Dispatch<React.SetStateAction<'recent' | 'hit'>>;
 }
 
 const FilterTimeContainer = tw.div`
@@ -46,6 +47,7 @@ const FilterTimeHolder = tw.span`
 const FilterSort = ({
   filterSortState,
   setFilterSortState,
+  setOption,
 }: FilterTimeProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isClicked, setIsClicked] = useState<boolean>(false);
@@ -66,6 +68,7 @@ const FilterSort = ({
       }
     });
     setFilterSortState(newFilterTimeState);
+    setOption(selected === '최신순' ? 'recent' : 'hit');
   }, [selected]);
 
   useOnClickOutside(ref, () => setIsClicked(false));

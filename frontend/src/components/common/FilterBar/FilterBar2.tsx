@@ -45,6 +45,7 @@ const FilterBar2 = ({
       <FilterSort
         filterSortState={filterSortState}
         setFilterSortState={setFilterSortState}
+        setOption={setOption}
       />
     </FilterBarContainer>
   );
