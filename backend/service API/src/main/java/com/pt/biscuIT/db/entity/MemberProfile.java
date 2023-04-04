@@ -1,20 +1,16 @@
 package com.pt.biscuIT.db.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Entity
 @Getter
-@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class MemberProfile implements Serializable {
 	@Id
 	private Long memberId;
@@ -22,6 +18,7 @@ public class MemberProfile implements Serializable {
 	@JoinColumn(name = "member_id")
 	@OneToOne(fetch = FetchType.LAZY)
 	private Member member;
+	@Enumerated(EnumType.STRING)
 	private Job job; //직무
 	private Integer period; //연차
 	private Integer exp; //경험치
