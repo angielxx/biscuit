@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.*;
-import com.pt.biscuIT.api.dto.member.MemberRefreshToken;
+import com.pt.biscuIT.db.entity.MemberRefreshToken;
 import com.pt.biscuIT.db.repository.MemberRefreshTokenRedisRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
