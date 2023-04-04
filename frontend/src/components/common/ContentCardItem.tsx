@@ -98,12 +98,13 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
   // 타입에 따라 썸네일, url 설정
   const queryClient = useQueryClient();
   useEffect(() => {
-    // setThumbImg('');
     if (content.type === 'VIDEO') {
       setUrl(`https://youtu.be/${content.source}`);
       setThumbImg(`https://img.youtube.com/vi/${content.source}/0.jpg`);
     } else {
-      const cacheImg = queryClient.getQueryData(['thumbnail', content.id]);
+      const cacheImg = queryClient.getQueryData(['thumbnail', content.id]) as
+        | string
+        | undefined;
       setUrl(content.source);
       setThumbImg(cacheImg);
     }
@@ -114,9 +115,7 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
 
   // 썸네일 가져오는 함수 (queryFn)
   const getMetaData = async (url: string) => {
-    // console.log(url);
     const data = await useGetMetaData(url);
-    // console.log(data);
     return data?.image;
   };
 
