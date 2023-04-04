@@ -45,6 +45,7 @@ public class ContentRepositorySupport {
     QMemberInterest qMemberInterest = QMemberInterest.memberInterest;
 
     QMemberBookmark qMemberBookmark = QMemberBookmark.memberBookmark;
+    QMemberHistory qMemberHistory = QMemberHistory.memberHistory;
 
     /**
      * 최근 등록된 컨텐츠를 랜덤으로 가져온다.
@@ -277,6 +278,37 @@ public class ContentRepositorySupport {
                 jpaQueryFactory
                         .select(qContent)
                         .from(qContent, qMemberBookmark)
+                        .where(whereCondition)
+                        .orderBy(ORDERS.stream().toArray(OrderSpecifier[]::new))
+                        .limit(pageable.getPageSize())
+                        .fetch()
+                        .size()
+        );
+    }
+
+    public Page<Content> findSimilarContent(Pageable pageable, int from, int to, Type type, List<Long> memberIdList) {
+        BooleanBuilder whereCondition = new BooleanBuilder();
+        whereCondition.and(qMemberHistory.member.id.in(memberIdList));
+        whereCondition.and(qContent.id.eq(qMemberHistory.content.id));
+        whereCondition.and(qContent.timeCost.between(from, to));
+        if(type != Type.ALL) whereCondition.and(qContent.type.eq(type));
+
+        List<OrderSpecifier> ORDERS = getOrderSpecifiers(pageable.getSort());
+        List<Content> contentList = jpaQueryFactory
+                .select(qContent)
+                .from(qContent, qMemberHistory)
+                .where(whereCondition)
+                .orderBy(ORDERS.stream().toArray(OrderSpecifier[]::new))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return new PageImpl<>(
+                contentList,
+                pageable,
+                jpaQueryFactory
+                        .select(qContent)
+                        .from(qContent, qMemberHistory)
                         .where(whereCondition)
                         .orderBy(ORDERS.stream().toArray(OrderSpecifier[]::new))
                         .limit(pageable.getPageSize())
