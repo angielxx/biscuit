@@ -1,13 +1,11 @@
 package com.pt.biscuIT.common.util;
 
-import com.pt.biscuIT.api.dto.member.MemberRefreshToken;
 import com.pt.biscuIT.common.exception.MemberNotFoundException;
 import com.pt.biscuIT.db.entity.Member;
 import com.pt.biscuIT.db.repository.MemberRefreshTokenRedisRepository;
 import com.pt.biscuIT.db.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -65,17 +63,19 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
         response.addCookie(CookieUtil.createCookie(clientUrl, ACCESS_TOKEN, accesstoken));
         response.addCookie(CookieUtil.createCookie(clientUrl, REFRESH_TOKEN, refreshtoken));
         Member member = memberRepository.findByIdentifier(oAuth2AuthenticationToken.getAuthorizedClientRegistrationId() + oAuth2User.getName()).orElse(null);
+        UriComponentsBuilder target = UriComponentsBuilder.fromUriString("/signin");
         if (member == null){
             throw new MemberNotFoundException("정상적으로 가입되지 않은 회원입니다.");
         }
         else if("ROLE_NEWBIE".equals(member.getRole())) {
-            String targetUrl = UriComponentsBuilder.fromUriString("/signin")
+            String targetUrl = target
                     .queryParam("is-noob", true)
                     .build().toUriString();
             log.info("this is newbie");
             getRedirectStrategy().sendRedirect(request, response, targetUrl);
         } else{
-            String targetUrl = UriComponentsBuilder.fromUriString("/signin")
+            String targetUrl = target
+                    .queryParam("is-noob", false)
                     .queryParam("nickname", member.getNickname())
                     .build().toUriString();
             log.info("this is oldie");
