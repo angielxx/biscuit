@@ -5,6 +5,8 @@ import Contributions from "../components/Dashboard/Contributions";
 import Graph from "../components/Dashboard/Graph";
 import Point from "../components/Dashboard/Point";
 import MyInfos from "../components/Dashboard/MyInfos";
+import { useQuery } from "@tanstack/react-query";
+import { get_dashboard } from "../api/dashboard";
 
 const HomeContainer = tw.div`flex-col w-screen justify-center px-6 pt-4`;
 const MyInfoContainer = tw.div`pb-6 mb-6 border-b-2 border-dark-grey20`;
@@ -40,6 +42,10 @@ const Setting = ({ category }: { category: string }) => {
 
 export default function MyPage() {
   const navigate = useNavigate();
+  const { data } = useQuery({
+    queryKey: ['get_dashboard'],
+    queryFn: () => get_dashboard(),
+  })
 
   return (
     <HomeContainer>
@@ -62,12 +68,12 @@ export default function MyPage() {
             <Span>퀴즈를 풀면 잔디가 자라나요.</Span>
           </DashboardHeader>
           <PointContainer>
-            <Point point={100} />
+            {data && <Point point={data.point} />}
           </PointContainer>
         </HeaderContainer>
-        <Contributions />
+        {data && <Contributions histories={data.histories} />}
         <Span>님이 비스킷에서 가장 많이 본 콘텐츠에요.</Span>
-        <Graph />
+        {data && <Graph graphs={data.graphs}/>}
       </DashboardContainer>
     </HomeContainer>
   )
