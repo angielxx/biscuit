@@ -77,4 +77,12 @@ export const requests = {
   POST_ABOUT_USER() {
     return `/api/members/onboarding`;
   },
+
+  GET_DASHBOARD() {
+    return `/api/members/dashboard`;
+  },
+
+  GET_MYINFO() {
+    return `/api/members`;
+  }
 };

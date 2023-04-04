@@ -5,7 +5,10 @@ import tw from 'twin.macro';
 interface QuizItemProps {
   question: string;
   options: Array<string>;
-  onClick: React.Dispatch<React.SetStateAction<number | null>>;
+  onClick: React.Dispatch<React.SetStateAction<number>>;
+  result: boolean; // 퀴즈결과 페이지라면 true
+  userAnswer?: number;
+  answer?: number;
 }
 
 const Question = tw.h4`text-h4 text-white`;
@@ -14,8 +17,25 @@ const QuizItemContainer = tw.div`flex flex-col gap-2 items-center`;
 
 const OptionsContainer = tw.div`flex flex-wrap gap-2 justify-center items-center`;
 
-const QuizItem = ({ question, options, onClick }: QuizItemProps) => {
-  const [clickedOption, setClickedOption] = useState<null | number>(null);
+const QuizItem = ({
+  question,
+  options,
+  onClick,
+  result,
+  userAnswer,
+  answer,
+}: QuizItemProps) => {
+  const [clickedOption, setClickedOption] = useState<number>(99);
+
+  const setOptionStatus = (index: number) => {
+    // 퀴즈 결과 페이지일 때
+    if (result) {
+      if (index === userAnswer && index === answer) return 'right';
+      if (index === userAnswer && index !== answer) return 'wrong';
+      return 'default';
+    }
+    return clickedOption === index ? 'selected' : 'default';
+  };
 
   return (
     <QuizItemContainer>
@@ -25,10 +45,13 @@ const QuizItem = ({ question, options, onClick }: QuizItemProps) => {
           <QuizOption
             key={index}
             option={option}
-            status={clickedOption === index ? 'selected' : 'default'}
+            status={setOptionStatus(index)}
             onClick={() => {
-              onClick(index);
-              setClickedOption(index);
+              if (result) return;
+              else {
+                onClick(index);
+                setClickedOption(index);
+              }
             }}
           />
         ))}

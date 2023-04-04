@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import tw, { styled, css } from 'twin.macro';
 
 const Container = tw.div`
@@ -30,12 +31,37 @@ const Box = styled.div((props: { theme: string, count: number }) => [
   css`background: ${boxColorChip[props.theme][props.count]}`
 ]);
 
-export default function Contributions() {
+type History = {
+  date: string;
+  count: number;
+}
+
+interface ContributionsProps {
+  histories: History[];
+}
+
+export default function Contributions({histories}: ContributionsProps) {
   const tmpData: number[][] = [];
-  for(let i=0; i<16; i++) {
+  const todayDate = new Date();
+  const todayDay = todayDate.getDay();
+
+  for(let i=0; i<15; i++) {
     tmpData.push([]);
-    tmpData[i].push(0, 1, 2, 3, 4, 5, 6);
+    tmpData[i].push(0);
   }
+  for(let i=0; i<=todayDay; i++) {
+    tmpData.push([]);
+    tmpData[15].push(0);
+  }
+
+  useEffect(() => {
+    histories.forEach((history: History) => {
+      const historyDate = Date.parse(history.date)
+      const dateDiff = (todayDate.getTime() - historyDate) / (1000 * 60 * 60 * 24)
+      if(dateDiff >= 7 * 16) return;
+      tmpData[15 - Math.ceil(dateDiff / 7)][dateDiff % 7] = history.count;
+    })
+  }, [histories])
   
   return (
     <Container>

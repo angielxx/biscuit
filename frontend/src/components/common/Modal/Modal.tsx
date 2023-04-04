@@ -14,22 +14,36 @@ import { JsxElement } from 'typescript';
 
 // Styled component
 const ModalContainer = styled.div`
-  ${tw`fixed z-50 bg-dark-evaluated p-6 text-white rounded-20 pt-5`}
+  ${tw`fixed z-50 bg-dark-evaluated p-6 text-white rounded-20 overflow-scroll`}
+  ${tw`w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[45vw] 2xl:w-[40vw]`}
   ${css`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    max-height: 90vh;
+    max-height: 80vh;
     max-width: 90vw;
+    min-width: 300px;
+
+    @media (min-width: 640px) {
+      min-width: 80vw;
+    }
+
+    @media (min-width: 768px) {
+      min-width: 60vw;
+    }
+
+    @media (min-width: 1024px) {
+      min-width: 50vw;
+    }
+
+    @media (min-width: 1280px) {
+      min-width: 40vw;
+    }
   `}
 `;
 
 const ModalContentContainer = styled.div`
-  ${tw`overflow-scroll`}
-  ${css`
-    height: calc(100% - 72px);
-    max-height: calc(90vh - 72px);
-  `}
+  ${tw`overflow-scroll relative h-full`}
 `;
 
 const BackdropWrapper = styled.div`
