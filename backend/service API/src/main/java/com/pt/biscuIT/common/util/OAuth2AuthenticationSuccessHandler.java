@@ -2,6 +2,7 @@ package com.pt.biscuIT.common.util;
 
 import com.pt.biscuIT.common.exception.MemberNotFoundException;
 import com.pt.biscuIT.db.entity.Member;
+import com.pt.biscuIT.db.entity.Role;
 import com.pt.biscuIT.db.repository.MemberRefreshTokenRedisRepository;
 import com.pt.biscuIT.db.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -67,7 +68,7 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
         if (member == null){
             throw new MemberNotFoundException("정상적으로 가입되지 않은 회원입니다.");
         }
-        else if("ROLE_NEWBIE".equals(member.getRole())) {
+        else if(Role.valueOf("ROLE_NEWBIE").equals(member.getRole())) {
             String targetUrl = target
                     .queryParam("is-noob", true)
                     .build().toUriString();

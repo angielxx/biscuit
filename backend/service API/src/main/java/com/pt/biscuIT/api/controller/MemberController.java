@@ -2,11 +2,14 @@ package com.pt.biscuIT.api.controller;
 
 import com.pt.biscuIT.api.dto.history.MemberGraphDto;
 import com.pt.biscuIT.api.dto.history.MemberHistoryDto;
+import com.pt.biscuIT.api.dto.member.MemberProfileDto;
 import com.pt.biscuIT.api.response.MemberDashboardRes;
 import com.pt.biscuIT.api.service.MemberAuthService;
 import com.pt.biscuIT.api.service.MemberService;
 import com.pt.biscuIT.common.model.response.BaseResponseBody;
+import com.pt.biscuIT.db.entity.Job;
 import com.pt.biscuIT.db.entity.Member;
+import com.pt.biscuIT.db.entity.MemberProfile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +36,14 @@ public class MemberController {
      * @return
      */
     @PostMapping("/onboarding")
-    public ResponseEntity<?> onboard(@RequestHeader(required = false, value = "Authorization") String token) {
+    public ResponseEntity<?> onboard(@RequestHeader(required = false, value = "Authorization") String token, @RequestBody MemberProfileDto memberProfileDto) {
         Member member = memberAuthService.getMember(token);
-
+        MemberProfile profile = MemberProfile.builder()
+                .memberId(member.getId())
+                .exp(memberProfileDto.getExp())
+                .job(Job.valueOf(memberProfileDto.getJob()))
+                .period(memberProfileDto.getPeriod())
+                .build();
         memberService.update(member);
         return ResponseEntity.ok().build();
     }

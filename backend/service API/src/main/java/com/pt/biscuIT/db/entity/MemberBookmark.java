@@ -1,5 +1,7 @@
 package com.pt.biscuIT.db.entity;
 
+import org.springframework.data.annotation.CreatedDate;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -20,5 +22,6 @@ public class MemberBookmark implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Content content;
 	// TODO: content 삭제 시 MemberBookmark도 삭제시키기
+	@CreatedDate
 	private LocalDateTime createdDate;
 }
