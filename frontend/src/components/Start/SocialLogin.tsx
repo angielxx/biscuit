@@ -22,6 +22,7 @@ const SocialLogin = () => {
     setNoob(false);
     // setIsName(nickname);
   } else {
+    console.log("온보딩");
     // 뉴비이면
     navigate(`/onboarding`);
   }
