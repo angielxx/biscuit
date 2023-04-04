@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { useRecoilState } from "recoil";
@@ -76,6 +76,7 @@ const OnBoarding = () => {
     "9년차": number;
     "10년 이상": number;
   }
+  
   const yearsList: YearsListType = {
     "1년 미만": 0,
     "1년차": 1, 
@@ -122,13 +123,20 @@ const OnBoarding = () => {
   });
 
   const isSend = () => {
+    console.log(selectList);
     setUserData({...userData, interests: selectList});
     userDataPost(userData);
     setNoob(false);
 
     // 홈으로 이동
-    navigate(`/`);
+    // navigate(`/`);
   }
+
+  useEffect(() => {
+    if (!noob) {
+      navigate(`/`);
+    }
+  }, [])
 
   return (
     <>
