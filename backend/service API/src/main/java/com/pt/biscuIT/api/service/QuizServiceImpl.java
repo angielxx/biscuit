@@ -27,45 +27,51 @@ public class QuizServiceImpl implements QuizService{
 	@Override
 	public ProvideQuizDto provideQuiz(Long contentId) {
 		ProvideQuizDto responseDto = new ProvideQuizDto();
-		//컨텐츠 가져오기
+		//컨텐츠 정보 가져오기
 		Content content = null;
 		Optional<Content> opContent = contentRepository.findById(contentId);
 		if(opContent.isPresent()) {
 			content = opContent.get();
 		}
-		//중복없는 난수 생성
+
+		//컨텐츠에 해당하는 퀴즈 가져오기
+		List<Quiz> findQuizzes = quizRepository.findQuizByContent(content);
+		int quizzesSize = findQuizzes.size();
+		System.out.println("quizzesSize = " + quizzesSize);
+
+		//퀴즈 개수 중에 중복없는 난수 생성
 		int cnt = 3;
+		if(quizzesSize > 3) {
+			cnt = quizzesSize;
+		}
 		int a[] = new int[cnt]; //퀴즈 뽑을 난수
+		int index = 0;
 		Random rand = new Random();
 		for(int i=0; i<cnt; i++) {
-			a[i] = rand.nextInt(4);
-			for(int j=0; j<i; j++) {
-				if(a[i] == a[j]){
-					i--;
-				}
-			}
+			do {
+				index = (int)(Math.random() * quizzesSize);
+			}while(exists(a, index));
+			a[i] = index;
 		}
+		for(int i=0; i<cnt; i++) {
+			System.out.println(a[i]);
+		}
+
 		//생성한 난수에 해당하는 퀴즈 반환
-		List<ProvideQuizDetailDto> quizzes = new ArrayList<>();
-		List<Quiz> findQuizzes = quizRepository.findQuizByContent(content);
+		List<ProvideQuizDetailDto> quizzes = new ArrayList<>(); //반환용 quiz
 		for(int i=0; i<cnt; i++) {
 			Quiz quiz = findQuizzes.get(a[i]);
+			System.out.println("quiz.getQuestion() = " + quiz.getQuestion());
 			//보기 배열 만들기
 			String c = "";
 			String[] choice = new String[3];
 			int idx = 0;
-			for(int j=0; j<quiz.getMultipleChoice().length(); j++) {
-				if(quiz.getMultipleChoice().charAt(j)==' ') {
-					c = c.substring(0, c.length()-2);
-					choice[idx] = c;
-					idx++;
-					c = "";
-				}
-				else {
-					c += quiz.getMultipleChoice().charAt(j);
-				}
+			String[] multipleChoice = quiz.getMultipleChoice().split("//");
+			System.out.println("문제의 보기");
+			for(int j=0; j<multipleChoice.length; j++) {
+				System.out.print(multipleChoice[j] + " ");
 			}
-			choice[idx] = c.substring(0, c.length()-2);
+			System.out.println();
 
 			//답안 배열 만들기
 			List<Integer> ans = new ArrayList<>();
@@ -79,8 +85,18 @@ public class QuizServiceImpl implements QuizService{
 				.answer(ans.toArray(new Integer[ans.size()]))
 				.build();
 			quizzes.add(dto);
+			System.out.println("dto.toString() = " + dto.toString());
 		}
 		responseDto.setQuizzes(quizzes);
 		return responseDto;
+	}
+
+	private static boolean exists(int a[], int index) {
+		for(int i=0; i<a.length; i++) {
+			if(a[i]==index) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
