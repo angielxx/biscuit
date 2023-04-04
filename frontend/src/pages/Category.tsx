@@ -89,7 +89,7 @@ const Category = () => {
     useInfiniteQuery({
       queryKey: ['get_catetory_contents', categoryName],
       enabled: !!categoryName,
-      queryFn: ({ pageParam = 999 }) =>
+      queryFn: ({ pageParam = 999999 }) =>
         get_category_contents(
           categoryName,
           option,
