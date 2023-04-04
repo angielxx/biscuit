@@ -2,6 +2,7 @@ package com.pt.biscuIT.api.service;
 
 import com.pt.biscuIT.api.dto.history.MemberGraphDto;
 import com.pt.biscuIT.api.dto.history.MemberHistoryDto;
+import com.pt.biscuIT.common.exception.MemberNotFoundException;
 import com.pt.biscuIT.db.entity.Member;
 import com.pt.biscuIT.db.repository.MemberHistoryRepositorySupport;
 import com.pt.biscuIT.db.repository.MemberPointRepositorySupport;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import java.util.Optional;
 
 /**
  * 회원 관련 서비스 정의.
@@ -34,16 +37,17 @@ public class MemberServiceImpl implements MemberService {
         if (memberRepository.findById(id).isPresent()) {
             return memberRepository.findById(id).get();
         }else {
-            throw new IllegalArgumentException("해당 회원이 존재하지 않습니다.");
+            throw new MemberNotFoundException("해당 회원이 존재하지 않습니다.");
         }
     }
 
     @Override
-    public Member findMemberByIdentifier(String identifier) {
-        if (memberRepository.findByIdentifier(identifier).isPresent()) {
-            return memberRepository.findByIdentifier(identifier).get();
+    public Member findByIdentifier(String identifier) {
+        Optional<Member> member = memberRepository.findByIdentifier(identifier);
+        if (member.isPresent()) {
+            return member.get();
         }else {
-            return null;
+            throw new MemberNotFoundException("해당 회원이 존재하지 않습니다.");
         }
     }
 

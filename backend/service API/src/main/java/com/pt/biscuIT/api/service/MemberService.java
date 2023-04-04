@@ -7,7 +7,7 @@ import com.pt.biscuIT.db.entity.Member;
 import java.util.List;
 
 public interface MemberService {
-    Member findMemberByIdentifier(String identifier);
+    Member findByIdentifier(String identifier);
 
     Member update(Member member);
     List<MemberHistoryDto> getHistoriesByMember(Member member);

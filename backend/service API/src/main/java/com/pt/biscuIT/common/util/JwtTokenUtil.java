@@ -4,7 +4,13 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.*;
+import com.pt.biscuIT.api.dto.member.MemberRefreshToken;
+import com.pt.biscuIT.db.repository.MemberRefreshTokenRedisRepository;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,6 +22,7 @@ import java.util.Date;
 /**
  * jwt 토큰 유틸 정의.
  */
+@RequiredArgsConstructor
 @Component
 public class JwtTokenUtil {
     @Value("${jwt.secret}")
@@ -30,18 +37,18 @@ public class JwtTokenUtil {
     public static final String ACCESS_TOKEN = "access-token";
     public static final String REFRESH_TOKEN = "refresh-token";
 
+    private static MemberRefreshTokenRedisRepository memberRefreshTokenRedisRepository;
+
     @Autowired
-    public JwtTokenUtil(@Value("${jwt.secret}") String secretKey, @Value("${jwt.expiration.atk}") Integer atkExpirationTime, @Value("${jwt.expiration.rtk}") Integer rtkExpirationTime) {
+    public JwtTokenUtil(MemberRefreshTokenRedisRepository memberRefreshTokenRedisRepository
+            , @Value("${jwt.secret}") String secretKey
+            , @Value("${jwt.expiration.atk}") Integer atkExpirationTime,@Value("${jwt.expiration.rtk}") Integer rtkExpirationTime) {
+        JwtTokenUtil.memberRefreshTokenRedisRepository = memberRefreshTokenRedisRepository;
         this.secretKey = secretKey;
         this.atkExpirationTime = atkExpirationTime;
         this.rtkExpirationTime = rtkExpirationTime;
     }
 
-
-    public void setExpirationTime() {
-        //JwtTokenUtil.expirationTime = Integer.parseInt(expirationTime);
-        JwtTokenUtil.rtkExpirationTime = rtkExpirationTime;
-    }
 
     public static JWTVerifier getVerifier() {
         return JWT
@@ -50,21 +57,54 @@ public class JwtTokenUtil {
                 .build();
     }
 
+    public boolean verifyToken(String token) {
+        String tokenWithoutPrefix = token.replace(TOKEN_PREFIX, "");
+        try {
+            Jws<Claims> claims = Jwts.parser()
+                    .setSigningKey(secretKey.getBytes())
+                    .parseClaimsJws(tokenWithoutPrefix);
+            return claims.getBody()
+                    .getExpiration()
+                    .after(new Date());
+        } catch (ExpiredJwtException e) {
+            throw new TokenExpiredException("Token is expired");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public static String createToken(String tokenType, String identifier) {
         int expirationTime = (tokenType.equals(ACCESS_TOKEN)) ? atkExpirationTime : rtkExpirationTime;
 
         Date expires = JwtTokenUtil.getTokenExpiration(expirationTime);
-
-        // TODO: redis에 토큰 저장
-        if (tokenType.equals(REFRESH_TOKEN)) {
-
-        }
-        return JWT.create()
+        String token = JWT.create()
                 .withSubject(identifier)
                 .withExpiresAt(expires)
                 .withIssuer(ISSUER)
                 .withIssuedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
                 .sign(Algorithm.HMAC512(secretKey.getBytes()));
+        if (tokenType.equals(REFRESH_TOKEN)) {
+            MemberRefreshToken memberRefreshToken = MemberRefreshToken.builder()
+                    .identifier(identifier)
+                    .refreshToken(token)
+                    .build();
+            memberRefreshTokenRedisRepository.save(memberRefreshToken);
+        }
+        return token;
+    }
+
+    public static String refreshToken(String refreshToken) {
+        String identifier = JwtTokenUtil.getIdentifier(refreshToken);
+        return JwtTokenUtil.createToken(REFRESH_TOKEN, identifier);
+    }
+
+    public String findrefreshTokenByToken(String refreshToken) {
+        return memberRefreshTokenRedisRepository.findByRefreshToken(refreshToken).getRefreshToken();
+    }
+
+    public String findrefreshTokenByIdentifier(String identifier) {
+        return memberRefreshTokenRedisRepository.findByIdentifier(identifier).getRefreshToken();
     }
 
 //    public static String getToken(int expiresToken, String identifier) {
@@ -83,9 +123,10 @@ public class JwtTokenUtil {
     }
 
     public static Long getExpiration(String Token){
+        String token = Token.replace(TOKEN_PREFIX, "");
         Date expiration = Jwts.parser()
                 .setSigningKey(secretKey.getBytes())
-                .parseClaimsJws(Token)
+                .parseClaimsJws(token)
                 .getBody()
                 .getExpiration();
 
@@ -94,9 +135,10 @@ public class JwtTokenUtil {
     }
 
     public static String getIdentifier(String Token){
+        String token = Token.replace(TOKEN_PREFIX, "");
         String identifier = Jwts.parser()
                 .setSigningKey(secretKey.getBytes())
-                .parseClaimsJws(Token)
+                .parseClaimsJws(token)
                 .getBody().getSubject();
         return identifier;
     }

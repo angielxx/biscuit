@@ -99,7 +99,7 @@ public class RecommendController {
             @RequestParam Type type,
             String identifier
     ) {
-        Member member = memberServiceImpl.findMemberByIdentifier(identifier);
+        Member member = memberServiceImpl.findByIdentifier(identifier);
         if(member == null) throw new BiscuitException(ErrorCode.MEMBER_NOT_FOUND);
 
         Page<ContentInfoListCategoryDto> contentList = recommendService.getFavoriteCategoryContent(pageable, from, to, type, member.getId());
@@ -122,7 +122,7 @@ public class RecommendController {
             @PathVariable String option,
             String identifier
     ) {
-        Member member = memberServiceImpl.findMemberByIdentifier(identifier);
+        Member member = memberServiceImpl.findByIdentifier(identifier);
         if(member == null) throw new BiscuitException(ErrorCode.MEMBER_NOT_FOUND);
         Page<ContentInfoDto> contentList = new PageImpl<>(new ArrayList<>(), pageable, 0);
 

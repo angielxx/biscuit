@@ -20,6 +20,15 @@ public class AuthController {
         log.info("provider: " + provider);
     }
 
+    @GetMapping("/logout")
+    public void logout() {
+        log.info("logout");
+    }
 
+    @GetMapping("/refresh")
+    public void refresh() {
+
+        log.info("refresh");
+    }
 
 }
