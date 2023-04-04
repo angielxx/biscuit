@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { QueryCache, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import defaultImg from '../../assets/image/default_thumbnail_img.png';
 import {
@@ -96,30 +96,39 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
   const isAuth = false;
 
   // 타입에 따라 썸네일, url 설정
+  const queryClient = useQueryClient();
   useEffect(() => {
+    // setThumbImg('');
     if (content.type === 'VIDEO') {
       setUrl(`https://youtu.be/${content.source}`);
       setThumbImg(`https://img.youtube.com/vi/${content.source}/0.jpg`);
     } else {
+      const cacheImg = queryClient.getQueryData(['thumbnail', content.id]);
       setUrl(content.source);
+      setThumbImg(cacheImg);
     }
-  }, [content]);
+    return () => {
+      setThumbImg('');
+    };
+  }, [content.id]);
 
   // 썸네일 가져오는 함수 (queryFn)
   const getMetaData = async (url: string) => {
+    // console.log(url);
     const data = await useGetMetaData(url);
+    // console.log(data);
     return data?.image;
   };
 
-  if (content.type === 'ARTICLE') {
-    // 리액트 쿼리로 썸네일 가져오기
-    const { data: thumbImg } = useQuery({
-      queryKey: ['thumbnail', content.id],
-      queryFn: () => getMetaData(content.source),
-      staleTime: 1000 * 60 * 30,
-      onSuccess: (image) => setThumbImg(image),
-    });
-  }
+  // 리액트 쿼리로 썸네일 가져오기
+  const { data } = useQuery({
+    queryKey: ['thumbnail', content.id],
+    queryFn: () => getMetaData(content.source),
+    staleTime: 1000 * 60 * 30,
+    cacheTime: 1000 * 60 * 60,
+    enabled: content.type === 'ARTICLE',
+    onSuccess: (image) => setThumbImg(image),
+  });
 
   // 날짜 포맷
   const stringToDate = (date: string) => {

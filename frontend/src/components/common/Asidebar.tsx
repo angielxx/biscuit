@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { isStartModalState } from '../../recoils/Start/Atoms';
-import { isLoginState } from '../../recoils/Start/Atoms';
+import { isNameState, isStartModalState } from '../../recoils/Start/Atoms';
+import { isMemberState } from '../../recoils/Start/Atoms';
 
 // components
 import BigCategory from './BigCategory';
@@ -56,7 +56,8 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
   const navigate = useNavigate();
 
   // 유저의 로그인 여부
-  const [isLogin, setIsLogin] = useRecoilState(isLoginState);
+  const [isMember, setIsMember] = useRecoilState(isMemberState);
+  const [isName, setIsName] = useRecoilState(isNameState);
 
   const { data, isLoading } = useQuery(
     ['get_categories'],
@@ -83,8 +84,8 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
         />
       </Closeicon>
 
-      {isLogin 
-        ? <AsideProfile />
+      {isMember
+        ? <AsideProfile isName={isName} />
         : <AsideLogin onClick={startModal} />
       }
 

@@ -1,5 +1,6 @@
 import tw from "twin.macro";
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Contributions from "../components/Dashboard/Contributions";
 import Graph from "../components/Dashboard/Graph";
 import Point from "../components/Dashboard/Point";
@@ -19,7 +20,6 @@ const Logo = tw.img`w-6 h-6`;
 const Setting = ({ category }: { category: string }) => {
   const imgSrc = `src/assets/icons/${category}.svg`;
   const [isExists, setIsExists] = useState(false);
-
   function checkLocalImgFileExists(imgSrc: string) {
     let img = new Image();
     img.src = imgSrc;
@@ -39,6 +39,8 @@ const Setting = ({ category }: { category: string }) => {
 
 
 export default function MyPage() {
+  const navigate = useNavigate();
+
   return (
     <HomeContainer>
       <MyInfoContainer>
@@ -47,7 +49,7 @@ export default function MyPage() {
             <Title>비스킷님의 정보</Title>
             {/* <Span>사용자 정보에 맞는 컨텐츠를 제공해드려요.</Span> */}
           </DashboardHeader>
-          <SettingContainer onClick={() => console.log("클릭")}>
+          <SettingContainer onClick={() => navigate('/editProfile')}>
             <Setting category="setting"/>
           </SettingContainer>
         </HeaderContainer>

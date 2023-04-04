@@ -7,6 +7,9 @@ import tw, { styled, css, TwStyle } from 'twin.macro';
 
 // icons
 import Close from '../../../assets/icons/close.svg';
+import seed from '../../../assets/image/seed.gif';
+
+// component
 import ContentCardItem from '../ContentCardItem';
 import QuizItem from './QuizItem';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -68,7 +71,7 @@ interface Quiz {
 // Main component
 const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   // 페이지 (0:피드백, 1:퀴즈, 2:결과)
-  const [page, setPage] = useState<number>(0);
+  const [page, setPage] = useState<number>(2);
   // 방금 본 컨텐츠
   const [recentContent, setRecentContent] = useRecoilState(recentContentState);
   // 퀴즈
@@ -153,8 +156,13 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
 
   return (
     <div className="flex flex-col gap-4 w-full">
-      <h3 className="text-h3 text-primary">방금 본 컨텐츠</h3>
-      {recentContent && <ContentCardItem content={recentContent} />}
+      {recentContent && page !== 2 && (
+        <>
+          <h3 className="text-h3 text-primary">방금 본 컨텐츠</h3>
+          <ContentCardItem content={recentContent} />
+        </>
+      )}
+      {page === 2 && <img src={seed} alt="" />}
       <DivideLine />
 
       <Container>
@@ -167,7 +175,7 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
         )}
 
         {/* 퀴즈 결과 */}
-        {page === 2 && <QuizResultPage />}
+        {page === 2 && <QuizResultPage quizzes={quizzes} />}
       </Container>
     </div>
   );
