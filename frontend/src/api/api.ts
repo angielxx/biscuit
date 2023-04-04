@@ -16,11 +16,11 @@ interface content {
 
 // 카테고리별 컨텐츠 목록 조회
 export const get_category_contents = async (
-  categoryName: string = '',
-  option: string = 'recent', // "recent", "hit"
-  type: string = 'all', // "all", "article", "video"
-  size: number = 20,
-  lastContentId: number = 999,
+  categoryName: string,
+  option: string, // "recent", "hit"
+  type: string, // "all", "article", "video"
+  size: number,
+  lastContentId: number,
   from?: number | null,
   to?: number | null
 ): Promise<
@@ -31,7 +31,7 @@ export const get_category_contents = async (
     }
   | undefined
 > => {
-  console.log(categoryName, option, type, size, lastContentId, from, to);
+  // console.log(categoryName, option, type, size, lastContentId, from, to);
   const { data } = await baseInstance.get(
     requests.GET_CATEGORY_CONTENTS(
       categoryName,
@@ -45,9 +45,9 @@ export const get_category_contents = async (
   );
   const { last: isLast } = data.metaData;
   const contentList = data.results;
-  console.log('contentList :', contentList);
+  console.log('data :', data);
   const nextLastContentId = contentList[contentList.length - 1]?.id;
-
+  // console.log('isLast :', isLast);
   return {
     contentList,
     nextLastContentId,
