@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -68,11 +69,14 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
             throw new MemberNotFoundException("정상적으로 가입되지 않은 회원입니다.");
         }
         else if("ROLE_NEWBIE".equals(member.getRole())) {
-            log.info("redirect to onboarding");
-            getRedirectStrategy().sendRedirect(request, response, clientUrl + "/onboarding");
+            String targetUrl = UriComponentsBuilder.fromUriString("/signin")
+                    .queryParam("is-noob", true)
+                    .build().toUriString();
+            log.info("this is newbie");
+            getRedirectStrategy().sendRedirect(request, response, targetUrl);
         } else{
-            log.info("redirect to home");
-            getRedirectStrategy().sendRedirect(request, response, clientUrl + "/");
+            getRedirectStrategy().sendRedirect(request, response, clientUrl + "/signin");
+            log.info("this is oldie");
         }
     }
 

@@ -43,10 +43,12 @@ public class MemberAuthServiceImpl implements MemberAuthService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        // OAuth2 서비스 제공자 구분
+        String provider = userRequest.getClientRegistration().getRegistrationId();
+
+        // OAuth2 계정 정보 가져오기
         DefaultOAuth2UserService oAuth2UserService = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
-
-        String provider = userRequest.getClientRegistration().getRegistrationId();
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
         Map<String, Object> attributes = oAuth2User.getAttributes();
         OAuthAttributes oAuthAttributes = OAuthAttributes.of(provider, userNameAttributeName, attributes);
@@ -54,6 +56,8 @@ public class MemberAuthServiceImpl implements MemberAuthService {
 
         Member member = saveOrUpdate(provider, oAuthAttributes.getOAuth2UserInfo());
         log.debug("member: {}", member.toString());
+        
+        // TODO CustonOAuth2User으로 바꿔서 쿼리 한번 덜 날리게 리팩토링
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(member.getRole().toString())),
                 oAuthAttributes.getOAuth2UserInfo().getAttributes(),

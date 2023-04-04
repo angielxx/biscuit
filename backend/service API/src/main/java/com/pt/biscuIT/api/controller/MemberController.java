@@ -33,4 +33,5 @@ public class MemberController {
         memberService.update(member);
         return ResponseEntity.ok().build();
     }
+
 }
