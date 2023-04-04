@@ -41,7 +41,7 @@ export default function Routers() {
         <Route path="/editProfile" element={<EditProfile />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/onboarding" element={<OnBoarding />} />
-        <Route path="/login/oauth2/code/google" element={<GoogleLogin />} />
+        <Route path="/signin" element={<GoogleLogin />} />
       </Routes>
     </div>
   );

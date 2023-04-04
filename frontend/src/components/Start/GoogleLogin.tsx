@@ -1,9 +1,23 @@
-const GoogleLogin = () => {
-  const urlParams = new URL(location.href).searchParams;
-  const authorizationCode = urlParams.get('code');
+import { getCookie, setCookie } from "typescript-cookie";
+import { isNoobState } from "../../recoils/Start/Atoms";
+import { useRecoilState } from "recoil";
+import { useNavigate } from "react-router-dom";
 
-  console.log(authorizationCode);
-  // 백엔드로 인가 코드 보내기
+const GoogleLogin = () => {
+  const navigate = useNavigate();
+  const urlParams = new URL(location.href).searchParams;
+  const isNoob = urlParams.get('is-noob');
+
+  const [noob, setNoob] = useRecoilState(isNoobState);
+
+  // 뉴비가 아니면
+  if (!isNoob) {
+    navigate(`/`);
+    setNoob(false);
+  } else {
+    // 뉴비이면
+    navigate(`/onboarding`);
+  }
 
   return (
     <></>
