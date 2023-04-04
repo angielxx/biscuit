@@ -6,14 +6,16 @@ const SocialLogin = () => {
   const navigate = useNavigate();
   const urlParams = new URL(location.href).searchParams;
   const isNoob = urlParams.get('is-noob');
+  const nickname = urlParams.get('nickname');
 
   const [noob, setNoob] = useRecoilState(isNoobState);
   const [isName, setIsName] = useRecoilState(isNameState);
 
   // 뉴비가 아니면
-  if (!isNoob) {
+  if (isNoob === "false" && nickname) {
     navigate(`/`);
     setNoob(false);
+    setIsName(nickname);
   } else {
     // 뉴비이면
     navigate(`/onboarding`);
