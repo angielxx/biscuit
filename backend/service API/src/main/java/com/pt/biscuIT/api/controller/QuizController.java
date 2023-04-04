@@ -25,7 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api")
 public class QuizController {
 	private final QuizService quizService;
-	private final MemberAuthService memberAuthService;
 
 	@GetMapping("{contentId}/quizzes")
 	public ProvideQuizDto provideQuiz(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long contentId) {
