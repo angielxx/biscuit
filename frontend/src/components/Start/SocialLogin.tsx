@@ -11,8 +11,11 @@ const SocialLogin = () => {
   const [noob, setNoob] = useRecoilState(isNoobState);
   const [isName, setIsName] = useRecoilState(isNameState);
 
+  console.log("login")
+
   // 뉴비가 아니면
   if (isNoob === "false" && nickname) {
+    console.log("login 안됨");
     navigate(`/`);
     setNoob(false);
     setIsName(nickname);
