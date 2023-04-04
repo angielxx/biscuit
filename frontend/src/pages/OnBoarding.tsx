@@ -15,7 +15,7 @@ const OnBoarding = () => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState({
     nickname: "",
-    period: "",
+    period: 0,
     job: "",
     interests: [""],
   });
@@ -62,9 +62,37 @@ const OnBoarding = () => {
   const [jobSelected, setJobSelected] = useState<string>("");
   const [periodSelected, setPeriodSelected] = useState<string>("");
 
+  type YearsListType = {
+    [index: string]: number;
+    "1년 미만": number;
+    "1년차": number;
+    "2년차": number;
+    "3년차": number;
+    "4년차": number;
+    "5년차": number;
+    "6년차": number;
+    "7년차": number;
+    "8년차": number;
+    "9년차": number;
+    "10년 이상": number;
+  }
+  const yearsList: YearsListType = {
+    "1년 미만": 0,
+    "1년차": 1, 
+    "2년차": 2, 
+    "3년차": 3,
+    "4년차": 4,
+    "5년차": 5, 
+    "6년차": 6, 
+    "7년차": 7,
+    "8년차": 8,
+    "9년차": 9,
+    "10년 이상": 10,
+  }
+
   const aboutUser = () => {
     if (jobSelected !== "" && periodSelected !== "") {
-      setUserData({...userData, job: jobSelected, period: periodSelected})
+      setUserData({...userData, job: jobSelected, period: yearsList[periodSelected]})
       setPage(2);
       console.log(jobSelected, periodSelected);
     } else {

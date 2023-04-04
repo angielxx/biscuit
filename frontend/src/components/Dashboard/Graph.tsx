@@ -3,23 +3,20 @@ import GraphContent from "./GraphContent";
 
 const GraphContainer = tw.div`w-full h-fit`;
 
-interface DataProps {
+type Graph = {
   category: string;
   count: number;
 }
 
-export default function Graph() {
-  const tmpData: DataProps[] = [
-    { category: "React", count: 101 },
-    { category: "Javascript", count: 85 },
-    { category: "Typescript", count: 70 },
-    { category: "Vue", count: 55 },
-    { category: "Spring", count: 40 },
-  ]
+interface GraphProps {
+  graphs: Graph[]
+}
+
+export default function Graph({graphs}: GraphProps) {
 
   return (
     <GraphContainer>
-      {tmpData?.map((data, idx) => {
+      {graphs?.map((data, idx) => {
         return (
           <GraphContent key={idx} data={data}/>
         )
