@@ -12,10 +12,11 @@ public enum ErrorCode {
 
     // 404 NOT_FOUND 존재하지 않는 리소스 접근
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다."),
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 유저입니다."),
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 유저입니다."),
 
     // 200 OK
     CONTENT_NOT_FOUND(HttpStatus.OK, "컨텐츠가 존재하지 않습니다."),
+    MEMBER_PROFILE_NOT_SETTING(HttpStatus.OK, "멤버 프로필을 설정해줭"),
 
     // 409 CONFLICT 이미 존재하는 리소스 접근
     DUPLICATE_CATEGORY(HttpStatus.CONFLICT, "이미 존재하는 카테고리입니다."),
