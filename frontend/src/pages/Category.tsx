@@ -10,6 +10,7 @@ import Loading from '../components/common/Loading';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { homeFilterBtnState, homeFilterTimeState } from '../recoils/Home/Atoms';
 import FilterBar from '../components/common/FilterBar/FilterBar';
+import FilterBar2 from '../components/common/FilterBar/FilterBar2';
 
 const CategoryContainer = styled.div`
   ${tw`flex flex-col px-4 gap-10 overflow-scroll pt-4`}
@@ -56,8 +57,7 @@ const Category = () => {
   const [type, setType] = useState<'all' | 'article' | 'video'>('all');
   // 데이터 사이즈
   const [size, setSize] = useState<number>(20);
-  // 시간 필터
-  const timeFilter = useRecoilValue(homeFilterTimeState);
+
   const [timeFilterIdx, setTimeFilterIdx] = useState<number>(6);
 
   // 저장된 필터값
@@ -65,30 +65,43 @@ const Category = () => {
     useRecoilState(homeFilterBtnState);
   const [filterTimeState, setFilterTimeState] =
     useRecoilState(homeFilterTimeState);
+  const timeFilter = useRecoilValue(homeFilterTimeState);
+  const typeFilter = useRecoilValue(homeFilterBtnState);
 
   // url에 담긴 카테고리 이름
   const { name } = useParams();
   useEffect(() => {
     // url에서 카테고리 이름 가져오기
     if (name) setCategoryName(name);
+
     // Recoil에서 타임필터 가져오기
     timeFilter.forEach((time: filterItem) => {
       if (time.status === true) setTimeFilterIdx(time.id);
     });
-  }, [name, timeFilter]);
+
+    // 타입 필터 가져오기
+    if (!typeFilter[0] && !typeFilter[1]) setType('all');
+    else if (typeFilter[0]) setType('video');
+    else if (typeFilter[1]) setType('article');
+  }, [name, timeFilter, typeFilter]);
 
   // 스크롤 옵져버
   const { ref, inView } = useInView();
+
   // 다음 페이지 로딩
   useEffect(() => {
-    if (inView && !isFetchingNextPage && fetchNextPage) fetchNextPage();
+    console.log('hasNextPage :', hasNextPage);
+    if (inView) {
+      fetchNextPage();
+      console.log('view', inView);
+    }
   }, [inView]);
 
   // 무한스크롤 데이터 패칭
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ['get_catetory_contents', categoryName],
-      enabled: !!categoryName,
+      queryKey: ['get_catetory_contents', categoryName, type],
+      enabled: categoryName !== '',
       queryFn: ({ pageParam = 999999 }) =>
         get_category_contents(
           categoryName,
@@ -102,18 +115,25 @@ const Category = () => {
           // timeFilterArr[timeFilterIdx].start,
           // timeFilterArr[timeFilterIdx].end
         ),
-      getNextPageParam: (lastPage) =>
-        lastPage?.isLast ? undefined : lastPage?.nextLastContentId,
+      getNextPageParam: (lastPage) => {
+        console.log('lastPage :', lastPage);
+        console.log(
+          'return :',
+          lastPage?.isLast ? undefined : lastPage?.nextLastContentId
+        );
+        return lastPage?.isLast ? undefined : lastPage?.nextLastContentId;
+      },
+      // staleTime: 1000 * 60 * 30,
+      // cacheTime: 1000 * 60 * 35,
     });
 
   return (
     <div className="mt-20">
       <SmallCategory title={categoryName} selectList={[]} />
-      <FilterBar
+      <FilterBar2
         filterBtnState={filterBtnState}
         setFilterBtnState={setFilterBtnState}
-        filterTimeState={filterTimeState}
-        setFilterTimeState={setFilterTimeState}
+        setOption={setOption}
       />
       <CategoryContainer>
         {data?.pages.map((page, index: number) => (
