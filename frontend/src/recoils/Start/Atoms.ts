@@ -10,7 +10,13 @@ const isNoobState = atom({
   default: true,
 })
 
+const isNameState = atom({
+  key: 'isNameState',
+  default: "",
+})
+
 export { 
   isStartModalState,
   isNoobState,
+  isNameState
 };

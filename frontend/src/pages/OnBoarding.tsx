@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { useRecoilState } from "recoil";
@@ -9,7 +9,7 @@ import AboutUser from "../components/OnBoarding/AboutUser";
 import AboutInterest from "../components/OnBoarding/AboutInterest";
 import { post_about_user } from "../api/login";
 
-import { isNoobState } from "../recoils/Start/Atoms";
+import { isNameState, isNoobState } from "../recoils/Start/Atoms";
 
 const OnBoarding = () => {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ const OnBoarding = () => {
   }
 
   // 0. 닉네임 모달
-  const [isName, setIsName] = useState<string>("");
+  const [isName, setIsName] = useRecoilState(isNameState);
   const [isCount, setIsCount] = useState<number>(0);
 
   const isChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,7 +96,6 @@ const OnBoarding = () => {
   const isSend = () => {
     setUserData({...userData, interests: selectList});
     userDataPost(userData);
-    console.log(selectList);
     setNoob(false);
 
     // 홈으로 이동
