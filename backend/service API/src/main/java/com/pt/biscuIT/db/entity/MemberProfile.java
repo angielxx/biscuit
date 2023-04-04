@@ -1,5 +1,8 @@
 package com.pt.biscuIT.db.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 
 import javax.persistence.Entity;
@@ -10,6 +13,8 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
 @Entity
+@Getter
+@Setter
 public class MemberProfile implements Serializable {
 	@Id
 	private Long memberId;

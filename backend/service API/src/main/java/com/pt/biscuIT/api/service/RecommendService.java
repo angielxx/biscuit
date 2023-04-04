@@ -3,11 +3,13 @@ package com.pt.biscuIT.api.service;
 import com.pt.biscuIT.api.dto.content.ContentInfoDto;
 import com.pt.biscuIT.api.dto.content.ContentInfoListCategoryDto;
 import com.pt.biscuIT.db.entity.Content;
+import com.pt.biscuIT.db.entity.Member;
 import com.pt.biscuIT.db.entity.Type;
 import com.pt.biscuIT.db.repository.CategoryRepositorySupport;
 import com.pt.biscuIT.db.repository.ContentRepository;
 import com.pt.biscuIT.db.repository.ContentRepositorySupport;
 import com.pt.biscuIT.db.repository.MemberRepositorySupport;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,13 +27,12 @@ import java.util.List;
  */
 @Slf4j
 @Service("recommendService")
+@RequiredArgsConstructor
 public class RecommendService {
-    @Autowired
-    ContentRepository contentRepository;
-    @Autowired
-    ContentRepositorySupport contentRepositorySupport;
-    @Autowired
-    CategoryRepositorySupport categoryRepositorySupport;
+    private final ContentRepository contentRepository;
+    private final ContentRepositorySupport contentRepositorySupport;
+    private final CategoryRepositorySupport categoryRepositorySupport;
+    private final MemberRepositorySupport memberRepositorySupport;
 
     public Page<ContentInfoDto> getRandomContent(Pageable pageable, int from, int to, Type type) {
         Page<Content> contentList = contentRepositorySupport.findContentByRandom(pageable, from, to, type);
@@ -81,10 +82,15 @@ public class RecommendService {
         return new PageImpl<>(contentCategoryList, pageable, contentCategoryList.size());
     }
 
-    public Page<ContentInfoDto> getBookmarkedContent(Pageable pageable, int from, int to, Type type, Long id) {
-        Page<Content> contentList = contentRepositorySupport.findBookmarkedContent(pageable, from, to, type, id);
-        Page<ContentInfoDto> res = contentList.map(ContentInfoDto::new);
+    public Page<ContentInfoDto> getPersonalContent(String option, Pageable pageable, int from, int to, Type type, Member member) {
+        Page<Content> contentList = new PageImpl<>(new ArrayList<>(), pageable, 0);
+        if("bookmarked".equals(option)) contentList = contentRepositorySupport.findBookmarkedContent(pageable, from, to, type, member.getId());
+        else if("similar".equals(option)) {
+            List<Long> memberIdList = memberRepositorySupport.findMemberIdBySimilarity(member);
+            contentList = contentRepositorySupport.findSimilarContent(pageable, from, to, type, memberIdList);
+        }
 
+        Page<ContentInfoDto> res = contentList.map(ContentInfoDto::new);
         return res;
     }
 }
