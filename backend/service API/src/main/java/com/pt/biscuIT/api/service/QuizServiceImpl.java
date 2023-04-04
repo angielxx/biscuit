@@ -37,11 +37,10 @@ public class QuizServiceImpl implements QuizService{
 		//컨텐츠에 해당하는 퀴즈 가져오기
 		List<Quiz> findQuizzes = quizRepository.findQuizByContent(content);
 		int quizzesSize = findQuizzes.size();
-		System.out.println("quizzesSize = " + quizzesSize);
 
 		//퀴즈 개수 중에 중복없는 난수 생성
 		int cnt = 3;
-		if(quizzesSize > 3) {
+		if(quizzesSize <= 3) {
 			cnt = quizzesSize;
 		}
 		int a[] = new int[cnt]; //퀴즈 뽑을 난수
@@ -53,39 +52,35 @@ public class QuizServiceImpl implements QuizService{
 			}while(exists(a, index));
 			a[i] = index;
 		}
-		for(int i=0; i<cnt; i++) {
-			System.out.println(a[i]);
-		}
 
 		//생성한 난수에 해당하는 퀴즈 반환
 		List<ProvideQuizDetailDto> quizzes = new ArrayList<>(); //반환용 quiz
 		for(int i=0; i<cnt; i++) {
 			Quiz quiz = findQuizzes.get(a[i]);
-			System.out.println("quiz.getQuestion() = " + quiz.getQuestion());
 			//보기 배열 만들기
 			String c = "";
 			String[] choice = new String[3];
 			int idx = 0;
-			String[] multipleChoice = quiz.getMultipleChoice().split("//");
-			System.out.println("문제의 보기");
-			for(int j=0; j<multipleChoice.length; j++) {
-				System.out.print(multipleChoice[j] + " ");
+			choice = quiz.getMultipleChoice().split("//");
+			
+			//답안 만들기
+			int answer = -1;
+			String ans = quiz.getAnswer();
+			for(int j=0; j<choice.length; j++) {
+				if(ans.contains(choice[j]) || ans.equals(choice[j])) {
+					answer = j;
+					break;
+				}
 			}
-			System.out.println();
 
-			//답안 배열 만들기
-			List<Integer> ans = new ArrayList<>();
-			for(int j=0; j<quiz.getAnswer().length(); j++) {
-				ans.add((quiz.getAnswer().charAt(j) - 'a') +1);
-			}
+			//DTO 생성
 			ProvideQuizDetailDto dto = ProvideQuizDetailDto.builder()
 				.quizId(quiz.getId())
 				.question(quiz.getQuestion())
 				.multiple_choice(choice)
-				.answer(ans.toArray(new Integer[ans.size()]))
+				.answer(answer)
 				.build();
 			quizzes.add(dto);
-			System.out.println("dto.toString() = " + dto.toString());
 		}
 		responseDto.setQuizzes(quizzes);
 		return responseDto;
