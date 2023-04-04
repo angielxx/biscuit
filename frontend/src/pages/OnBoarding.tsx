@@ -9,7 +9,7 @@ import AboutUser from "../components/OnBoarding/AboutUser";
 import AboutInterest from "../components/OnBoarding/AboutInterest";
 import { post_about_user } from "../api/login";
 
-import { isMemberState, isNameState } from "../recoils/Start/Atoms";
+import { isNoobState } from "../recoils/Start/Atoms";
 
 const OnBoarding = () => {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ const OnBoarding = () => {
   }
 
   // 0. 닉네임 모달
-  const [isName, setIsName] = useRecoilState(isNameState);
+  const [isName, setIsName] = useState<string>("");
   const [isCount, setIsCount] = useState<number>(0);
 
   const isChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,18 +86,18 @@ const OnBoarding = () => {
     }
   }
 
+  const [noob, setNoob] = useRecoilState(isNoobState);
+
   // userData 전달
   const { mutate: userDataPost } = useMutation({
     mutationFn: (userData: {}) => post_about_user(userData),
   });
 
-  const [isMember, setIsMember] = useRecoilState(isMemberState);
-
   const isSend = () => {
     setUserData({...userData, interests: selectList});
     userDataPost(userData);
     console.log(selectList);
-    setIsMember(true);
+    setNoob(false);
 
     // 홈으로 이동
     navigate(`/`);
