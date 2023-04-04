@@ -84,7 +84,7 @@ const Search = () => {
     useInfiniteQuery({
       queryKey: ['get_search', searchKey],
       enabled: !!searchKey,
-      queryFn: ({ pageParam = 999 }) =>
+      queryFn: ({ pageParam = 999999 }) =>
         get_search(searchKey, sort, time, pageParam, size),
       getNextPageParam: (lastPage) => {
         return lastPage?.isLast ? undefined : lastPage?.nextLastContentId;
