@@ -77,5 +77,9 @@ export const requests = {
 
   GET_DASHBOARD() {
     return `/api/members/dashboard`;
+  },
+
+  GET_MYINFO() {
+    return `/api/members`;
   }
 };

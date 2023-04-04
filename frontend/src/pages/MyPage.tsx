@@ -7,6 +7,7 @@ import Point from "../components/Dashboard/Point";
 import MyInfos from "../components/Dashboard/MyInfos";
 import { useQuery } from "@tanstack/react-query";
 import { get_dashboard } from "../api/dashboard";
+import { get_myInfo } from "../api/myInfo";
 
 const HomeContainer = tw.div`flex-col w-screen justify-center px-6 pt-4`;
 const MyInfoContainer = tw.div`pb-6 mb-6 border-b-2 border-dark-grey20`;
@@ -42,24 +43,28 @@ const Setting = ({ category }: { category: string }) => {
 
 export default function MyPage() {
   const navigate = useNavigate();
-  const { data } = useQuery({
+  const myInfoData = useQuery({
+    queryKey: ['get_myInfo'],
+    queryFn: () => get_myInfo(),
+  }).data;
+
+  const dashBoardData = useQuery({
     queryKey: ['get_dashboard'],
     queryFn: () => get_dashboard(),
-  })
+  }).data;
 
   return (
     <HomeContainer>
       <MyInfoContainer>
         <HeaderContainer>
           <DashboardHeader>
-            <Title>비스킷님의 정보</Title>
-            {/* <Span>사용자 정보에 맞는 컨텐츠를 제공해드려요.</Span> */}
+            {myInfoData && <Title>{myInfoData.nickname}님의 정보</Title>}
           </DashboardHeader>
           <SettingContainer onClick={() => navigate('/editProfile')}>
             <Setting category="setting"/>
           </SettingContainer>
         </HeaderContainer>
-        <MyInfos />
+        {myInfoData && <MyInfos myInfo={myInfoData}/>}
       </MyInfoContainer>
       <DashboardContainer>
         <HeaderContainer>
@@ -68,12 +73,12 @@ export default function MyPage() {
             <Span>퀴즈를 풀면 잔디가 자라나요.</Span>
           </DashboardHeader>
           <PointContainer>
-            {data && <Point point={data.point} />}
+            {dashBoardData && <Point point={dashBoardData.point} />}
           </PointContainer>
         </HeaderContainer>
-        {data && <Contributions histories={data.histories} />}
+        {dashBoardData && <Contributions histories={dashBoardData.histories} />}
         <Span>님이 비스킷에서 가장 많이 본 콘텐츠에요.</Span>
-        {data && <Graph graphs={data.graphs}/>}
+        {dashBoardData && <Graph graphs={dashBoardData.graphs}/>}
       </DashboardContainer>
     </HomeContainer>
   )

@@ -21,11 +21,22 @@ const Info = ({title, content}: InfoProps) => {
   )
 }
 
-export default function MyInfos() {
+type MyInfo = {
+  nickname: string,
+  job: string,
+	period: string,
+  interest: string[],
+}
+
+interface MyInfoContent {
+  myInfo: MyInfo;
+}
+
+export default function MyInfos({myInfo}: MyInfoContent) {
   return (
     <>
-      <Info title="직무" content="프론트엔드" />
-      <Info title="경력" content="10년 이상" />
+      <Info title="직무" content={myInfo.job} />
+      <Info title="경력" content={myInfo.period} />
       <Info title="관심사" content="React 등 10개" />
     </>
   )
