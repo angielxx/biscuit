@@ -28,8 +28,8 @@ import static com.pt.biscuIT.common.util.JwtTokenUtil.REFRESH_TOKEN;
 @Component
 public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    private String clientUrl = "http://localhost:5173";
-//    private String clientUrl = "https://j8a706.p.ssafy.io";
+//    private String clientUrl = "http://localhost:5173";
+    private String clientUrl = "https://j8a706.p.ssafy.io";
     MemberRefreshTokenRedisRepository memberRefreshTokenRedisRepository;
 //    private RequestCache requestCache = new HttpSessionRequestCache();
 
@@ -75,8 +75,11 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
             log.info("this is newbie");
             getRedirectStrategy().sendRedirect(request, response, targetUrl);
         } else{
-            getRedirectStrategy().sendRedirect(request, response, clientUrl + "/signin");
+            String targetUrl = UriComponentsBuilder.fromUriString("/signin")
+                    .queryParam("nickname", member.getNickname())
+                    .build().toUriString();
             log.info("this is oldie");
+            getRedirectStrategy().sendRedirect(request, response, targetUrl);
         }
     }
 
