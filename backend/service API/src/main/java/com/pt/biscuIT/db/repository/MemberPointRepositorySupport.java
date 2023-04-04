@@ -1,5 +1,6 @@
 package com.pt.biscuIT.db.repository;
 
+import com.pt.biscuIT.db.entity.Member;
 import com.pt.biscuIT.db.entity.QMemberPoint;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,9 @@ public class MemberPointRepositorySupport {
                                         .select(qMemberPoint.totalPoints)
                                         .from(qMemberPoint)
                                         .where(qMemberPoint.member.id.eq(memberId))
-                                        .fetchOne();
+                                        .orderBy(qMemberPoint.id.desc())
+                                        .fetchFirst();
         return point == null ? 0 : point;
     }
+
 }

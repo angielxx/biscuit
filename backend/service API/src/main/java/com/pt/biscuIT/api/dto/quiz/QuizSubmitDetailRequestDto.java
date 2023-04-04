@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
-public class QuizSubmitDto {
-	private Integer memberPoint;
+public class QuizSubmitDetailRequestDto {
+	private Long quizId;
+	private Boolean answer;
 }

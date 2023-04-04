@@ -5,14 +5,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-import com.pt.biscuIT.api.dto.quiz.ProvideQuizDetailDto;
-import com.pt.biscuIT.api.dto.quiz.ProvideQuizDto;
+import com.pt.biscuIT.api.dto.quiz.*;
+import com.pt.biscuIT.db.entity.*;
+import com.pt.biscuIT.db.repository.*;
 import org.springframework.stereotype.Service;
-
-import com.pt.biscuIT.db.entity.Content;
-import com.pt.biscuIT.db.entity.Quiz;
-import com.pt.biscuIT.db.repository.ContentRepository;
-import com.pt.biscuIT.db.repository.QuizRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +19,9 @@ import lombok.extern.slf4j.Slf4j;
 public class QuizServiceImpl implements QuizService{
 	private final QuizRepository quizRepository;
 	private final ContentRepository contentRepository;
+	private final MemberPointRepositorySupport memberPointRepositorySupport;
+	private final MemberSubmissionRepository memberSubmissionRepository;
+	private final MemberPointRepository memberPointRepository;
 
 	@Override
 	public ProvideQuizDto provideQuiz(Long contentId) {
@@ -84,6 +83,40 @@ public class QuizServiceImpl implements QuizService{
 		}
 		responseDto.setQuizzes(quizzes);
 		return responseDto;
+	}
+
+	@Override
+	public QuizSubmitDto submitQuiz(Member member, Long contentId, QuizSubmitRequestDto requestDto) {
+		//사용자의 원래 point
+		Integer pointByMemberId = memberPointRepositorySupport.findPointByMemberId(member.getId());
+
+		List<QuizSubmitDetailRequestDto> answers = requestDto.getAnswers();
+
+		//사용자의 풀이내역 저장 + 갱신될 point 정보 확인
+		int upPoint = 0;
+		for(int i=0; i<answers.size(); i++) {
+			if(answers.get(i).getAnswer()) {
+				upPoint++;
+			}
+			Quiz quiz = quizRepository.findById(answers.get(i).getQuizId()).get();
+
+			memberSubmissionRepository.save(MemberSubmission.builder()
+							.member(member)
+							.quiz(quiz)
+							.isCorrect(answers.get(i).getAnswer())
+							.build());
+		}
+
+		//사용자의 갱신된 point정보 저장
+		if(upPoint > 0) {
+			memberPointRepository.save(MemberPoint.builder()
+					.changedPoints(upPoint)
+					.pointTrigger(PointTrigger.QUIZ)
+					.totalPoints(pointByMemberId+upPoint)
+					.member(member)
+					.build());
+		}
+		return QuizSubmitDto.builder().memberPoint(pointByMemberId).build();
 	}
 
 	private static boolean exists(int a[], int index) {
