@@ -42,7 +42,7 @@ public class MemberController {
 
     @GetMapping("/dashboard")
     public ResponseEntity<? extends BaseResponseBody> getDashBoardByMember(String identifier) {
-        Member member = memberService.findMemberByIdentifier(identifier);
+        Member member = memberService.findByIdentifier(identifier);
 //        if(member == null) throw new BiscuitException(ErrorCode.USER_NOT_FOUND);
 
         List<MemberHistoryDto> histories = memberService.getHistoriesByMember(member);
