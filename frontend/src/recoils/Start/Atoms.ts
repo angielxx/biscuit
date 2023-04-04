@@ -7,7 +7,7 @@ const isStartModalState = atom({
 
 const isNoobState = atom({
   key: 'isNoobState',
-  default: false,
+  default: true,
 })
 
 export { 
