@@ -5,6 +5,8 @@ import com.pt.biscuIT.common.exception.BiscuitException;
 import com.pt.biscuIT.common.exception.ErrorCode;
 import com.pt.biscuIT.db.entity.Content;
 import com.pt.biscuIT.db.entity.ContentView;
+import com.pt.biscuIT.db.entity.Member;
+import com.pt.biscuIT.db.entity.MemberHistory;
 import com.pt.biscuIT.db.entity.Type;
 import com.pt.biscuIT.db.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service("contentService")
@@ -22,6 +25,8 @@ public class ContentService {
     private final ContentRepositorySupport contentRepositorySupport;
     private final ContentViewRepositorySupport contentViewRepositorySupport;
     private final MemberBookmarkRepositorySupport memberBookmarkRepositorySupport;
+    private final MemberHistoryRepository memberHistoryRepository;
+
     public Page<ContentInfoDto> getCategoryContent (String category, Pageable pageable, Long lastContentId, int from, int to, String condition, Type type) {
         Page<Content> contentList = null;
         if("recent".equals(condition)) {
@@ -38,12 +43,28 @@ public class ContentService {
         return contentList.map(ContentInfoDto::new);
     }
 
-    public void getContentDetail(Long contentId) {
+    public void getContentDetail(Member member, Long contentId) {
         Content content = contentRepository.findById(contentId)
             .orElseThrow(() -> new BiscuitException(ErrorCode.CONTENT_NOT_FOUND));
-        content.setHit(content.getHit() + 1);
-        contentRepository.save(content);
+        contentRepository.save(Content.builder()
+                .id(content.getId())
+                .title(content.getTitle())
+                .source(content.getSource())
+                .writer(content.getWriter())
+                .channel(content.getChannel())
+                .createdDate(content.getCreatedDate())
+                .hit(content.getHit() + 1)
+                .timeCost(content.getTimeCost())
+                .type(content.getType())
+                .build());
 
+        if(member != null) {
+            memberHistoryRepository.save(MemberHistory.builder()
+                .member(member)
+                .content(content)
+                .createdDate(LocalDateTime.now())
+                .build());
+        }
     }
 
     public void setProperty(List<ContentInfoDto> contentList, Long memberId) {
