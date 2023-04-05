@@ -1,5 +1,5 @@
 import tw from "twin.macro";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Contributions from "../components/Dashboard/Contributions";
 import Graph from "../components/Dashboard/Graph";
@@ -42,19 +42,59 @@ const Setting = ({ category }: { category: string }) => {
     : <Logo />;
 };
 
+type History = {
+  date: string;
+  count: number;
+}
+
+type Graph = {
+  category: string;
+  count: number;
+}
+
+interface DashboardContent {
+  status: number;
+  message: string;
+  histories: History[];
+  graphs: Graph[];
+  point: number;
+}
+
+interface MyInfoContent {
+  nickname: string,
+  job: string,
+	period: string,
+  interest: string[],
+}
+
 export default function MyPage() {
   const functionToggle = useRecoilValue(functionToggleState);
 
   const navigate = useNavigate();
-  const myInfoData = useQuery({
+  const myInfoQuery = useQuery({
     queryKey: ['get_myInfo'],
     queryFn: () => get_myInfo(),
   }).data;
 
-  const dashBoardData = useQuery({
+  const dashBoardQuery = useQuery({
     queryKey: ['get_dashboard'],
     queryFn: () => get_dashboard(),
   }).data;
+
+  const [myInfoData, setMyInfoData] = useState<MyInfoContent>();
+  const [dashBoardData, setDashBoardData] = useState<DashboardContent>();
+
+  useEffect(() => {
+    if (myInfoQuery !== undefined && myInfoQuery) {
+      setMyInfoData(myInfoQuery);
+    }
+  }, [myInfoQuery]);
+
+  useEffect(() => {
+    if (dashBoardData !== undefined && dashBoardQuery) {
+      setDashBoardData(dashBoardQuery);
+    }
+  }, [dashBoardQuery]);
 
   return (
     <HomeContainer>
