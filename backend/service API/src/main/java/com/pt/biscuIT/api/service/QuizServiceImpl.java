@@ -24,7 +24,7 @@ public class QuizServiceImpl implements QuizService{
 	private final MemberPointRepository memberPointRepository;
 
 	@Override
-	public ProvideQuizDto provideQuiz(Long contentId) {
+	public ProvideQuizDto provideQuiz(Member member, Long contentId) {
 		ProvideQuizDto responseDto = new ProvideQuizDto();
 		//컨텐츠 정보 가져오기
 		Content content = null;
