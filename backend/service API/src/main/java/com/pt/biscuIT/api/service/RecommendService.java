@@ -80,7 +80,6 @@ public class RecommendService {
 
             contentCategoryList.add(content);
         }));
-
         return new PageImpl<>(contentCategoryList, pageable, contentCategoryList.size());
     }
 
