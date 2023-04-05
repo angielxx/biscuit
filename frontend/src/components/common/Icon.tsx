@@ -5,7 +5,7 @@ const Logo = tw.img`w-9 h-9 mr-2`;
 
 const Icon = ({ category }: { category: string }) => {
   const [imgSrc, setImgSrc] = useState(
-    `src/assets/icons/category/${category}.svg`
+    `public/assets/icons/category/${category}.svg`
   );
   const [isExists, setIsExists] = useState(false);
 
