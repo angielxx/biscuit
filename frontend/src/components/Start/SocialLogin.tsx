@@ -22,7 +22,7 @@ const SocialLogin = () => {
       console.log("login 안됨");
       navigate(`/`);
       setNoob(false);
-      // setIsName(nickname);
+      setIsName(nickname);
     } else {
       console.log("온보딩");
       // 뉴비이면
