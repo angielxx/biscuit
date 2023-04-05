@@ -90,10 +90,6 @@ public class MemberAuthServiceImpl implements MemberAuthService {
         } else {
             log.info("findMember.isNOTPresent: 회원가입한 적 없는 회원입니다.");
             member = memberRepository.save(oAuthMember);
-//            memberBookmarkRepository.save(MemberBookmark.builder()
-//                    .member(member)
-//                    .build());
-//            memberHistoryRepository.save(MemberHistory.builder()
             memberProfileRepository.save(MemberProfile.builder()
                     .member(member)
                     .build());

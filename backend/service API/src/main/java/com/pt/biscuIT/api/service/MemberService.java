@@ -26,5 +26,5 @@ public interface MemberService {
 
     void updateMemberInfo(MemberInfoDto memberInfoDto);
 
-    MemberProfile updateProfile(MemberProfile profile);
+    void updateProfile(MemberProfile profile);
 }

@@ -75,9 +75,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public MemberProfile updateProfile(MemberProfile profile) {
+    public void updateProfile(MemberProfile profile) {
         if (memberProfilerepository.findById(profile.getMemberId()).isPresent()) {
-            return memberProfilerepository.save(profile);
+            memberProfilerepository.save(profile);
         }else {
             throw new MemberNotFoundException("해당 회원이 존재하지 않습니다.");
         }
