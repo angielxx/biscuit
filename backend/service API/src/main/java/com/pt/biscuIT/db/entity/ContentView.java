@@ -1,7 +1,6 @@
 package com.pt.biscuIT.db.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import lombok.Getter;
@@ -14,7 +13,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ContentView implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
