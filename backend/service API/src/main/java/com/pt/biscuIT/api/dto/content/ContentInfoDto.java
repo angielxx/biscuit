@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.util.HtmlUtils;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -34,7 +35,7 @@ public class ContentInfoDto {
 
     public ContentInfoDto(Content content) {
         this.id = content.getId();
-        this.title = content.getTitle();
+        this.title = HtmlUtils.htmlUnescape(content.getTitle());
         this.source = content.getSource();
         this.creditBy = content.getChannel();
         this.createdDate = content.getCreatedDate();

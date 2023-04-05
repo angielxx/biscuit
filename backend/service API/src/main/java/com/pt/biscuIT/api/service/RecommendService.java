@@ -33,6 +33,7 @@ public class RecommendService {
     private final ContentRepositorySupport contentRepositorySupport;
     private final CategoryRepositorySupport categoryRepositorySupport;
     private final MemberRepositorySupport memberRepositorySupport;
+    private final ContentService contentService;
 
     public Page<ContentInfoDto> getRandomContent(Pageable pageable, int from, int to, Type type) {
         Page<Content> contentList = contentRepositorySupport.findContentByRandom(pageable, from, to, type);
@@ -71,10 +72,11 @@ public class RecommendService {
             List<Long> categoryIds = new ArrayList<>();
             categoryIds.add(categoryId);
             String category = categoryRepositorySupport.findSubNameByCategoryId(categoryId);
-            Page<Content> contentList = contentRepositorySupport.findRecentContentByCategory(categoryIds, pageable, Long.MAX_VALUE, from, to, type);
+            Page<ContentInfoDto> contentList = contentRepositorySupport.findRecentContentByCategory(categoryIds, pageable, Long.MAX_VALUE, from, to, type).map(ContentInfoDto::new);
 
+            contentService.setProperty(contentList.getContent(), memberId);
             content.setCategory(category);
-            content.setItems(contentList.map(ContentInfoDto::new).getContent());
+            content.setItems(contentList.getContent());
 
             contentCategoryList.add(content);
         }));
