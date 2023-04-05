@@ -65,8 +65,10 @@ export default function Contributions({histories}: ContributionsProps) {
       const dateDiff = (todayDate.getTime() - historyDate) / (1000 * 60 * 60 * 24)
       if(dateDiff >= 7 * 16) return;
       tmpData[15 - Math.ceil(dateDiff / 7)][dateDiff % 7] = history.count;
-      setDashBoardState(tmpData);
-    })
+    });
+    setDashBoardState(tmpData);
+    console.log("histories:", histories);
+    console.log(tmpData);
   }, [histories])
   
   return (
