@@ -135,11 +135,11 @@ const OnBoarding = () => {
   return (
     <>
       {page === 0
-        ? <Modal content={<Nickname isClicked={nickname} isChange={isChange} isName={isName} isCount={isCount} />} onClose={isClose} />
+        ? <Modal content={<Nickname isClicked={nickname} isChange={isChange} isName={isName} isCount={isCount} />} onClose={isClose} isOnboarding={true} />
         : page === 1
-          ? <Modal content={<AboutUser isClicked={aboutUser} jobSelected={jobSelected} setJobSelected={setJobSelected} periodSelected={periodSelected} setPeriodSelected={setPeriodSelected} isBack={isBack} />} onClose={isClose} />
+          ? <Modal content={<AboutUser isClicked={aboutUser} jobSelected={jobSelected} setJobSelected={setJobSelected} periodSelected={periodSelected} setPeriodSelected={setPeriodSelected} isBack={isBack} />} onClose={isClose} isOnboarding={true} />
           : page === 2
-            ? <Modal content={<AboutInterest isClicked={isClicked} isSend={isSend} isBack={isBack} selectList={selectList} />} onClose={isClose} />
+            ? <Modal content={<AboutInterest isClicked={isClicked} isSend={isSend} isBack={isBack} selectList={selectList} />} onClose={isClose} isOnboarding={true} />
             : null
       }
     </>
