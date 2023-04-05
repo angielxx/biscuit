@@ -22,4 +22,14 @@ public class MemberProfile implements Serializable {
 	private Job job; //직무
 	private Integer period; //연차
 	private Integer exp; //경험치
+
+	@Override
+	public String toString() {
+		return "MemberProfile{" +
+				"memberId=" + memberId +
+				", job=" + job +
+				", period=" + period +
+				", exp=" + exp +
+				'}';
+	}
 }

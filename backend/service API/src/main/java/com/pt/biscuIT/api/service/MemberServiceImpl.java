@@ -4,10 +4,7 @@ import com.pt.biscuIT.api.dto.history.MemberGraphDto;
 import com.pt.biscuIT.api.dto.history.MemberHistoryDto;
 import com.pt.biscuIT.api.dto.member.MemberDto;
 import com.pt.biscuIT.common.exception.MemberNotFoundException;
-import com.pt.biscuIT.db.entity.Member;
-import com.pt.biscuIT.db.entity.MemberInterest;
-import com.pt.biscuIT.db.entity.MemberProfile;
-import com.pt.biscuIT.db.entity.Role;
+import com.pt.biscuIT.db.entity.*;
 import com.pt.biscuIT.db.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 회원 관련 서비스 정의.
@@ -101,5 +99,20 @@ public class MemberServiceImpl implements MemberService {
         memberDto.setRole(Role.valueOf(roleUser.toUpperCase()));
         // TODO ENUM 값이 잘못 들어올 경우 Exception 처리
         memberRepository.save(memberDto.toEntity());
+    }
+
+    @Override
+    public List<Category> getInterestList(Member member) {
+        List<MemberInterest> interestList =  memberInterestRepository.findAllByMemberId(member.getId());
+        return interestList.stream().map(MemberInterest::getCategory).collect(Collectors.toList());
+    }
+
+    @Override
+    public MemberProfile getMemberProfileByMemberId(Long id) {
+        if (memberProfilerepository.findById(id).isPresent()) {
+            return memberProfilerepository.findById(id).get();
+        }else {
+            throw new MemberNotFoundException("해당 회원이 존재하지 않습니다.");
+        }
     }
 }

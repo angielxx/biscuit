@@ -28,8 +28,6 @@ public class Member implements Serializable {
 	@CreatedDate
 	private LocalDateTime signupDate;
 	private LocalDateTime withdrawDate;
-	@OneToOne(fetch = FetchType.LAZY)
-	private MemberProfile memberProfile;
 
 	public Member(Member member, String email) {
 		this.id = member.getId();
@@ -40,7 +38,6 @@ public class Member implements Serializable {
 		this.role = member.getRole();
 		this.signupDate = member.getSignupDate();
 		this.withdrawDate = member.getWithdrawDate();
-		this.memberProfile = member.getMemberProfile();
 	}
 
 	@Override
