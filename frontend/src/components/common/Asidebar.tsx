@@ -59,10 +59,9 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
   const isName = useRecoilValue(isNameState);
   const [isNoob, setIsNoob] = useRecoilState(isNoobState);
 
-  const { data, isLoading } = useQuery(
-    ['get_categories'],
-    () => get_categories()
-  )
+  const { data, isLoading } = useQuery(['get_categories'], () =>
+    get_categories()
+  );
 
   const isClicked: ClickHanlder = (event: any, item: string) => {
     navigate(`/category/${item}`);
@@ -72,7 +71,13 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
   const startModal = () => {
     setIsStartModal(true);
     setIsOpen(false);
-  }
+  };
+
+  useEffect(() => {
+    if (!getCookie('access-token')) {
+      setIsNoob(true);
+    }
+  }, []);
 
   return (
     <Aside className={isOpen ? 'open' : ''}>
@@ -84,10 +89,11 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
         />
       </Closeicon>
 
-      {isNoob === false
-        ? <AsideProfile isName={isName} />
-        : <AsideLogin onClick={startModal} />
-      }
+      {isNoob === false ? (
+        <AsideProfile isName={isName} />
+      ) : (
+        <AsideLogin onClick={startModal} />
+      )}
 
       {data?.map((item, index) => {
         return (
