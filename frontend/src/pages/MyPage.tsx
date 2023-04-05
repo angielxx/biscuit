@@ -64,7 +64,7 @@ interface MyInfoContent {
   nickname: string,
   job: string,
 	period: string,
-  interest: string[],
+  interests: string[],
 }
 
 export default function MyPage() {
