@@ -47,6 +47,11 @@ public class SecurityConfig {
 
     private static final String[] OPEN_API_POST = new String[] {
             "/api/auth/signin/**",
+            "/api/contents/**/feedback",
+    };
+
+    private static final String[] ADMIN_API_POST = new String[] {
+            "/api/admin/**",
     };
 
     private final MemberAuthService memberAuthService;
