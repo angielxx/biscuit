@@ -2,9 +2,10 @@ package com.pt.biscuIT.api.controller;
 
 import com.pt.biscuIT.api.dto.history.MemberGraphDto;
 import com.pt.biscuIT.api.dto.history.MemberHistoryDto;
-import com.pt.biscuIT.api.dto.member.MemberProfileDto;
 import com.pt.biscuIT.api.request.MemberOnboardingReq;
 import com.pt.biscuIT.api.response.MemberDashboardRes;
+import com.pt.biscuIT.api.response.MemberInfoRes;
+import com.pt.biscuIT.api.response.MetaDataContentListRes;
 import com.pt.biscuIT.api.service.CategoryService;
 import com.pt.biscuIT.api.service.MemberAuthService;
 import com.pt.biscuIT.api.service.MemberService;
@@ -17,10 +18,13 @@ import com.pt.biscuIT.db.entity.MemberInterest;
 import com.pt.biscuIT.db.entity.MemberProfile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -32,8 +36,14 @@ public class MemberController {
     private final CategoryService categoryService;
 
     @GetMapping("/")
-    public ResponseEntity<?> getMemberByEmail(String email) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> getMemberInfo(@RequestHeader(value = "Authorization") String token) {
+        Member member = memberAuthService.getMember(token);
+        MemberInfoRes res = MemberInfoRes.builder().nickname(member.getNickname())
+                .job(member.getMemberProfile().getJob().toString())
+                .period(member.getMemberProfile().getPeriod())
+                .interests(memberService.getInterestList(member).stream().map(category -> category.getSubName().toString()).collect(Collectors.toList()))
+                .build();
+        return ResponseEntity.ok(res);
     }
 
     /**
@@ -41,12 +51,13 @@ public class MemberController {
      * @param token
      * @return
      */
+    @Transactional
     @PostMapping("/onboarding")
     public ResponseEntity<?> onboard(@RequestHeader(value = "Authorization") String token, @RequestBody MemberOnboardingReq memberOnboardingReq) {
         log.debug("token: " + token);
         Member member = memberAuthService.getMember(token);
         // nickname 정보 업데이트
-        memberService.updateRole(member, "ROLE_USER");
+        memberService.updateRole(member, "ROLE_MEMBER");
         memberService.updateNickName(member, memberOnboardingReq.getNickname());
         // job, period 정보 업데이트
         MemberProfile profile = MemberProfile.builder()
