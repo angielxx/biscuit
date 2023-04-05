@@ -1,8 +1,11 @@
 package com.pt.biscuIT.db.entity;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -14,8 +17,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class MemberPoint implements Serializable {
 	@Id
