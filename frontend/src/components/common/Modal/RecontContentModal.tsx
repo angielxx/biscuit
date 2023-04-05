@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { getCookie } from 'typescript-cookie';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  getTimeSelector,
+  recentContentState,
+} from '../../../recoils/Contents/Atoms';
+import { isNoobState } from '../../../recoils/Start/Atoms';
 
 // twin macro
 import tw, { styled, css, TwStyle } from 'twin.macro';
@@ -12,14 +19,11 @@ import seed from '../../../assets/image/seed.png';
 // component
 import ContentCardItem from '../ContentCardItem';
 import QuizItem from './QuizItem';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import {
-  getTimeSelector,
-  recentContentState,
-} from '../../../recoils/Contents/Atoms';
 import QuizResultPage from './QuizResultPage';
 import QuizPage from './QuizPage';
 import FeedbackPage from './FeedbackPage';
+
+// API
 import { post_feedback } from '../../../api/feedback';
 import { get_quizzes, post_quizzes } from '../../../api/quiz';
 
@@ -72,9 +76,11 @@ interface Quiz {
 // Main component
 const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   // 페이지 (0:피드백, 1:퀴즈, 2:결과)
-  const [page, setPage] = useState<number>(2);
+  const [page, setPage] = useState<number>(0);
   // 방금 본 컨텐츠
   const [recentContent, setRecentContent] = useRecoilState(recentContentState);
+  // 로그인 상태
+  const [isNoob, setIsNoob] = useRecoilState(isNoobState);
   // 퀴즈
   const [quizzes, setQuizzes] = useState<Quiz[]>([
     {
@@ -123,20 +129,31 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   const { mutate: feedbackMutate } = useMutation({
     mutationFn: ({ contentId, feedback, timecost }: mutateParams) =>
       post_feedback(contentId, feedback, timecost),
-    onSuccess: () => setPage(1),
+    onSuccess: () => {
+      if (recentContent.type === 'ARTICLE') setPage(1);
+      else onClose();
+    },
+  });
+
+  // 퀴즈 GET
+  const {
+    data,
+    isError: isGetQuizError,
+    isSuccess: isGetQuizSuccess,
+  } = useQuery({
+    queryKey: ['get_quizzes', recentContent.id],
+    queryFn: () => get_quizzes(recentContent.id),
+    onSuccess: (data) => {
+      const quizzes = data.quizzes;
+      setQuizzes(data.quizzes);
+    },
+    enabled: recentContent.type === 'ARTICLE',
   });
 
   // 퀴즈 답 POST
   const { mutate: quizMutate } = useMutation({
     mutationFn: (contentId: number) => post_quizzes(contentId),
     onSuccess: (data) => setPage(2), // 퀴즈 제출하고 포인트 정보 받아와야 함
-  });
-
-  // 퀴즈 GET
-  const { data } = useQuery({
-    queryKey: ['get_quizzes', recentContent.id],
-    queryFn: () => get_quizzes(recentContent.id),
-    onSuccess: (data) => setQuizzes(data.quizzes),
   });
 
   // 피드백 제출
@@ -182,7 +199,7 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
         {page === 0 && <FeedbackPage onSubmit={feedbackSubmitHandler} />}
 
         {/* 퀴즈 */}
-        {page === 1 && (
+        {page === 1 && isGetQuizSuccess && (
           <QuizPage onSubmit={quizSubmitHandler} quizzes={quizzes} />
         )}
 

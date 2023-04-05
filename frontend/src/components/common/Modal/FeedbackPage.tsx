@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import {
-  endTimeState,
-  isStartState,
-} from '../../../recoils/Contents/Atoms';
+import { endTimeState, isStartState } from '../../../recoils/Contents/Atoms';
+import { isNoobState } from '../../../recoils/Start/Atoms';
 
 // image
 import neutral_face from '../../../assets/image/neutral-face.png';
@@ -61,7 +59,11 @@ const FeedbackPage = ({ onSubmit }: FeedbackPageProps) => {
     <>
       <PageTitle
         title="방금 본 컨텐츠가 어땠는지 알려주세요."
-        desc="피드백을 주시면 더 정확한 컨텐츠를 받아보실 수 있어요."
+        desc={
+          isNoobState
+            ? ''
+            : '피드백을 주시면 더 정확한 컨텐츠를 받아보실 수 있어요.'
+        }
       />
       <FeedbackBtns>
         {['쉬웠어요', '적당해요', '어려웠어요'].map((text, index) => {
