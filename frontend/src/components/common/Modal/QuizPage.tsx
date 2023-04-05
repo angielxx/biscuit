@@ -28,7 +28,7 @@ const QuizPage = ({ onSubmit, quizzes }: QuizPageProps) => {
 
   // answer 초기값 설정
   useEffect(() => {
-    console.log(quizzes);
+    // console.log(quizzes);
     quizzes?.forEach((quiz) =>
       setAnswers((prev) => {
         prev[quiz.quizId] = -1;
@@ -38,20 +38,16 @@ const QuizPage = ({ onSubmit, quizzes }: QuizPageProps) => {
     console.log(answers);
   }, [quizzes]);
 
-  // 버튼 상태 설정
-  useEffect(() => {
-    const allStatus = Object.values(answers).every((answer) => answer !== -1);
-    if (allStatus) setBtnStatus('active');
-    else setBtnStatus('disabled');
-    console.log(allStatus);
-  }, [answers]);
-
   const clickQuizOptionHandler = (quizId: number, answer: number) => {
     setAnswers((prev) => {
       prev[quizId] = answer;
       return prev;
     });
-    console.log(quizId);
+    // 버튼 상태 설정
+    const allStatus = Object.values(answers).every((answer) => answer !== -1);
+    if (allStatus) setBtnStatus('active');
+    else setBtnStatus('disabled');
+    console.log(allStatus);
   };
 
   return (
