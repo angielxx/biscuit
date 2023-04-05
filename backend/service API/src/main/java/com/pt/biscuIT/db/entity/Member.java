@@ -31,6 +31,18 @@ public class Member implements Serializable {
 	@OneToOne(fetch = FetchType.LAZY)
 	private MemberProfile memberProfile;
 
+	public Member(Member member, String email) {
+		this.id = member.getId();
+		this.identifier = member.getIdentifier();
+		this.email = email;
+		this.provider = member.getProvider();
+		this.nickname = member.getNickname();
+		this.role = member.getRole();
+		this.signupDate = member.getSignupDate();
+		this.withdrawDate = member.getWithdrawDate();
+		this.memberProfile = member.getMemberProfile();
+	}
+
 	@Override
 	public String toString() {
 		return "Member{" +
