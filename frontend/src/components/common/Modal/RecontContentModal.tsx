@@ -73,6 +73,15 @@ interface Quiz {
   answer: number;
 }
 
+type AnswerType = {
+  status: boolean; // 유저가 답을 선택했는지에 대한 싱태
+  userAnswer: number;
+};
+
+type AnswerState = {
+  [index: number]: AnswerType;
+};
+
 // Main component
 const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   // 페이지 (0:피드백, 1:퀴즈, 2:결과)
@@ -110,6 +119,7 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
       answer: 0,
     },
   ]);
+
   // 콘텐츠 소비 시간
   const getTime = useRecoilValue(getTimeSelector);
   // 유저가 선택한 퀴즈의 정답
@@ -145,7 +155,39 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
     queryFn: () => get_quizzes(recentContent.id),
     onSuccess: (data) => {
       const quizzes = data.quizzes;
-      setQuizzes(data.quizzes);
+      // setQuizzes(data.quizzes);
+      setQuizzes([
+        {
+          quizId: 106,
+          question: 'Logstash는 어떤 역할을 하나요?',
+          multiple_choice: [
+            '서버를 생성하여 아파치 로그를 생성하는 역할을 합니다.',
+            'Elasticsearch 클러스터의 데이터를 조회하고 시각화하는 역할을 합니다.',
+            '아파치 로그를 Elasticsearch Service 클러스터로 전송하여 데이터를 적재하는 역할을 합니다.',
+          ],
+          answer: 2,
+        },
+        {
+          quizId: 107,
+          question: 'Kibana에서 어떤 기능이 제공되나요?',
+          multiple_choice: [
+            'Lucene query로 검색이 가능하며, 다양한 기능을 활용하여 데이터 시각화가 가능합니다.',
+            '데이터를 전송하는 역할을 합니다.',
+            'Visualize를 하나 생성하는 역할을 합니다.',
+          ],
+          answer: 0,
+        },
+        {
+          quizId: 104,
+          question: 'SubAccount란 무엇인가요?',
+          multiple_choice: [
+            '네이버 클라우드 플랫폼의 인증서비스',
+            '네이버 클라우드 플랫폼의 서비스 관리 도구',
+            '사용자를 서브 계정으로 등록하고, 특정 서비스에 대한 권한을 부여할 수 있는 상품',
+          ],
+          answer: 2,
+        },
+      ]);
     },
     enabled: recentContent.type === 'ARTICLE',
   });
@@ -165,11 +207,8 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   };
 
   // 퀴즈 제출
-  const quizSubmitHandler = (
-    firstAnswer: number,
-    secondAnswer: number,
-    thirdAnswer: number
-  ) => {
+
+  const quizSubmitHandler = (answers: AnswerState) => {
     // API POST 요청 : 퀴즈 제출 내역 저장
     quizMutate(recentContent.id);
     setUserAnswers([firstAnswer, secondAnswer, thirdAnswer]);
@@ -199,7 +238,7 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
         {page === 0 && <FeedbackPage onSubmit={feedbackSubmitHandler} />}
 
         {/* 퀴즈 */}
-        {page === 1 && isGetQuizSuccess && (
+        {page === 1 && (
           <QuizPage onSubmit={quizSubmitHandler} quizzes={quizzes} />
         )}
 

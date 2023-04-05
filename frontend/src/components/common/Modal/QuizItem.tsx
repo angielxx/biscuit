@@ -2,10 +2,22 @@ import React, { useState } from 'react';
 import QuizOption from '../Modal/QuizOption';
 import tw from 'twin.macro';
 
-interface QuizItemProps {
+interface Answer {
+  quizId: number;
+  userAnswer: number;
+  status: boolean; // 유저가 답을 선택했는지에 대한 싱태
+}
+
+interface Quiz {
+  quizId: number;
   question: string;
-  options: Array<string>;
-  onClick: React.Dispatch<React.SetStateAction<number>>;
+  multiple_choice: string[];
+  answer: number;
+}
+
+interface QuizItemProps {
+  quiz: Quiz;
+  onClick: (quizId: number, answer: number) => void;
   result: boolean; // 퀴즈결과 페이지라면 true
   userAnswer?: number;
   answer?: number;
@@ -18,8 +30,7 @@ const QuizItemContainer = tw.div`flex flex-col gap-2 items-center`;
 const OptionsContainer = tw.div`flex flex-wrap gap-2 justify-center items-center`;
 
 const QuizItem = ({
-  question,
-  options,
+  quiz,
   onClick,
   result,
   userAnswer,
@@ -39,9 +50,9 @@ const QuizItem = ({
 
   return (
     <QuizItemContainer>
-      <Question>Q. {question}</Question>
+      <Question>Q. {quiz.question}</Question>
       <OptionsContainer>
-        {options.map((option, index) => (
+        {quiz.multiple_choice.map((option, index) => (
           <QuizOption
             key={index}
             option={option}
@@ -49,7 +60,7 @@ const QuizItem = ({
             onClick={() => {
               if (result) return;
               else {
-                onClick(index);
+                onClick(quiz.quizId, index);
                 setClickedOption(index);
               }
             }}

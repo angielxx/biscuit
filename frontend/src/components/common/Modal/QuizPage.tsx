@@ -11,66 +11,79 @@ interface Quiz {
 }
 
 interface QuizPageProps {
-  onSubmit: (
-    firstAnswer: number,
-    secondAnswer: number,
-    thirdAnswer: number
-  ) => void;
+  onSubmit: (answers: AnswerState) => void;
   quizzes: Quiz[];
 }
+type AnswerState = {
+  [index: number]: number;
+};
+
+type StatusType = 'active' | 'disabled' | 'danger' | 'activeHover';
 
 const QuizPage = ({ onSubmit, quizzes }: QuizPageProps) => {
-  // 3가지 퀴즈 각각 저장
-  const [firstQuiz, setFirstQuiz] = useState<Quiz>(quizzes[0]);
-  const [secondQuiz, setSecondQuiz] = useState<Quiz>(quizzes[1]);
-  const [thirdQuiz, setThirdQuiz] = useState<Quiz>(quizzes[2]);
+  // 퀴즈에 대해 유저가 선택한 답 저장
+  const [answers, setAnswers] = useState<AnswerState>({});
+  // 제출 버튼 상태
+  const [btnStatus, setBtnStatus] = useState<StatusType>('disabled');
 
+  // answer 초기값 설정
   useEffect(() => {
-    setFirstQuiz(quizzes[0]);
-    setSecondQuiz(quizzes[1]);
-    setThirdQuiz(quizzes[2]);
-  }, []);
+    console.log(quizzes);
+    quizzes?.forEach((quiz) =>
+      setAnswers((prev) => {
+        prev[quiz.quizId] = -1;
+        return prev;
+      })
+    );
+    console.log(answers);
+  }, [quizzes]);
 
-  // 선택한 퀴즈 정답
-  const [firstAnswer, setFirstAnswer] = useState<number>(99);
-  const [secondAnswer, setSecondAnswer] = useState<number>(99);
-  const [thirdAnswer, setThirdAnswer] = useState<number>(99);
+  // 버튼 상태 설정
+  useEffect(() => {
+    const allStatus = Object.values(answers).every((answer) => answer !== -1);
+    if (allStatus) setBtnStatus('active');
+    else setBtnStatus('disabled');
+    console.log(allStatus);
+  }, [answers]);
+
+  const clickQuizOptionHandler = (quizId: number, answer: number) => {
+    setAnswers((prev) => {
+      prev[quizId] = answer;
+      return prev;
+    });
+    console.log(quizId);
+  };
 
   return (
     <>
-      <PageTitle
-        title="방금 본 컨텐츠를 잘 이해했는지 확인해보세요."
-        desc="퀴즈를 제출하면 오늘의 잔디가 자라나요."
-      />
-      <div className="flex flex-col gap-6 py-6">
-        <QuizItem
-          question={firstQuiz.question}
-          options={firstQuiz.multiple_choice}
-          onClick={setFirstAnswer}
-          result={false}
-        />
-        <QuizItem
-          question={secondQuiz.question}
-          options={secondQuiz.multiple_choice}
-          onClick={setSecondAnswer}
-          result={false}
-        />
-        <QuizItem
-          question={thirdQuiz.question}
-          options={thirdQuiz.multiple_choice}
-          onClick={setThirdAnswer}
-          result={false}
-        />
-      </div>
-      <Button
-        title="다 풀었어요"
-        status={
-          firstAnswer !== null && secondAnswer !== null && thirdAnswer !== null
-            ? 'active'
-            : 'disabled'
-        }
-        onClick={() => onSubmit(firstAnswer, secondAnswer, thirdAnswer)}
-      />
+      {quizzes.length ? (
+        <>
+          <PageTitle
+            title="방금 본 컨텐츠를 잘 이해했는지 확인해보세요."
+            desc="퀴즈를 제출하면 오늘의 잔디가 자라나요."
+          />
+          <div className="flex flex-col gap-6 py-6">
+            {quizzes.length &&
+              quizzes.map((quiz) => (
+                <QuizItem
+                  key={quiz.quizId}
+                  quiz={quiz}
+                  onClick={clickQuizOptionHandler}
+                  result={false}
+                />
+              ))}
+          </div>
+          <Button
+            title="다 풀었어요"
+            status={btnStatus}
+            onClick={() => onSubmit(answers)}
+          />
+        </>
+      ) : (
+        <div>
+          <span>아쉽게도 이 글의 퀴즈가 아직 없어요</span>
+        </div>
+      )}
     </>
   );
 };
