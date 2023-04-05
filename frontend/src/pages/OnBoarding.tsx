@@ -133,7 +133,7 @@ const OnBoarding = () => {
     setNoob(false);
 
     // 홈으로 이동
-    // navigate(`/`);
+    navigate(`/`);
   }
 
   return (
