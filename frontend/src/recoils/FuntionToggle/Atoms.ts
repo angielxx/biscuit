@@ -16,6 +16,9 @@ const functionToggleState = atom({
     dashBoardToggle: true,
     pointToggle: true,
     graphToggle: true,
+    jobToggle: true,
+    periodToggle: true,
+    interestToggle: true,
   },
   effects_UNSTABLE: [persistAtom],
 })
