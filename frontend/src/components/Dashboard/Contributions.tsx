@@ -47,10 +47,12 @@ export default function Contributions({histories}: ContributionsProps) {
 
   for(let i=0; i<15; i++) {
     tmpData.push([]);
-    tmpData[i].push(0);
+    for(let j=0; j<7; j++) {
+      tmpData[i].push(0);
+    }
   }
+  tmpData.push([]);
   for(let i=0; i<=todayDay; i++) {
-    tmpData.push([]);
     tmpData[15].push(0);
   }
 

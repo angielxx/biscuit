@@ -14,9 +14,9 @@ const Info = ({title, content}: InfoProps) => {
   return (
     <InfoContainer>
       <TitleContainer>
-        <Span>{title}</Span>
+        {title && <Span>{title}</Span>}
       </TitleContainer>
-      <TextBox>{content}</TextBox>
+      {content && <TextBox>{content}</TextBox>}
     </InfoContainer>
   )
 }
@@ -35,8 +35,8 @@ interface MyInfoContent {
 export default function MyInfos({myInfo}: MyInfoContent) {
   return (
     <>
-      <Info title="직무" content={myInfo.job} />
-      <Info title="경력" content={myInfo.period} />
+      <Info title="직무" content={myInfo?.job} />
+      <Info title="경력" content={myInfo?.period} />
       <Info title="관심사" content={`${myInfo?.interest[0]}
         ${myInfo?.interest.length > 1
           ? `등 ${myInfo?.interest.length}개}` : ""}`}
