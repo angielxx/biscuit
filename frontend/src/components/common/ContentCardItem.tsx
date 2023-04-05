@@ -114,21 +114,21 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
     };
   }, [content.id]);
 
-  // 썸네일 가져오는 함수 (queryFn)
-  const getMetaData = async (url: string) => {
-    const data = await useGetMetaData(url);
-    return data?.image;
-  };
+  // // 썸네일 가져오는 함수 (queryFn)
+  // const getMetaData = async (url: string) => {
+  //   const data = await useGetMetaData(url);
+  //   return data?.image;
+  // };
 
-  // 리액트 쿼리로 썸네일 가져오기
-  const { data } = useQuery({
-    queryKey: ['thumbnail', content.id],
-    queryFn: () => getMetaData(content.source),
-    staleTime: 1000 * 60 * 30,
-    cacheTime: 1000 * 60 * 60,
-    enabled: content.type === 'ARTICLE',
-    onSuccess: (image) => setThumbImg(image),
-  });
+  // // 리액트 쿼리로 썸네일 가져오기
+  // const { data } = useQuery({
+  //   queryKey: ['thumbnail', content.id],
+  //   queryFn: () => getMetaData(content.source),
+  //   staleTime: 1000 * 60 * 30,
+  //   cacheTime: 1000 * 60 * 60,
+  //   enabled: content.type === 'ARTICLE',
+  //   onSuccess: (image) => setThumbImg(image),
+  // });
 
   // 날짜 포맷
   const stringToDate = (date: string) => {
