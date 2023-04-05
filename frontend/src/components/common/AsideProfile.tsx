@@ -23,19 +23,13 @@ const AsideBtn = styled.div`
 
 interface ProfileProps {
   isName: string;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-const AsideProfile = ({isName}: ProfileProps) => {
-  const navigate = useNavigate();
-
-  const goToMypage = () => {
-    navigate('/mypage');
-    // setIsOpen(false);
-  };
-
+const AsideProfile = ({isName, onClick}: ProfileProps) => {
   return (
     <ProfileBox>
-      <Nickname onClick={goToMypage}>{isName} 님</Nickname>
+      <Nickname onClick={onClick}>{isName} 님</Nickname>
       <AsideBtn>
         <AsideButton
           to="/editProfile"
