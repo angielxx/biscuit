@@ -75,9 +75,13 @@ interface OverlayProps {
 function Overlay({ onClose, content, isOnboarding }: OverlayProps) {
   return (
     <ModalContainer isOnboarding={isOnboarding}>
-      <div id="close-row" className="flex justify-end">
-        <img src={Close} alt="모달 닫는 버튼" onClick={onClose} />
-      </div>
+      {!isOnboarding
+        ?
+          <div id="close-row" className="flex justify-end">
+            <img src={Close} alt="모달 닫는 버튼" onClick={onClose} />
+          </div>
+        : null
+      }
       <ModalContentContainer>{content}</ModalContentContainer>
     </ModalContainer>
   );

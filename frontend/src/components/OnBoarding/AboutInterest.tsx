@@ -36,12 +36,12 @@ const AboutInterest = ({
       </div>
       <div className="flex flex-col gap-2 mt-4">
         <span className="text-h3">어떤 기술에 관심이 있으신가요?</span>
-        <span className="text-sub text-subColor">
+        <span className="text-tiny text-subColor">
           관심사에 맞춘 컨텐츠를 홈 화면에서 추천드려요.
         </span>
       </div>
       <hr className="my-4 border-[1px] border-dark-grey20" />
-      <ul className="h-[360px] overflow-scroll">
+      <ul className="h-[320px] overflow-scroll">
         {data?.map((item, index) => {
           return (
             <BigCategory
