@@ -25,14 +25,14 @@ public class QuizController {
 	private final MemberAuthService memberAuthService;
 
 	@GetMapping("{contentId}/quizzes")
-	public ProvideQuizDto provideQuiz(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long contentId) {
+	public ProvideQuizDto provideQuiz(@RequestHeader(value = "Authorization") String token, @PathVariable Long contentId) {
 		Member member = memberAuthService.getMember(token);
 
 		return quizService.provideQuiz(contentId);
 	}
 
 	@PostMapping("{contentId}/quizzes")
-	public QuizSubmitDto submitQuiz(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long contentId, @RequestBody QuizSubmitRequestDto requestDto) {
+	public QuizSubmitDto submitQuiz(@RequestHeader(value = "Authorization") String token, @PathVariable Long contentId, @RequestBody QuizSubmitRequestDto requestDto) {
 		Member member = memberAuthService.getMember(token);
 		return quizService.submitQuiz(member, contentId, requestDto);
 	}
