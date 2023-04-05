@@ -4,7 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 import { get_home_contents } from '../../api/contents';
 import { useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
-import { homeFilterBtnState, homeFilterTimeState } from '../../recoils/Home/Atoms';
+import {
+  homeFilterBtnState,
+  homeFilterTimeState,
+} from '../../recoils/Home/Atoms';
 import Icon from '../common/Icon';
 
 const ContentListContainer = tw.div`
@@ -58,6 +61,7 @@ interface content {
   marked: boolean;
   tags: Array<string> | null;
   hit: number;
+  img: string;
 }
 
 interface randomContent {
@@ -99,11 +103,12 @@ const HomeContentList = ({ category }: HomeComentListProps) => {
     queryKey: ['get_home_contents', category, timeFilterIdx, typeFilter],
     queryFn: async () => {
       const categoryCount = category === 'category' ? 5 : undefined;
-      const type = typeFilter[0] === true
-        ? "video" 
-        : typeFilter[1] === true
-          ? "article"
-          : "all";
+      const type =
+        typeFilter[0] === true
+          ? 'video'
+          : typeFilter[1] === true
+          ? 'article'
+          : 'all';
       const fromTo = timeFilterArr[timeFilterIdx];
       return await get_home_contents(category, categoryCount, fromTo, type);
     },

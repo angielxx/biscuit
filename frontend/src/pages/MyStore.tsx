@@ -20,6 +20,7 @@ interface content {
   marked: boolean;
   tags: Array<string> | null;
   hit: number;
+  img: string;
 }
 
 const MyStore = () => {
@@ -39,6 +40,7 @@ const MyStore = () => {
       tags: [],
       hit: 0,
       marked: false,
+      img: '',
     },
     {
       id: 53,
@@ -52,6 +54,7 @@ const MyStore = () => {
       tags: [],
       hit: 0,
       marked: false,
+      img: '',
     },
   ]);
   // 히스토리
@@ -68,6 +71,7 @@ const MyStore = () => {
       tags: [],
       hit: 0,
       marked: false,
+      img: '',
     },
     {
       id: 53,
@@ -81,6 +85,7 @@ const MyStore = () => {
       tags: [],
       hit: 0,
       marked: false,
+      img: '',
     },
   ]);
 

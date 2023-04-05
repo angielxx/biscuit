@@ -77,6 +77,7 @@ interface content {
   marked: boolean;
   tags: Array<string> | null;
   hit: number;
+  img: string;
 }
 
 interface ContentCardItemProps {
@@ -102,11 +103,11 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
       setUrl(`https://youtu.be/${content.source}`);
       setThumbImg(`https://img.youtube.com/vi/${content.source}/0.jpg`);
     } else {
-      const cacheImg = queryClient.getQueryData(['thumbnail', content.id]) as
-        | string
-        | undefined;
+      // const cacheImg = queryClient.getQueryData(['thumbnail', content.id]) as
+      //   | string
+      //   | undefined;
       setUrl(content.source);
-      setThumbImg(cacheImg);
+      setThumbImg(content.img);
     }
     return () => {
       setThumbImg('');
