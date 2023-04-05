@@ -55,6 +55,7 @@ export default function Contributions({histories}: ContributionsProps) {
   }
 
   useEffect(() => {
+    if(histories === undefined) return;
     histories.forEach((history: History) => {
       const historyDate = Date.parse(history.date)
       const dateDiff = (todayDate.getTime() - historyDate) / (1000 * 60 * 60 * 24)

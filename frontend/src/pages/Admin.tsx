@@ -11,13 +11,17 @@ export default function Admin() {
     setFunctionToggle(newFunctionToggle);
   }
 
+  const spanStyle = {
+    color: "white",
+  }
+
   return (
     <div>
       <h1>Admin Page</h1>
       {functionToggle ? Object.entries(functionToggle).map(([key, value]: [string, any]) => {
         return (
           <div key={ key }>
-            <span>{ key }</span>
+            <span style={spanStyle}>{ key }</span>
             <input 
               type="checkbox" 
               name={key} 
