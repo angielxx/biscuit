@@ -30,6 +30,7 @@ public class ContentInfoDto {
     private boolean isMarked;
     private List<String> tags;
     private Integer hit;
+    private String img;
 
     public ContentInfoDto(Content content) {
         this.id = content.getId();
@@ -41,5 +42,6 @@ public class ContentInfoDto {
         this.type = content.getType();
         this.isMarked = false;
         this.hit = content.getHit();
+        this.img = content.getImg();
     }
 }
