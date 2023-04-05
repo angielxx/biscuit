@@ -2,6 +2,7 @@ package com.pt.biscuIT.api.controller;
 
 import com.pt.biscuIT.api.dto.content.ContentInfoListCategoryDto;
 import com.pt.biscuIT.api.response.RandomCategoryContentRes;
+import com.pt.biscuIT.api.service.MemberAuthService;
 import com.pt.biscuIT.api.service.MemberServiceImpl;
 import com.pt.biscuIT.common.exception.BiscuitException;
 import com.pt.biscuIT.common.exception.ErrorCode;
@@ -29,15 +30,14 @@ import java.util.ArrayList;
 @RequestMapping("/api/recommends")
 @Slf4j
 public class RecommendController {
-
     @Autowired
     RecommendService recommendService;
-
     @Autowired
     ContentRepository contentRepositorySupport;
-
     @Autowired
     MemberServiceImpl memberServiceImpl;
+    @Autowired
+    MemberAuthService memberAuthService;
 
     /*
         TODO: 추천 컨텐츠를 제공하는 API
@@ -97,9 +97,9 @@ public class RecommendController {
             @RequestParam(required = false, defaultValue = "0") int from,
             @RequestParam(required = false, defaultValue = "1440") int to,
             @RequestParam Type type,
-            String identifier
+            @RequestHeader(required = false, value = "Authorization") String token
     ) {
-        Member member = memberServiceImpl.findByIdentifier(identifier);
+        Member member = memberAuthService.getMember(token);
         if(member == null) throw new BiscuitException(ErrorCode.MEMBER_NOT_FOUND);
 
         Page<ContentInfoListCategoryDto> contentList = recommendService.getFavoriteCategoryContent(pageable, from, to, type, member.getId());
@@ -120,9 +120,9 @@ public class RecommendController {
             @RequestParam(required = false, defaultValue = "1440") int to,
             @RequestParam Type type,
             @PathVariable String option,
-            String identifier
+            @RequestHeader(required = false, value = "Authorization") String token
     ) {
-        Member member = memberServiceImpl.findByIdentifier(identifier);
+        Member member = memberAuthService.getMember(token);
         if(member == null) throw new BiscuitException(ErrorCode.MEMBER_NOT_FOUND);
         Page<ContentInfoDto> contentList = new PageImpl<>(new ArrayList<>(), pageable, 0);
 
