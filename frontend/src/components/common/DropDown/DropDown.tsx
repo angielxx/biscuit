@@ -19,7 +19,7 @@ interface DropDownProps {
 }
 
 const DropDownContainer = styled.div((props: {isOnboarding: boolean}) => [
-  tw`h-[200px] w-full overflow-scroll overflow-x-hidden z-20 fixed`,
+  tw`h-[210px] w-full overflow-scroll overflow-x-hidden z-20 fixed`,
   props.isOnboarding === true
     ? css`width: calc(100% - 64px);`
     : css`width: calc(80% - 38.4px);`

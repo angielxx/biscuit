@@ -13,10 +13,10 @@ import Close from '../../../assets/icons/close.svg';
 import { JsxElement } from 'typescript';
 
 // Styled component
-const ModalContainer = styled.div`
-  ${tw`fixed z-50 bg-dark-evaluated p-6 text-white rounded-20 overflow-scroll`}
-  ${tw`w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[45vw] 2xl:w-[40vw]`}
-  ${css`
+const ModalContainer = styled.div((props: {isOnboarding: boolean}) => [
+  tw`fixed z-50 bg-dark-evaluated p-6 text-white rounded-20`,
+  tw`w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[45vw] 2xl:w-[40vw]`,
+  css`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -39,8 +39,11 @@ const ModalContainer = styled.div`
     @media (min-width: 1280px) {
       min-width: 40vw;
     }
-  `}
-`;
+  `,
+  props.isOnboarding === false
+    ? css`overflow: scroll;`
+    : null
+])
 
 const ModalContentContainer = styled.div`
   ${tw`overflow-scroll relative h-full`}
@@ -66,11 +69,12 @@ function Backdrop({ onClose }: BackdropProps) {
 interface OverlayProps {
   onClose: () => void;
   content: ReactElement;
+  isOnboarding: boolean;
 }
 
-function Overlay({ onClose, content }: OverlayProps) {
+function Overlay({ onClose, content, isOnboarding }: OverlayProps) {
   return (
-    <ModalContainer>
+    <ModalContainer isOnboarding={isOnboarding}>
       <div id="close-row" className="flex justify-end">
         <img src={Close} alt="모달 닫는 버튼" onClick={onClose} />
       </div>
@@ -82,9 +86,10 @@ function Overlay({ onClose, content }: OverlayProps) {
 interface ModalProps {
   onClose: () => void;
   content: ReactElement;
+  isOnboarding: boolean;
 }
 
-function Modal({ onClose, content }: ModalProps) {
+function Modal({ onClose, content, isOnboarding }: ModalProps) {
   return (
     <React.Fragment>
       {ReactDOM.createPortal(
@@ -92,7 +97,7 @@ function Modal({ onClose, content }: ModalProps) {
         document.getElementById('backdrop-root') as HTMLElement
       )}
       {ReactDOM.createPortal(
-        <Overlay content={content} onClose={onClose} />,
+        <Overlay content={content} onClose={onClose} isOnboarding={isOnboarding} />,
         document.getElementById('overlay-root') as HTMLElement
       )}
     </React.Fragment>
