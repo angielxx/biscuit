@@ -8,6 +8,8 @@ import com.pt.biscuIT.api.response.MemberDashboardRes;
 import com.pt.biscuIT.api.service.CategoryService;
 import com.pt.biscuIT.api.service.MemberAuthService;
 import com.pt.biscuIT.api.service.MemberService;
+import com.pt.biscuIT.common.exception.BiscuitException;
+import com.pt.biscuIT.common.exception.ErrorCode;
 import com.pt.biscuIT.common.model.response.BaseResponseBody;
 import com.pt.biscuIT.db.entity.Job;
 import com.pt.biscuIT.db.entity.Member;
@@ -64,9 +66,11 @@ public class MemberController {
     }
 
     @GetMapping("/dashboard")
-    public ResponseEntity<? extends BaseResponseBody> getDashBoardByMember(String identifier) {
-        Member member = memberService.findByIdentifier(identifier);
-//        if(member == null) throw new BiscuitException(ErrorCode.USER_NOT_FOUND);
+    public ResponseEntity<? extends BaseResponseBody> getDashBoardByMember(
+            @RequestHeader(required = false, value = "Authorization") String token
+    ) {
+        Member member = memberAuthService.getMember(token);
+        if(member == null) throw new BiscuitException(ErrorCode.MEMBER_NOT_FOUND);
 
         List<MemberHistoryDto> histories = memberService.getHistoriesByMember(member);
         List<MemberGraphDto> graphs = memberService.getGraphsByMember(member);
