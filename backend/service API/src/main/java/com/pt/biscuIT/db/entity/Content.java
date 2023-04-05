@@ -35,4 +35,5 @@ public class Content implements Serializable {
 	private Integer timeCost;
 	@Enumerated(EnumType.STRING)
 	private Type type;
+	private String img;
 }
