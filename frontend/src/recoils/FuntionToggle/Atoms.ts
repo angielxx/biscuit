@@ -12,6 +12,10 @@ const functionToggleState = atom({
     filterBarToggle: true,
     bannerToggle: true,
     homeContentsToggle: true,
+    myInfoToggle: true,
+    dashBoardToggle: true,
+    pointToggle: true,
+    graphToggle: true,
   },
   effects_UNSTABLE: [persistAtom],
 })
