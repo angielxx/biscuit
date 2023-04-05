@@ -2,6 +2,7 @@ package com.pt.biscuIT.api.controller;
 
 import com.pt.biscuIT.api.dto.content.ContentInfoListCategoryDto;
 import com.pt.biscuIT.api.response.RandomCategoryContentRes;
+import com.pt.biscuIT.api.service.ContentService;
 import com.pt.biscuIT.api.service.MemberAuthService;
 import com.pt.biscuIT.api.service.MemberServiceImpl;
 import com.pt.biscuIT.common.exception.BiscuitException;
@@ -38,6 +39,8 @@ public class RecommendController {
     MemberServiceImpl memberServiceImpl;
     @Autowired
     MemberAuthService memberAuthService;
+    @Autowired
+    ContentService contentService;
 
     /*
         TODO: 추천 컨텐츠를 제공하는 API
@@ -128,6 +131,8 @@ public class RecommendController {
 
         if("bookmarked".equals(option) || "similar".equals(option)) contentList = recommendService.getPersonalContent(option, pageable, from, to, type, member);
         else throw new BiscuitException(ErrorCode.INVALID_PARAMETER);
+
+        contentService.setProperty(contentList.getContent(), member.getId());
 
 
         PageMetaData metaData = PageMetaData.builder()
