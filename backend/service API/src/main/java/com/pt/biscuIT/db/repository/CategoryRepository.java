@@ -17,6 +17,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     )
     List<String> findCodeAndMainNameList();
 
+    Category findBySubName(String subName);
+
 //    @Query(
 //            value = "SELECT sub_name, substring(code, 3, 5) " +
 //                    "FROM category " +

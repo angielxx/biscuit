@@ -3,12 +3,15 @@ package com.pt.biscuIT.api.controller;
 import com.pt.biscuIT.api.dto.history.MemberGraphDto;
 import com.pt.biscuIT.api.dto.history.MemberHistoryDto;
 import com.pt.biscuIT.api.dto.member.MemberProfileDto;
+import com.pt.biscuIT.api.request.MemberOnboardingReq;
 import com.pt.biscuIT.api.response.MemberDashboardRes;
+import com.pt.biscuIT.api.service.CategoryService;
 import com.pt.biscuIT.api.service.MemberAuthService;
 import com.pt.biscuIT.api.service.MemberService;
 import com.pt.biscuIT.common.model.response.BaseResponseBody;
 import com.pt.biscuIT.db.entity.Job;
 import com.pt.biscuIT.db.entity.Member;
+import com.pt.biscuIT.db.entity.MemberInterest;
 import com.pt.biscuIT.db.entity.MemberProfile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +27,7 @@ import java.util.List;
 public class MemberController {
     private final MemberService memberService;
     private final MemberAuthService memberAuthService;
+    private final CategoryService categoryService;
 
     @GetMapping("/")
     public ResponseEntity<?> getMemberByEmail(String email) {
@@ -36,15 +40,26 @@ public class MemberController {
      * @return
      */
     @PostMapping("/onboarding")
-    public ResponseEntity<?> onboard(@RequestHeader(required = false, value = "Authorization") String token, @RequestBody MemberProfileDto memberProfileDto) {
+    public ResponseEntity<?> onboard(@RequestHeader(value = "Authorization") String token, @RequestBody MemberOnboardingReq memberOnboardingReq) {
+        log.debug("token: " + token);
         Member member = memberAuthService.getMember(token);
+        // nickname 정보 업데이트
+        memberService.updateRole(member, "ROLE_USER");
+        memberService.updateNickName(member, memberOnboardingReq.getNickname());
+        // job, period 정보 업데이트
         MemberProfile profile = MemberProfile.builder()
                 .memberId(member.getId())
-                .exp(memberProfileDto.getExp())
-                .job(Job.valueOf(memberProfileDto.getJob()))
-                .period(memberProfileDto.getPeriod())
+                .job(Job.valueOf(memberOnboardingReq.getJob().toUpperCase()))
+                .period(memberOnboardingReq.getPeriod())
                 .build();
-        memberService.update(member);
+        memberService.updateProfile(profile);
+        // intrests 정보 업데이트 TODO : 중복 체크
+        for (String interest : memberOnboardingReq.getInterests()) {
+            memberService.saveMemberInterest(MemberInterest.builder()
+                    .member(member)
+                    .category(categoryService.getCategoryBySubName(interest))
+                    .build());
+        }
         return ResponseEntity.ok().build();
     }
 
