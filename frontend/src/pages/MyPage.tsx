@@ -47,7 +47,7 @@ type History = {
   count: number;
 }
 
-type Graph = {
+type GraphItem = {
   category: string;
   count: number;
 }
@@ -56,7 +56,7 @@ interface DashboardContent {
   status: number;
   message: string;
   histories: History[];
-  graphs: Graph[];
+  graphs: GraphItem[];
   point: number;
 }
 
