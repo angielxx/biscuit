@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import tw, { styled, css } from 'twin.macro';
 
 const Container = tw.div`
@@ -45,6 +45,8 @@ export default function Contributions({histories}: ContributionsProps) {
   const todayDate = new Date();
   const todayDay = todayDate.getDay();
 
+  const [dashBoardState, setDashBoardState] = useState<number[][]>([]);
+
   for(let i=0; i<15; i++) {
     tmpData.push([]);
     for(let j=0; j<7; j++) {
@@ -63,17 +65,18 @@ export default function Contributions({histories}: ContributionsProps) {
       const dateDiff = (todayDate.getTime() - historyDate) / (1000 * 60 * 60 * 24)
       if(dateDiff >= 7 * 16) return;
       tmpData[15 - Math.ceil(dateDiff / 7)][dateDiff % 7] = history.count;
+      setDashBoardState(tmpData);
     })
   }, [histories])
   
   return (
     <Container>
-      {tmpData?.map((tmp, idx) => {
+      {dashBoardState?.map((week, idx) => {
         return (
           <ColContainer key={idx}>
-            {tmp?.map((t, index) => {
+            {week?.map((day, index) => {
               return (
-                <Box key={index} theme={"default"} count={t}>
+                <Box key={index} theme={"default"} count={day}>
                 </Box>
               )
             })}
