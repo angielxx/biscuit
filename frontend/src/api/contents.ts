@@ -42,7 +42,7 @@ const get_personal_contents = async (
   },
   type: string,
 ): Promise<content[] | randomContent[] | undefined> => {
-  const response = await baseInstance.get(
+  const response = await authInstance.get(
     requests.GET_PERSONAL_CONTENTS(option, fromTo, type)
   );
   return response.data.results;
