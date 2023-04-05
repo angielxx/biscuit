@@ -11,9 +11,8 @@ import javax.persistence.*;
 @Entity
 @Builder
 @Getter
-@Setter
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
