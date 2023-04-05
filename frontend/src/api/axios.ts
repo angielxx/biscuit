@@ -2,7 +2,7 @@ import axios from 'axios';
 import { requests } from './requests';
 import { getCookie, setCookie } from 'typescript-cookie';
 import { useEffect } from 'react';
-import { isNoobState, isOnboardingState } from '../recoils/Start/Atoms';
+import { isNoobState } from '../recoils/Start/Atoms';
 import { useRecoilState } from 'recoil';
 
 const BASE_URL = requests.base_url;
@@ -20,10 +20,12 @@ const authAPI = (url: string, options?: any) => {
 const setTokenHeader = (config: any) => {
   // 쿠키에 담긴 토큰 가져오기
   const token = getCookie('access-token');
-  console.log(token);
+  const [isNoob, setIsNoob] = useRecoilState(isNoobState);
 
   if (token) {
     config.headers["Authorization"] = `Bearer ${token}`;
+  } else {
+    setIsNoob(true);
   }
   return config;
 };
