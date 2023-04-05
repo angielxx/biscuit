@@ -25,8 +25,5 @@ export default defineConfig(({ command, mode }) => {
       viteTsconfigPaths(),
       svgrPlugin(),
     ],
-    define: {
-      __APP_ENV__: env.APP_ENV,
-    },
   };
 });
