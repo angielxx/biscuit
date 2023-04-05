@@ -43,6 +43,7 @@ public class SecurityConfig {
             "/api/recommends/random/**",
             "/login/**",
             "/oauth2/**",
+            "/api/quizzes/**"
     };
 
     private static final String[] OPEN_API_POST = new String[] {
