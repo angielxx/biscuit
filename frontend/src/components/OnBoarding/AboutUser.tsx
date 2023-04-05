@@ -9,7 +9,7 @@ import backspace from '../../assets/icons/backspace.svg';
 import tw, { styled } from 'twin.macro';
 
 const ChooseContent = styled.div`
-  ${tw`flex flex-col px-2 gap-4 mb-4`}
+  ${tw`flex flex-col gap-4 mb-4`}
 `;
 
 const ChooseItem = styled.div`
