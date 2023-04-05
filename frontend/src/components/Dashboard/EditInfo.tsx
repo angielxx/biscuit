@@ -88,7 +88,7 @@ const Interest = ({title}: InterestProps) => {
       <BtnContainer>
         <Button title="관심사 설정하기" status="disabled" onClick={() => {setModalOpen(true)}} />
       </BtnContainer>
-      {modalOpen && <Modal content={<AboutInterest isClicked={isClicked} isSend={isSend} isBack={isBack} selectList={selectList} />} onClose={isClose} />}
+      {modalOpen && <Modal content={<AboutInterest isClicked={isClicked} isSend={isSend} isBack={isBack} selectList={selectList} />} onClose={isClose} isOnboarding={false} />}
     </InfoContainer>
   )
 }
