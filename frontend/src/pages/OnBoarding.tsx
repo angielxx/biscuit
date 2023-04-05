@@ -113,6 +113,7 @@ const OnBoarding = () => {
     } else {
       setSelectList([...selectList, item]);
     }
+
   }
   
   const [noob, setNoob] = useRecoilState(isNoobState);
@@ -124,7 +125,7 @@ const OnBoarding = () => {
   
   const isSend = () => {
     console.log(selectList);
-    setUserData({...userData, interests: selectList});
+    setUserData({...userData, interests: [...selectList]});
     userDataPost(userData);
     setNoob(false);
 
