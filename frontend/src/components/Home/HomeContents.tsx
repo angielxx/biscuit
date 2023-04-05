@@ -1,5 +1,7 @@
 import tw, { styled, css } from 'twin.macro';
 import HomeContentList from './HomeContentList';
+import PersonalContentList from './PersonalContentList';
+import FitContent from './FitContent';
 
 const HomeContentsContainer = tw.div`
   flex-col w-full h-fit
@@ -14,7 +16,10 @@ const HomeContents = ({}: Object) => {
     <HomeContentsContainer>
       {isAuth
         ? authContent?.map((category) => {
-            return <HomeContentList key={category} category={category} />;
+            return <>
+              <FitContent key={category} option={category} />
+              <PersonalContentList key={category} option={category} />
+            </>;
           })
         : unAuthContents?.map((category) => {
             return <HomeContentList key={category} category={category} />;

@@ -34,4 +34,18 @@ const get_home_contents = async (
   return response.data.results;
 };
 
-export { get_home_contents };
+const get_personal_contents = async (
+  option: string,
+  fromTo: {
+    start: number;
+    end: number;
+  },
+  type: string,
+): Promise<content[] | randomContent[] | undefined> => {
+  const response = await baseInstance.get(
+    requests.GET_PERSONAL_CONTENTS(option, fromTo, type)
+  );
+  return response.data.results;
+};
+
+export { get_home_contents, get_personal_contents };

@@ -73,6 +73,17 @@ export const requests = {
     return route;
   },
 
+  GET_PERSONAL_CONTENTS(
+    option: string,
+    fromTo: {
+      start: number;
+      end: number;
+    },
+    type: string,
+  ) {
+    return `/api/recommends/personal/${option}&type=${type}&from=${fromTo?.start}&to=${fromTo?.end}`;
+  },
+
   // 가입 설문조사 전달
   POST_ABOUT_USER() {
     return `/api/members/onboarding`;
