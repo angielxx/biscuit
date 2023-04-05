@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Map;
@@ -46,6 +47,7 @@ public class MemberAuthServiceImpl implements MemberAuthService {
 //    }
 
     @Override
+    @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         // OAuth2 서비스 제공자 구분
         String provider = userRequest.getClientRegistration().getRegistrationId();
@@ -69,6 +71,7 @@ public class MemberAuthServiceImpl implements MemberAuthService {
         );
     }
 
+    @Transactional
     public Member saveOrUpdate(String provider, OAuth2UserInfo oAuth2UserInfo) {
 
         Member oAuthMember = Member.builder()
@@ -101,7 +104,7 @@ public class MemberAuthServiceImpl implements MemberAuthService {
 
     @Override
     public Member getMember(String token) {
-        String identifier = jwtTokenUtil.getIdentifier(token);
+        String identifier = JwtTokenUtil.getIdentifier(token);
         Optional<Member> findMember = memberRepository.findByIdentifier(identifier);
         if (findMember.isPresent()) {
             return findMember.get();
