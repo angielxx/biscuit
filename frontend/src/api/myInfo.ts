@@ -9,5 +9,6 @@ interface MyInfoContent {
 }
 
 export const get_myInfo = async (): Promise<MyInfoContent> => {
-  return await authInstance.get(requests.GET_MYINFO());
+  const response = await authInstance.get(requests.GET_MYINFO());
+  return response.data;
 }
