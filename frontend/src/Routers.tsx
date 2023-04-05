@@ -27,10 +27,15 @@ export default function Routers() {
         <Modal
           onClose={() => setIsModalOpen(false)}
           content={<RecentContentModal onClose={() => setIsModalOpen(false)} />}
+          isOnboarding={false}
         />
       ) : null}
       {isStartModalOpen ? (
-        <Modal onClose={() => setIsStartModalOpen(false)} content={<Start />} />
+        <Modal 
+          onClose={() => setIsStartModalOpen(false)} 
+          content={<Start />} 
+          isOnboarding={true}
+        />
       ) : null}
       <Routes>
         <Route path="/" element={<Home />} />
