@@ -85,12 +85,14 @@ export default function MyPage() {
   const [dashBoardData, setDashBoardData] = useState<DashboardContent>();
 
   useEffect(() => {
+    console.log(myInfoQuery);
     if (myInfoQuery !== undefined && myInfoQuery) {
       setMyInfoData(myInfoQuery);
     }
   }, [myInfoQuery]);
 
   useEffect(() => {
+    console.log(dashBoardQuery);
     if (dashBoardData !== undefined && dashBoardQuery) {
       setDashBoardData(dashBoardQuery);
     }
