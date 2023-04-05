@@ -4,10 +4,8 @@ import com.pt.biscuIT.api.dto.member.OAuth2UserInfo;
 import com.pt.biscuIT.api.dto.member.OAuthAttributes;
 import com.pt.biscuIT.common.exception.MemberNotFoundException;
 import com.pt.biscuIT.common.util.JwtTokenUtil;
-import com.pt.biscuIT.db.entity.Member;
-import com.pt.biscuIT.db.entity.Provider;
-import com.pt.biscuIT.db.entity.Role;
-import com.pt.biscuIT.db.repository.MemberRepository;
+import com.pt.biscuIT.db.entity.*;
+import com.pt.biscuIT.db.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,6 +29,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberAuthServiceImpl implements MemberAuthService {
     private final MemberRepository memberRepository;
+    private final MemberBookmarkRepository memberBookmarkRepository;
+    private final MemberHistoryRepository memberHistoryRepository;
+    private final MemberInterestRepository memberInterestRepository;
+    private final MemberPointRepository memberPointRepository;
+    private final MemberProfileRepository memberProfileRepository;
+    private final MemberSubmissionRepository memberSubmissionRepository;
     private final JwtTokenUtil jwtTokenUtil;
 
 //    public MemberAuthDto loadMemberByEmail(String email) {
@@ -79,11 +83,17 @@ public class MemberAuthServiceImpl implements MemberAuthService {
         Member member;
         if (findMember.isPresent()) {
             log.info("findMember.isPresent: 이미 회원가입한 적 있는 회원입니다.");
-            findMember.get().setEmail(oAuthMember.getEmail());
-            member = memberRepository.save(findMember.get());
+            member = memberRepository.save(new Member(findMember.get(), oAuthMember.getEmail()));
         } else {
             log.info("findMember.isNOTPresent: 회원가입한 적 없는 회원입니다.");
             member = memberRepository.save(oAuthMember);
+//            memberBookmarkRepository.save(MemberBookmark.builder()
+//                    .member(member)
+//                    .build());
+//            memberHistoryRepository.save(MemberHistory.builder()
+            memberProfileRepository.save(MemberProfile.builder()
+                    .member(member)
+                    .build());
         }
         log.debug("member: {}", member.toString());
         return member;
