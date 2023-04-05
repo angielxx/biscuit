@@ -38,11 +38,14 @@ public class MemberController {
     @GetMapping("/")
     public ResponseEntity<?> getMemberInfo(@RequestHeader(value = "Authorization") String token) {
         Member member = memberAuthService.getMember(token);
+        MemberProfile profile = memberService.getMemberProfileByMemberId(member.getId());
+        log.debug(profile.toString());
+        log.debug("쌤 혹시 제 memberProfile 보셨나요?");
         MemberInfoRes res = MemberInfoRes.builder().nickname(member.getNickname())
-                .job(member.getMemberProfile().getJob().toString())
-                .period(member.getMemberProfile().getPeriod())
+                .job(profile.getJob().toString())
+                .period(profile.getPeriod())
                 .interests(memberService.getInterestList(member).stream().map(category -> category.getSubName().toString()).collect(Collectors.toList()))
-                .build();
+                .build();;
         return ResponseEntity.ok(res);
     }
 

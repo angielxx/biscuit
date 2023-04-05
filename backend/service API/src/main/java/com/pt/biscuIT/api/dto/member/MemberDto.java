@@ -24,7 +24,6 @@ public class MemberDto {
     private Role role;
     private LocalDateTime signupDate;
     private LocalDateTime withdrawDate;
-    private MemberProfile memberProfile;
 
     public MemberDto(Member member){
         this.id = member.getId();
@@ -35,7 +34,6 @@ public class MemberDto {
         this.role = member.getRole();
         this.signupDate = member.getSignupDate();
         this.withdrawDate = member.getWithdrawDate();
-        this.memberProfile = member.getMemberProfile();
     }
 
     public Member toEntity(){
@@ -48,7 +46,6 @@ public class MemberDto {
                 .role(this.getRole())
                 .signupDate(this.getSignupDate())
                 .withdrawDate(this.getWithdrawDate())
-                .memberProfile(this.getMemberProfile())
                 .build();
     }
 }

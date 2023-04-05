@@ -26,4 +26,6 @@ public interface MemberService {
     void updateRole(Member member, String roleUser);
 
     List<Category> getInterestList(Member member);
+
+    MemberProfile getMemberProfileByMemberId(Long id);
 }
