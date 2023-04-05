@@ -1,10 +1,6 @@
 package com.pt.biscuIT.api.controller;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.pt.biscuIT.api.dto.bookmark.BookmarkAddDto;
 import com.pt.biscuIT.api.service.BookmarkService;
@@ -27,5 +23,11 @@ public class BookmarkController {
 	public void addBookmark(@RequestHeader(value = "Authorization") String token, @RequestBody BookmarkAddDto req){
 		Member member = memberAuthService.getMember(token);
 		bookmarkService.addBookmark(member, req.getContentId());
+	}
+
+	@DeleteMapping("/{contentId}")
+	public void deleteBookmark(@RequestHeader(value = "Authorization") String token, @PathVariable Long contentId){
+		Member member = memberAuthService.getMember(token);
+		bookmarkService.deleteBookmark(member, contentId);
 	}
 }
