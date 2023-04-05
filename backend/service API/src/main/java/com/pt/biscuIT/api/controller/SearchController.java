@@ -43,7 +43,10 @@ public class SearchController {
 			@RequestParam Type type,
 			@PathVariable String option
 			) {
-		Member member = memberAuthService.getMember(token);
+		Member member = null;
+		if(token != null) {
+			member = memberAuthService.getMember(token);
+		}
 		if(condition.equals("content")) {
 			return searchService.searchContent(member, keyword, from, to, lastContentId, pageable, type, option);
 		}
