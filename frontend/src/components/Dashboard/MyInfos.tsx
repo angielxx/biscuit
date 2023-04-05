@@ -27,7 +27,7 @@ type MyInfo = {
   nickname: string,
   job: string,
 	period: string,
-  interest: string[],
+  interests: string[],
 }
 
 interface MyInfoContent {
@@ -43,10 +43,10 @@ export default function MyInfos({myInfo}: MyInfoContent) {
       {functionToggle.periodToggle && <Info title="경력" content={myInfo?.period} />}
       {functionToggle.interestToggle
         && myInfo !==undefined
-        && myInfo.interest !== undefined
-        && <Info title="관심사" content={`${myInfo?.interest[0]}
-        ${myInfo?.interest.length > 1
-          ? `등 ${myInfo?.interest.length}개}` : ""}`}
+        && myInfo.interests !== undefined
+        && <Info title="관심사" content={`${myInfo?.interests[0]}
+        ${myInfo?.interests.length > 1
+          ? `등 ${myInfo?.interests.length}개}` : ""}`}
       />}
     </>
   )
