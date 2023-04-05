@@ -38,13 +38,13 @@ interface Props {
 
 type CategoryObjType = {
   [index: string]: string;
-  hit: string;
-  id: string;
+  bookmarked: string;
+  similar: string;
 };
 
 const CategoryObj: CategoryObjType = {
-  hit: '가장 인기 있는',
-  id: '최근 업로드 된',
+  bookmarked: '북마크한 컨텐츠',
+  similar: '나와 비슷한 사용자들이 즐겨본',
 };
 
 interface content {
@@ -81,7 +81,7 @@ const timeFilterArr = [
   { start: 0, end: 1440 },
 ];
 
-const HomeAuthContentList = ({ option }: Props) => {
+const PersonalContentList = ({ option }: Props) => {
   const timeFilter = useRecoilValue(homeFilterTimeState);
   const [timeFilterIdx, setTimeFilterIdx] = useState(6);
   const typeFilter = useRecoilValue(homeFilterBtnState);
@@ -113,7 +113,7 @@ const HomeAuthContentList = ({ option }: Props) => {
 
   return (
     <>
-      {option === 'fit' ? (
+      {option === 'favorite' ? (
         <>
           {data?.map((result, idx) => {
             return (
@@ -139,52 +139,29 @@ const HomeAuthContentList = ({ option }: Props) => {
             );
           })}
         </>
-      ) : 
-        option === 'favorite'
-        ? (
-          <>
-            <ListTitleContatiner>
-              <Icon category={category} />
-              <Title>{CategoryObj[category]}</Title>
-            </ListTitleContatiner>
-            <ContentListContainer>
-              <RowListContainer>
-                {data?.map((content, idx) => {
-                  return (
-                    <ContentContainer key={idx}>
-                      {!('items' in content) ? (
-                        <ContentCardItem content={content} />
-                      ) : null}
-                    </ContentContainer>
-                  );
-                })}
-              </RowListContainer>
-            </ContentListContainer>
-          </>
-        )
-        : (
-          <>
-            <ListTitleContatiner>
-              <Icon category={category} />
-              <Title>{CategoryObj[category]}</Title>
-            </ListTitleContatiner>
-            <ContentListContainer>
-              <RowListContainer>
-                {data?.map((content, idx) => {
-                  return (
-                    <ContentContainer key={idx}>
-                      {!('items' in content) ? (
-                        <ContentCardItem content={content} />
-                      ) : null}
-                    </ContentContainer>
-                  );
-                })}
-              </RowListContainer>
-            </ContentListContainer>
-          </>
+      ) : (
+        <>
+          <ListTitleContatiner>
+            <Icon category={option} />
+            <Title>{CategoryObj[option]}</Title>
+          </ListTitleContatiner>
+          <ContentListContainer>
+            <RowListContainer>
+              {data?.map((content, idx) => {
+                return (
+                  <ContentContainer key={idx}>
+                    {!('items' in content) ? (
+                      <ContentCardItem content={content} />
+                    ) : null}
+                  </ContentContainer>
+                );
+              })}
+            </RowListContainer>
+          </ContentListContainer>
+        </>
       )}
     </>
   );
 };
 
-export default HomeContentList;
+export default PersonalContentList;

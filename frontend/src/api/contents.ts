@@ -41,7 +41,7 @@ const get_personal_contents = async (
     end: number;
   },
   type: string,
-): Promise<content[] | undefined> => {
+): Promise<content[] | randomContent[] | undefined> => {
   const response = await baseInstance.get(
     requests.GET_PERSONAL_CONTENTS(option, fromTo, type)
   );
