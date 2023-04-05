@@ -30,7 +30,7 @@ interface SmallProps {
 
 const SmallCategory = ({ isClicked, title, selectList }: SmallProps) => {
   const [imgSrc, setImgSrc] = useState(
-    `src/assets/icons/category/${title}.svg`
+    `public/assets/icons/category/${title}.svg`
   );
   const [isExists, setIsExists] = useState(false);
 
@@ -41,14 +41,15 @@ const SmallCategory = ({ isClicked, title, selectList }: SmallProps) => {
       setIsExists(true);
     };
     img.onerror = function () {
-      setImgSrc('src/assets/icons/category/Default.svg');
+      setImgSrc('public/assets/icons/category/Default.svg');
       setIsExists(false);
     };
   }
 
   useEffect(() => {
+    console.log('small category title :', title);
     checkLocalImgFileExists(imgSrc);
-  }, [imgSrc]);
+  }, [imgSrc, title]);
 
   return (
     <CategoryBox
