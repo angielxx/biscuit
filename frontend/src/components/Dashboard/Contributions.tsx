@@ -41,9 +41,20 @@ interface ContributionsProps {
 }
 
 export default function Contributions({histories}: ContributionsProps) {
+
+  const dateFormat = (date: Date) => {
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    const strMonth = month >= 10 ? month.toString() : '0' + month.toString();
+    const strDay = day >= 10 ? day.toString() : '0' + day.toString();
+    return date.getFullYear().toString() + '-' + strMonth + '-' + strDay;    
+  }
+
   const tmpData: number[][] = [];
-  const todayDate = new Date();
-  const todayDay = todayDate.getDay();
+  const dateData = new Date();
+  const todayDate = dateFormat(dateData);
+  const todayDay = dateData.getDay();
+
 
   const [dashBoardState, setDashBoardState] = useState<number[][]>([]);
 
@@ -60,9 +71,15 @@ export default function Contributions({histories}: ContributionsProps) {
 
   useEffect(() => {
     if(histories === undefined) return;
+
+    console.log(todayDate);
+
     histories.forEach((history: History) => {
       const historyDate = Date.parse(history.date)
-      const dateDiff = (todayDate.getTime() - historyDate) / (1000 * 60 * 60 * 24)
+      const dateDiff = (Date.parse(todayDate) - historyDate) / (1000 * 60 * 60 * 24);
+
+      console.log(dateDiff);
+
       if(dateDiff >= 7 * 16) return;
       tmpData[15 - Math.ceil(dateDiff / 7)][dateDiff % 7] = history.count;
     });
