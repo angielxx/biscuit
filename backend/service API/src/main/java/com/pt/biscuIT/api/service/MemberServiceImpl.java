@@ -2,12 +2,13 @@ package com.pt.biscuIT.api.service;
 
 import com.pt.biscuIT.api.dto.history.MemberGraphDto;
 import com.pt.biscuIT.api.dto.history.MemberHistoryDto;
+import com.pt.biscuIT.api.dto.member.MemberDto;
 import com.pt.biscuIT.common.exception.MemberNotFoundException;
 import com.pt.biscuIT.db.entity.Member;
-import com.pt.biscuIT.db.repository.MemberHistoryRepositorySupport;
-import com.pt.biscuIT.db.repository.MemberPointRepositorySupport;
-import com.pt.biscuIT.db.repository.MemberRepository;
-import com.pt.biscuIT.db.repository.MemberRepositorySupport;
+import com.pt.biscuIT.db.entity.MemberInterest;
+import com.pt.biscuIT.db.entity.MemberProfile;
+import com.pt.biscuIT.db.entity.Role;
+import com.pt.biscuIT.db.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,8 +31,10 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final MemberRepositorySupport memberRepositorySupport;
     private final MemberPointRepositorySupport memberPointRepositorySupport;
-
+    private final MemberProfileRepository memberProfilerepository;
     private final MemberHistoryRepositorySupport memberHistoryRepositorySupport;
+    private final MemberBookmarkRepository memberBookmarkRepository;
+    private final MemberInterestRepository memberInterestRepository;
 
     public Member findMemberById(Long id) {
         if (memberRepository.findById(id).isPresent()) {
@@ -69,5 +72,34 @@ public class MemberServiceImpl implements MemberService {
 
     public Integer getPointByMember(Member member) {
         return memberPointRepositorySupport.findPointByMemberId(member.getId());
+    }
+
+    @Override
+    public MemberProfile updateProfile(MemberProfile profile) {
+        if (memberProfilerepository.findById(profile.getMemberId()).isPresent()) {
+            return memberProfilerepository.save(profile);
+        }else {
+            throw new MemberNotFoundException("해당 회원이 존재하지 않습니다.");
+        }
+    }
+
+    @Override
+    public MemberInterest saveMemberInterest(MemberInterest memberInterest) {
+        return memberInterestRepository.save(memberInterest);
+    }
+
+    @Override
+    public void updateNickName(Member member, String nickname) {
+        MemberDto memberDto = new MemberDto(member);
+        memberDto.setNickname(nickname);
+        memberRepository.save(memberDto.toEntity());
+    }
+
+    @Override
+    public void updateRole(Member member, String roleUser) {
+        MemberDto memberDto = new MemberDto(member);
+        memberDto.setRole(Role.valueOf(roleUser.toUpperCase()));
+        // TODO ENUM 값이 잘못 들어올 경우 Exception 처리
+        memberRepository.save(memberDto.toEntity());
     }
 }

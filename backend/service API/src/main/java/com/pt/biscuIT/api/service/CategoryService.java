@@ -58,4 +58,12 @@ public class CategoryService {
 
         return res;
     }
+
+    public Long getCategoryIdBySubName(String subName) {
+        return categoryRepositorySupport.getCategoryIdBySubName(subName);
+    }
+
+    public Category getCategoryBySubName(String subName) {
+        return categoryRepository.findBySubName(subName);
+    }
 }

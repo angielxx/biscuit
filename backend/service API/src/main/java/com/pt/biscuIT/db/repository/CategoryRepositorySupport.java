@@ -33,4 +33,12 @@ public class CategoryRepositorySupport {
                 .where(qCategory.id.eq(categoryId))
                 .fetchOne();
     }
+
+    public Long getCategoryIdBySubName(String subName) {
+        return jpaQueryFactory
+                .select(qCategory.id)
+                .from(qCategory)
+                .where(qCategory.subName.eq(subName))
+                .fetchOne();
+    }
 }
