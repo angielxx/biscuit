@@ -35,12 +35,15 @@ public class MemberController {
     private final MemberAuthService memberAuthService;
     private final CategoryService categoryService;
 
-    @GetMapping("/")
+    /**
+     * 회원 정보 조회
+     * @param token
+     * @return
+     */
+    @GetMapping("")
     public ResponseEntity<?> getMemberInfo(@RequestHeader(value = "Authorization") String token) {
         Member member = memberAuthService.getMember(token);
         MemberProfile profile = memberService.getMemberProfileByMemberId(member.getId());
-        log.debug(profile.toString());
-        log.debug("쌤 혹시 제 memberProfile 보셨나요?");
         MemberInfoRes res = MemberInfoRes.builder().nickname(member.getNickname())
                 .job(profile.getJob().toString())
                 .period(profile.getPeriod())
@@ -49,11 +52,6 @@ public class MemberController {
         return ResponseEntity.ok(res);
     }
 
-    /**
-     * 회원 정보 조회
-     * @param token
-     * @return
-     */
     @Transactional
     @PostMapping("/onboarding")
     public ResponseEntity<?> onboard(@RequestHeader(value = "Authorization") String token, @RequestBody MemberOnboardingReq memberOnboardingReq) {
