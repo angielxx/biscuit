@@ -16,19 +16,19 @@ type BoxTheme = {
 
 const boxColorChip: BoxTheme = {
   default: [
-    `#484E55`,
-    `#254648`,
-    `#2b6e72`,
-    `#32959b`,
-    `#38bdc5`,
-    `#3fe5ef`,
-    `#3fe5ef`,
+    `#484E55`, 
+    `#254648`, 
+    `#2b6e72`, 
+    `#32959b`,  
+    `#38bdc5`, 
+    `#3fe5ef`, 
+    `#3fe5ef`, 
   ]
 };
 
 const Box = styled.div((props: { theme: string, count: number }) => [
   tw`w-[80%] pb-[80%] mx-[10%] my-[20%] rounded`,
-  css`background: ${boxColorChip[props.theme][props.count]}`
+  css`background: ${boxColorChip[props.theme][props.count > 10 ? 6 : Math.ceil(props.count/2)]}`
 ]);
 
 type History = {
@@ -81,7 +81,7 @@ export default function Contributions({histories}: ContributionsProps) {
       console.log(dateDiff);
 
       if(dateDiff >= 7 * 16) return;
-      tmpData[15 - Math.ceil(dateDiff / 7)][dateDiff % 7] = history.count;
+      tmpData[15 - Math.floor(dateDiff / 7)][todayDay - dateDiff % 7] = history.count;
     });
     setDashBoardState(tmpData);
     console.log("histories:", histories);
