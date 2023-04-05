@@ -15,7 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 import { get_categories } from '../../api/category';
 import AsideProfile from './AsideProfile';
 import AsideLogin from './AsideLogin';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 const Aside = styled.div`
   ${tw`h-full z-20 flex flex-col items-start p-2 fixed w-[314px] right-0 top-0 bg-black`}
@@ -55,8 +55,8 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
   const [isStartModal, setIsStartModal] = useRecoilState(isStartModalState);
   const navigate = useNavigate();
 
-  const [isName, setIsName] = useRecoilState(isNameState);
-  const [isNoob, setIsNoob] = useRecoilState(isNoobState);
+  const isName = useRecoilValue(isNameState);
+  const isNoob = useRecoilValue(isNoobState);
 
   const { data, isLoading } = useQuery(
     ['get_categories'],
