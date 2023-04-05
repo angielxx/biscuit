@@ -44,7 +44,7 @@ type CategoryObjType = {
 
 const CategoryObj: CategoryObjType = {
   bookmarked: '북마크한 컨텐츠',
-  similar: '나와 비슷한 사용자들이 즐겨본',
+  similar: '동료들의 Pick',
 };
 
 interface content {
