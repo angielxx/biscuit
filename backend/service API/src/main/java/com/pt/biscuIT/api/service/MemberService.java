@@ -2,6 +2,7 @@ package com.pt.biscuIT.api.service;
 
 import com.pt.biscuIT.api.dto.history.MemberGraphDto;
 import com.pt.biscuIT.api.dto.history.MemberHistoryDto;
+import com.pt.biscuIT.db.entity.Category;
 import com.pt.biscuIT.db.entity.Member;
 import com.pt.biscuIT.db.entity.MemberInterest;
 import com.pt.biscuIT.db.entity.MemberProfile;
@@ -23,4 +24,6 @@ public interface MemberService {
     void updateNickName(Member member, String nickname);
 
     void updateRole(Member member, String roleUser);
+
+    List<Category> getInterestList(Member member);
 }
