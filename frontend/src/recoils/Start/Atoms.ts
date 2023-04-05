@@ -20,8 +20,15 @@ const isNameState = atom({
   effects_UNSTABLE: [persistAtom],
 })
 
+const isOnboardingState = atom({
+  key: 'isOnboardingState',
+  default: false,
+  effects_UNSTABLE: [persistAtom],
+})
+
 export { 
   isStartModalState,
   isNoobState,
-  isNameState
+  isNameState,
+  isOnboardingState
 };
