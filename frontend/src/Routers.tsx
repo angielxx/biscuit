@@ -1,15 +1,15 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Admin from './pages/Admin';
 import Search from './pages/Search';
 import Category from './pages/Category';
 
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { isModalOpenState } from './recoils/Contents/Atoms';
 import RecentContentModal from './components/common/Modal/RecontContentModal';
 import Modal from './components/common/Modal/Modal';
 import OnBoarding from './pages/OnBoarding';
-import { isStartModalState } from './recoils/Start/Atoms';
+import { isOnboardingState, isStartModalState } from './recoils/Start/Atoms';
 import Start from './components/Start/Start';
 import SocialLogin from './components/Start/SocialLogin';
 import MyPage from './pages/MyPage';
@@ -20,6 +20,7 @@ export default function Routers() {
   const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState);
   const [isStartModalOpen, setIsStartModalOpen] =
     useRecoilState(isStartModalState);
+  const onboardingState = useRecoilValue(isOnboardingState);
 
   return (
     <div>
@@ -45,7 +46,10 @@ export default function Routers() {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/editProfile" element={<EditProfile />} />
         <Route path="/admin" element={<Admin />} />
-        <Route path="/onboarding" element={<OnBoarding />} />
+        {!onboardingState
+          ? <Route path="/onboarding" element={<OnBoarding />} />
+          : null
+        }
         <Route path="/signin" element={<SocialLogin />} />
       </Routes>
     </div>

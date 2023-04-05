@@ -9,7 +9,7 @@ import AboutUser from "../components/OnBoarding/AboutUser";
 import AboutInterest from "../components/OnBoarding/AboutInterest";
 import { post_about_user } from "../api/login";
 
-import { isNameState, isNoobState } from "../recoils/Start/Atoms";
+import { isNameState, isNoobState, isOnboardingState } from "../recoils/Start/Atoms";
 
 const OnBoarding = () => {
   const navigate = useNavigate();
@@ -117,6 +117,7 @@ const OnBoarding = () => {
   }
   
   const [noob, setNoob] = useRecoilState(isNoobState);
+  const [onboarding, setOnboarding] = useRecoilState(isOnboardingState);
   
   // userData 전달
   const { mutate: userDataPost } = useMutation({
@@ -133,7 +134,8 @@ const OnBoarding = () => {
     setNoob(false);
 
     // 홈으로 이동
-    navigate(`/`);
+    setOnboarding(true);
+    navigate(`/`, {replace: true});
   }
 
   return (
