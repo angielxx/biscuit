@@ -122,10 +122,13 @@ const OnBoarding = () => {
   const { mutate: userDataPost } = useMutation({
     mutationFn: (userData: {}) => post_about_user(userData),
   });
+
+  useEffect(() => {
+    setUserData({...userData, interests: selectList});
+  }, [selectList]);
   
   const isSend = () => {
     console.log(selectList);
-    setUserData({...userData, interests: [...selectList]});
     userDataPost(userData);
     setNoob(false);
 
