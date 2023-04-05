@@ -16,7 +16,7 @@ const Icon = ({ category }: { category: string }) => {
       setIsExists(true);
     };
     img.onerror = function () {
-      setImgSrc('src/assets/icons/category/Default.svg');
+      setImgSrc('public/assets/icons/category/Default.svg');
       setIsExists(false);
     };
   }
