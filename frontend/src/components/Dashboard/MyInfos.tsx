@@ -18,7 +18,7 @@ const Info = ({title, content}: InfoProps) => {
       <TitleContainer>
         {title && <Span>{title}</Span>}
       </TitleContainer>
-      {content && <TextBox>{content}</TextBox>}
+      {content!==undefined && <TextBox>{content}</TextBox>}
     </InfoContainer>
   )
 }
@@ -41,7 +41,10 @@ export default function MyInfos({myInfo}: MyInfoContent) {
     <>
       {functionToggle.jobToggle && <Info title="직무" content={myInfo?.job} />}
       {functionToggle.periodToggle && <Info title="경력" content={myInfo?.period} />}
-      {functionToggle.interestToggle && <Info title="관심사" content={`${myInfo?.interest[0]}
+      {functionToggle.interestToggle
+        && myInfo !==undefined
+        && myInfo.interest !== undefined
+        && <Info title="관심사" content={`${myInfo?.interest[0]}
         ${myInfo?.interest.length > 1
           ? `등 ${myInfo?.interest.length}개}` : ""}`}
       />}
