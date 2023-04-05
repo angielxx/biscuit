@@ -1,7 +1,9 @@
 package com.pt.biscuIT.api.controller;
 
 import com.pt.biscuIT.api.dto.content.ContentInfoListCategoryDto;
+import com.pt.biscuIT.api.response.ContentInfoListRes;
 import com.pt.biscuIT.api.response.RandomCategoryContentRes;
+import com.pt.biscuIT.api.service.ContentService;
 import com.pt.biscuIT.api.service.MemberAuthService;
 import com.pt.biscuIT.api.service.MemberServiceImpl;
 import com.pt.biscuIT.common.exception.BiscuitException;
@@ -38,6 +40,8 @@ public class RecommendController {
     MemberServiceImpl memberServiceImpl;
     @Autowired
     MemberAuthService memberAuthService;
+    @Autowired
+    ContentService contentService;
 
     /*
         TODO: 추천 컨텐츠를 제공하는 API
@@ -114,7 +118,7 @@ public class RecommendController {
     }
 
     @GetMapping("/personal/{option}")
-    public ResponseEntity<? extends BaseResponseBody> getContentByBookmarked(
+    public ResponseEntity<? extends BaseResponseBody> getContentByPersonalOption(
             @PageableDefault(size = 30) Pageable pageable,
             @RequestParam(required = false, defaultValue = "0") int from,
             @RequestParam(required = false, defaultValue = "1440") int to,
@@ -129,17 +133,12 @@ public class RecommendController {
         if("bookmarked".equals(option) || "similar".equals(option)) contentList = recommendService.getPersonalContent(option, pageable, from, to, type, member);
         else throw new BiscuitException(ErrorCode.INVALID_PARAMETER);
 
+        contentService.setProperty(contentList.getContent(), member.getId());
 
-        PageMetaData metaData = PageMetaData.builder()
-                .lastContentId(contentList.getContent().get(contentList.getContent().size() - 1).getId())
-                .last(contentList.isLast())
-                .build();
-
-        return ResponseEntity.status(200).body(MetaDataContentListRes.of(
+        return ResponseEntity.status(200).body(ContentInfoListRes.of(
                 HttpStatus.OK.value(),
                 "SUCCESS",
-                MetaDataContentListRes.builder()
-                        .metaData(metaData)
+                ContentInfoListRes.builder()
                         .results(contentList.getContent())
                         .build()
         ));

@@ -63,6 +63,7 @@ public class ContentService {
                 .member(member)
                 .content(content)
                 .createdDate(LocalDateTime.now())
+                .isDeleted(false)
                 .build());
         }
     }

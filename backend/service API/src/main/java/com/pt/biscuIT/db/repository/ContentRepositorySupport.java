@@ -242,7 +242,7 @@ public class ContentRepositorySupport {
     }
 
     public List<Long> findCategoryIdByFavorite(Long memberId) {
-        return jpaQueryFactory
+        List<Long> categoryIdList = jpaQueryFactory
                 .select(qCategory.id)
                 .from(qCategory, qMemberInterest)
                 .where(
@@ -250,6 +250,7 @@ public class ContentRepositorySupport {
                         qMemberInterest.category.id.eq(qCategory.id)
                 )
                 .fetch();
+        return categoryIdList != null? categoryIdList: new ArrayList<>();
     }
 
     public Page<Content> findBookmarkedContent(Pageable pageable, int from, int to, Type type, Long memberId) {
@@ -273,7 +274,7 @@ public class ContentRepositorySupport {
 //        Collections.shuffle(contentList);
 
         return new PageImpl<>(
-                contentList,
+                (contentList != null) ? contentList: new ArrayList<>(),
                 pageable,
                 jpaQueryFactory
                         .select(qContent)
@@ -304,7 +305,7 @@ public class ContentRepositorySupport {
                 .fetch();
 
         return new PageImpl<>(
-                contentList,
+                (contentList != null) ? contentList: new ArrayList<>(),
                 pageable,
                 jpaQueryFactory
                         .select(qContent)

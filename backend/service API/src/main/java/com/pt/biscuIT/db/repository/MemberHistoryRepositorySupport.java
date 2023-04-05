@@ -4,13 +4,20 @@ import com.pt.biscuIT.api.dto.history.MemberGraphDto;
 import com.pt.biscuIT.api.dto.history.MemberHistoryDto;
 import com.pt.biscuIT.api.dto.history.QMemberGraphDto;
 import com.pt.biscuIT.api.dto.history.QMemberHistoryDto;
+import com.pt.biscuIT.db.entity.Content;
+import com.pt.biscuIT.db.entity.MemberHistory;
 import com.pt.biscuIT.db.entity.QCategory;
+import com.pt.biscuIT.db.entity.QContent;
 import com.pt.biscuIT.db.entity.QContentCategory;
 import com.pt.biscuIT.db.entity.QMemberHistory;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +37,7 @@ public class MemberHistoryRepositorySupport {
     QContentCategory qContentCategory = QContentCategory.contentCategory;
     QMemberHistory qMemberHistory = QMemberHistory.memberHistory;
     QCategory qCategory = QCategory.category;
+    QContent qContent = QContent.content;
 
     public List<MemberGraphDto> getGraphsByMemberId(Long memberId) {
         BooleanBuilder whereCondition = new BooleanBuilder();
@@ -79,5 +87,32 @@ public class MemberHistoryRepositorySupport {
                 .fetch();
 
         return histories;
+    }
+
+    public Page<MemberHistory> findHistoryContentByMemberId(Long memberId, Pageable pageable, Long lastContentId) {
+        BooleanBuilder whereCondition = new BooleanBuilder();
+        whereCondition.and(qMemberHistory.member.id.eq(memberId));
+        whereCondition.and(qMemberHistory.content.id.eq(qContent.id));
+        whereCondition.and(qMemberHistory.isDeleted.eq(false));
+        whereCondition.and(qMemberHistory.id.lt(lastContentId));
+
+        List<MemberHistory> contents = jpaQueryFactory
+            .select(qMemberHistory)
+            .from(qContent, qMemberHistory)
+            .where(whereCondition)
+            .orderBy(qMemberHistory.createdDate.desc())
+            .offset(0)
+            .limit(pageable.getPageSize())
+            .fetch();
+
+        return new PageImpl<>(
+            contents,
+            pageable,
+            jpaQueryFactory
+                .select(qMemberHistory)
+                .from(qContent, qMemberHistory)
+                .where(whereCondition)
+                .orderBy(qMemberHistory.createdDate.desc())
+                .fetch().size());
     }
 }

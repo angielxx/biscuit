@@ -1,15 +1,15 @@
-package com.pt.biscuIT.api.dto.content;
+package com.pt.biscuIT.api.dto.history;
+
+import java.time.LocalDate;
+import java.util.List;
 
 import com.pt.biscuIT.db.entity.Content;
 import com.pt.biscuIT.db.entity.Type;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.util.HtmlUtils;
-
-import java.time.LocalDate;
-import java.util.List;
 
 /**
  * @author 7unho
@@ -20,8 +20,9 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ContentInfoDto {
-    private Long id;
+public class HistoryContentInfoDto {
+    private Long memberHistoryId;
+    private Long contentId;
     private String title;
     private String source;
     private String creditBy;
@@ -31,11 +32,10 @@ public class ContentInfoDto {
     private boolean isMarked;
     private List<String> tags;
     private Integer hit;
-    private String img;
 
-    public ContentInfoDto(Content content) {
-        this.id = content.getId();
-        this.title = HtmlUtils.htmlUnescape(content.getTitle());
+    public HistoryContentInfoDto(Content content) {
+        this.contentId = content.getId();
+        this.title = content.getTitle();
         this.source = content.getSource();
         this.creditBy = content.getChannel();
         this.createdDate = content.getCreatedDate();
@@ -43,6 +43,5 @@ public class ContentInfoDto {
         this.type = content.getType();
         this.isMarked = false;
         this.hit = content.getHit();
-        this.img = content.getImg();
     }
 }

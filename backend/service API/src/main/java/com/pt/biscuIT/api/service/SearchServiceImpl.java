@@ -13,10 +13,12 @@ import com.pt.biscuIT.common.exception.BiscuitException;
 import com.pt.biscuIT.common.exception.ErrorCode;
 import com.pt.biscuIT.common.model.response.PageMetaData;
 import com.pt.biscuIT.db.entity.Content;
+import com.pt.biscuIT.db.entity.Member;
 import com.pt.biscuIT.db.entity.Type;
 import com.pt.biscuIT.db.repository.ContentRepositorySupport;
 import com.pt.biscuIT.db.repository.ContentTageRepositorySupport;
 import com.pt.biscuIT.db.repository.ContentViewRepositorySupport;
+import com.pt.biscuIT.db.repository.MemberBookmarkRepositorySupport;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,9 +31,10 @@ public class SearchServiceImpl implements SearchService {
 	private final ContentRepositorySupport contentRepositorySupport;
 	private final ContentViewRepositorySupport contentViewRepositorySupport;
 	private final ContentTageRepositorySupport contentTageRepositorySupport;
+	private final MemberBookmarkRepositorySupport memberBookmarkRepositorySupport;
 
 	@Override
-	public SearchContentRes searchContent(String keyword, int from, int to, Long lastContentId, Pageable pageable, Type type, String option) {
+	public SearchContentRes searchContent(Member member, String keyword, int from, int to, Long lastContentId, Pageable pageable, Type type, String option) {
 		Page<Content> contentList = null;
 		if("recent".equals(option)) {
 			contentList = contentRepositorySupport.findRecentContentByTitleAndTag(keyword, pageable, lastContentId, from, to, type);
@@ -55,6 +58,10 @@ public class SearchServiceImpl implements SearchService {
 			List<String> tags = contentTageRepositorySupport.findByTagsByContentId(content.getId());
 			ContentInfoDto contentInfoDto = new ContentInfoDto(content);
 			contentInfoDto.setTags(tags);
+			if(member != null) { //로그인된 상태라면
+				boolean isMarked = memberBookmarkRepositorySupport.isMarked(member.getId(), content.getId());
+				contentInfoDto.setMarked(isMarked);
+			}
 			contentInfoDtoList.add(contentInfoDto);
 		}
 
