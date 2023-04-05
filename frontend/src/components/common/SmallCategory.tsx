@@ -1,5 +1,5 @@
 // css
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import tw, { styled } from 'twin.macro';
 
 const Category = ({ category }: { category: string }) => {
@@ -29,11 +29,34 @@ interface SmallProps {
 }
 
 const SmallCategory = ({ isClicked, title, selectList }: SmallProps) => {
+  const [imgSrc, setImgSrc] = useState(
+    `src/assets/icons/category/${title}.svg`
+  );
+  const [isExists, setIsExists] = useState(false);
+
+  function checkLocalImgFileExists(imgSrc: string) {
+    let img = new Image();
+    img.src = imgSrc;
+    img.onload = function () {
+      setIsExists(true);
+    };
+    img.onerror = function () {
+      setImgSrc('src/assets/icons/category/Default.svg');
+      setIsExists(false);
+    };
+  }
+
+  useEffect(() => {
+    checkLocalImgFileExists(imgSrc);
+  }, [imgSrc]);
 
   return (
-    <CategoryBox onClick={isClicked} className={selectList.includes(title) ? "choose" : ""}>
+    <CategoryBox
+      onClick={isClicked}
+      className={selectList.includes(title) ? 'choose' : ''}
+    >
       <SubCategory>
-        <Category category={title} />
+        <img src={imgSrc} />
         <p className="text-h3">{title}</p>
       </SubCategory>
     </CategoryBox>
