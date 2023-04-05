@@ -1,6 +1,7 @@
 package com.pt.biscuIT.api.controller;
 
 import com.pt.biscuIT.api.dto.content.ContentInfoListCategoryDto;
+import com.pt.biscuIT.api.response.ContentInfoListRes;
 import com.pt.biscuIT.api.response.RandomCategoryContentRes;
 import com.pt.biscuIT.api.service.ContentService;
 import com.pt.biscuIT.api.service.MemberAuthService;
@@ -117,7 +118,7 @@ public class RecommendController {
     }
 
     @GetMapping("/personal/{option}")
-    public ResponseEntity<? extends BaseResponseBody> getContentByBookmarked(
+    public ResponseEntity<? extends BaseResponseBody> getContentByPersonalOption(
             @PageableDefault(size = 30) Pageable pageable,
             @RequestParam(required = false, defaultValue = "0") int from,
             @RequestParam(required = false, defaultValue = "1440") int to,
@@ -134,17 +135,10 @@ public class RecommendController {
 
         contentService.setProperty(contentList.getContent(), member.getId());
 
-
-        PageMetaData metaData = PageMetaData.builder()
-                .lastContentId(contentList.getContent().get(contentList.getContent().size() - 1).getId())
-                .last(contentList.isLast())
-                .build();
-
-        return ResponseEntity.status(200).body(MetaDataContentListRes.of(
+        return ResponseEntity.status(200).body(ContentInfoListRes.of(
                 HttpStatus.OK.value(),
                 "SUCCESS",
-                MetaDataContentListRes.builder()
-                        .metaData(metaData)
+                ContentInfoListRes.builder()
                         .results(contentList.getContent())
                         .build()
         ));
