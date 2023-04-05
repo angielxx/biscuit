@@ -74,12 +74,12 @@ export default function MyPage() {
   const myInfoQuery = useQuery({
     queryKey: ['get_myInfo'],
     queryFn: () => get_myInfo(),
-  }).data;
+  });
 
   const dashBoardQuery = useQuery({
     queryKey: ['get_dashboard'],
     queryFn: () => get_dashboard(),
-  }).data;
+  });
 
   const [myInfoData, setMyInfoData] = useState<MyInfoContent>();
   const [dashBoardData, setDashBoardData] = useState<DashboardContent>();
@@ -87,14 +87,14 @@ export default function MyPage() {
   useEffect(() => {
     console.log(myInfoQuery);
     if (myInfoQuery !== undefined && myInfoQuery) {
-      setMyInfoData(myInfoQuery);
+      setMyInfoData(myInfoQuery.data);
     }
   }, [myInfoQuery]);
 
   useEffect(() => {
     console.log(dashBoardQuery);
     if (dashBoardData !== undefined && dashBoardQuery) {
-      setDashBoardData(dashBoardQuery);
+      setDashBoardData(dashBoardQuery.data);
     }
   }, [dashBoardQuery]);
 
