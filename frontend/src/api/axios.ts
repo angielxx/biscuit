@@ -20,13 +20,14 @@ const authAPI = (url: string, options?: any) => {
 const setTokenHeader = (config: any) => {
   // 쿠키에 담긴 토큰 가져오기
   const token = getCookie('access-token');
-  const [isNoob, setIsNoob] = useRecoilState(isNoobState);
+  // const [isNoob, setIsNoob] = useRecoilState(isNoobState);
 
   if (token) {
     config.headers["Authorization"] = `Bearer ${token}`;
-  } else {
-    setIsNoob(true);
-  }
+  } 
+  // else {
+  //   setIsNoob(true);
+  // }
   return config;
 };
 
