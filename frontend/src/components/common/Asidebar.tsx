@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { isNameState, isStartModalState } from '../../recoils/Start/Atoms';
 import { isNoobState } from '../../recoils/Start/Atoms';
@@ -16,6 +16,7 @@ import { get_categories } from '../../api/category';
 import AsideProfile from './AsideProfile';
 import AsideLogin from './AsideLogin';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { getCookie } from 'typescript-cookie';
 
 const Aside = styled.div`
   ${tw`h-full z-20 flex flex-col items-start p-2 fixed w-[314px] right-0 top-0 bg-black`}
@@ -56,7 +57,7 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
   const navigate = useNavigate();
 
   const isName = useRecoilValue(isNameState);
-  const isNoob = useRecoilValue(isNoobState);
+  const [isNoob, setIsNoob] = useRecoilState(isNoobState);
 
   const { data, isLoading } = useQuery(
     ['get_categories'],
@@ -72,6 +73,12 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
     setIsStartModal(true);
     setIsOpen(false);
   }
+
+  useEffect(() => {
+    if (!getCookie('access-token')) {
+      setIsNoob(true);
+    }
+  }, [])
 
   return (
     <Aside className={isOpen ? 'open' : ''}>
