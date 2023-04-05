@@ -46,7 +46,7 @@ export default function MyInfos({myInfo}: MyInfoContent) {
         && myInfo.interests !== undefined
         && <Info title="관심사" content={`${myInfo?.interests[0]}
         ${myInfo?.interests.length > 1
-          ? `등 ${myInfo?.interests.length}개}` : ""}`}
+          ? `등 ${myInfo?.interests.length}개` : ""}`}
       />}
     </>
   )

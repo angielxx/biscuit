@@ -85,13 +85,13 @@ export default function MyPage() {
   const [dashBoardData, setDashBoardData] = useState<DashboardContent>();
 
   useEffect(() => {
-    if (myInfoQuery !== undefined && myInfoQuery) {
+    if (myInfoQuery !== undefined) {
       setMyInfoData(myInfoQuery.data);
     }
   }, [myInfoQuery]);
 
   useEffect(() => {
-    if (dashBoardData !== undefined && dashBoardQuery) {
+    if (dashBoardQuery !== undefined) {
       setDashBoardData(dashBoardQuery.data);
     }
   }, [dashBoardQuery]);
@@ -117,12 +117,12 @@ export default function MyPage() {
             <Span>퀴즈를 풀면 잔디가 자라나요.</Span>
           </DashboardHeader>
           <PointContainer>
-            {functionToggle.pointToggle && dashBoardData !== undefined && dashBoardData.point !== undefined && <Point point={dashBoardData.point} />}
+            {functionToggle.pointToggle && dashBoardData && <Point point={dashBoardData.point} />}
           </PointContainer>
         </HeaderContainer>
-        {functionToggle.dashBoardToggle && dashBoardData !== undefined && dashBoardData.histories !== undefined && <Contributions histories={dashBoardData.histories} />}
+        {functionToggle.dashBoardToggle && dashBoardData && <Contributions histories={dashBoardData.histories} />}
         <Span>님이 비스킷에서 가장 많이 본 콘텐츠에요.</Span>
-        {functionToggle.graphToggle && dashBoardData !== undefined && dashBoardData.graphs !== undefined && <Graph graphs={dashBoardData.graphs}/>}
+        {functionToggle.graphToggle && dashBoardData && <Graph graphs={dashBoardData.graphs}/>}
       </DashboardContainer>
     </HomeContainer>
   )
