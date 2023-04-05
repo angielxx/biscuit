@@ -2,10 +2,6 @@
 import { useEffect, useState } from 'react';
 import tw, { styled } from 'twin.macro';
 
-const Category = ({ category }: { category: string }) => {
-  return <img src={`/src/assets/icons/category/${category}.svg`} />;
-};
-
 const CategoryBox = styled.li`
   ${tw`flex flex-col items-start order-5 w-full px-4 py-3 gap-[10px] text-white border-b border-solid border-dark-grey10 cursor-pointer`}
 
@@ -29,9 +25,7 @@ interface SmallProps {
 }
 
 const SmallCategory = ({ isClicked, title, selectList }: SmallProps) => {
-  const [imgSrc, setImgSrc] = useState(
-    `public/assets/icons/category/${title}.svg`
-  );
+  const [imgSrc, setImgSrc] = useState(`assets/icons/category/${title}.svg`);
   const [isExists, setIsExists] = useState(false);
 
   function checkLocalImgFileExists(imgSrc: string) {
@@ -41,7 +35,7 @@ const SmallCategory = ({ isClicked, title, selectList }: SmallProps) => {
       setIsExists(true);
     };
     img.onerror = function () {
-      setImgSrc('public/assets/icons/category/Default.svg');
+      setImgSrc('assets/icons/category/Default.svg');
       setIsExists(false);
     };
   }
