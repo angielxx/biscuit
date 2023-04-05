@@ -9,7 +9,7 @@ import { isModalOpenState } from './recoils/Contents/Atoms';
 import RecentContentModal from './components/common/Modal/RecontContentModal';
 import Modal from './components/common/Modal/Modal';
 import OnBoarding from './pages/OnBoarding';
-import { isOnboardingState, isStartModalState } from './recoils/Start/Atoms';
+import { isStartModalState } from './recoils/Start/Atoms';
 import Start from './components/Start/Start';
 import SocialLogin from './components/Start/SocialLogin';
 import MyPage from './pages/MyPage';
@@ -20,7 +20,6 @@ export default function Routers() {
   const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState);
   const [isStartModalOpen, setIsStartModalOpen] =
     useRecoilState(isStartModalState);
-  const onboardingState = useRecoilValue(isOnboardingState);
 
   return (
     <div>
@@ -46,10 +45,7 @@ export default function Routers() {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/editProfile" element={<EditProfile />} />
         <Route path="/admin" element={<Admin />} />
-        {!onboardingState
-          ? <Route path="/onboarding" element={<OnBoarding />} />
-          : null
-        }
+        <Route path="/onboarding" element={<OnBoarding />} />
         <Route path="/signin" element={<SocialLogin />} />
       </Routes>
     </div>
