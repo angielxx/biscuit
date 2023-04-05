@@ -38,13 +38,11 @@ interface Props {
 
 type CategoryObjType = {
   [index: string]: string;
-  bookmarked: string;
-  similar: string;
+  fit: string,
 };
 
 const CategoryObj: CategoryObjType = {
-  bookmarked: '북마크한 컨텐츠',
-  similar: '나와 비슷한 사용자들이 즐겨본',
+  fit: '지금 딱 필요한',
 };
 
 interface content {

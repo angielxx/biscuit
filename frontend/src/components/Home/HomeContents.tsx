@@ -11,18 +11,20 @@ const HomeContentsContainer = tw.div`
 
 const HomeContents = ({}: Object) => {
   const unAuthContents = ['id', 'hit', 'category'];
-  const authContent = ['fit', 'favor_category', 'bookmarked', 'similar_member'];
+  const authContent = ['favorite', 'bookmarked', 'similar'];
   const isNoob = useRecoilValue(isNoobState);
 
   return (
     <HomeContentsContainer>
       {isNoob === false
-        ? authContent?.map((category) => {
-            return <>
-              <FitContent key={category} option={category} />
-              <PersonalContentList key={category} option={category} />
-            </>;
-          })
+        ? <>
+          <FitContent option={"fit"} />
+          {authContent?.map((category) => {
+              return <>
+                <PersonalContentList key={category} option={category} />
+              </>;
+          })}
+        </>
         : unAuthContents?.map((category) => {
             return <HomeContentList key={category} category={category} />;
           })}
