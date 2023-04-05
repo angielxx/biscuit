@@ -74,12 +74,6 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
     setIsOpen(false);
   }
 
-  useEffect(() => {
-    if (!getCookie('access-token')) {
-      setIsNoob(true);
-    }
-  }, [])
-
   return (
     <Aside className={isOpen ? 'open' : ''}>
       <Closeicon>
