@@ -24,7 +24,7 @@ public class HistoryController {
 	private final MemberHistoryService memberHistoryService;
 
 	@PostMapping("/{historyId}")
-	public void deleteHistory(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long historyId) {
+	public void deleteHistory(@RequestHeader(value = "Authorization") String token, @PathVariable Long historyId) {
 		Member member = memberAuthService.getMember(token);
 		memberHistoryService.deleteHistory(member, historyId);
 	}
