@@ -12,9 +12,6 @@ const authAPI = (url: string, options?: any) => {
   return axios.create(
     { 
       baseURL: url,
-      // headers: {
-      //   Authorization: `Bearer ${getCookie('access-token')}`
-      // },
       ...options 
     }
   );
@@ -61,7 +58,8 @@ authInstance.interceptors.request.use(setTokenHeader);
 //         });
 //         if (data) {
 //           setCookie('access-token', data);
-//           return authInstance;
+//           config.headers["Authorization"] = `Bearer ${getCookie('access-token')}`;
+//           return authInstance.request(config);
 //         }
 //       }
 //       catch (error) {
