@@ -41,6 +41,7 @@ public class SecurityConfig {
             "/api/search/**",
             "/api/categories/**",
             "/api/recommends/random/**",
+            "/api/quizzes/**",
             "/login/**",
             "/oauth2/**",
     };
