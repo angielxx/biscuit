@@ -35,7 +35,7 @@ const QuizPage = ({ onSubmit, quizzes }: QuizPageProps) => {
         return prev;
       })
     );
-    console.log(answers);
+    // console.log(answers);
   }, [quizzes]);
 
   const clickQuizOptionHandler = (quizId: number, answer: number) => {
@@ -47,7 +47,7 @@ const QuizPage = ({ onSubmit, quizzes }: QuizPageProps) => {
     const allStatus = Object.values(answers).every((answer) => answer !== -1);
     if (allStatus) setBtnStatus('active');
     else setBtnStatus('disabled');
-    console.log(allStatus);
+    // console.log(allStatus);
   };
 
   return (

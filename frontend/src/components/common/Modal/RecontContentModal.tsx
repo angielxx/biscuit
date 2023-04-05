@@ -119,15 +119,10 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
       answer: 0,
     },
   ]);
-
   // 콘텐츠 소비 시간
   const getTime = useRecoilValue(getTimeSelector);
   // 유저가 선택한 퀴즈의 정답
-  const [userAnswers, setUserAnswers] = useState<number[]>([]);
-
-  useEffect(() => {
-    // API get 요청 : 퀴즈 제공
-  }, []);
+  const [userAnswers, setUserAnswers] = useState<AnswerState>([]);
 
   interface mutateParams {
     contentId: number;
@@ -211,7 +206,7 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   const quizSubmitHandler = (answers: AnswerState) => {
     // API POST 요청 : 퀴즈 제출 내역 저장
     quizMutate(recentContent.id);
-    setUserAnswers([firstAnswer, secondAnswer, thirdAnswer]);
+    setUserAnswers(answers);
   };
 
   return (
