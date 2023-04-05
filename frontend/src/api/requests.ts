@@ -81,7 +81,7 @@ export const requests = {
     },
     type: string,
   ) {
-    return `/api/recommends/personal/${option}&type=${type}&from=${fromTo?.start}&to=${fromTo?.end}`;
+    return `/api/recommends/personal/${option}?type=${type}&from=${fromTo?.start}&to=${fromTo?.end}`;
   },
 
   // 가입 설문조사 전달
