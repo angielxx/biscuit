@@ -79,7 +79,7 @@ public class MemberAuthServiceImpl implements MemberAuthService {
         Member member;
         if (findMember.isPresent()) {
             log.info("findMember.isPresent: 이미 회원가입한 적 있는 회원입니다.");
-            findMember.get().setEmail(oAuthMember.getEmail());
+            // findMember.get().setEmail(oAuthMember.getEmail());
             member = memberRepository.save(findMember.get());
         } else {
             log.info("findMember.isNOTPresent: 회원가입한 적 없는 회원입니다.");
