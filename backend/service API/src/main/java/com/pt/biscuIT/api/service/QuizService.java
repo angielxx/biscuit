@@ -8,6 +8,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface QuizService {
-	ProvideQuizDto provideQuiz(Member member, Long contentId);
+	ProvideQuizDto provideQuiz(Long contentId);
     QuizSubmitDto submitQuiz(Member member, Long contentId, QuizSubmitRequestDto requestDto);
 }
