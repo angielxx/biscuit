@@ -12,6 +12,7 @@ interface content {
   marked: boolean;
   tags: Array<string> | null;
   hit: number;
+  img: string;
 }
 
 interface randomContent {
@@ -26,7 +27,7 @@ const get_home_contents = async (
     start: number;
     end: number;
   },
-  type?: string,
+  type?: string
 ): Promise<content[] | randomContent[] | undefined> => {
   const response = await baseInstance.get(
     requests.GET_HOME_CONTENTS(classification, categoryCount, fromTo, type)
@@ -40,7 +41,7 @@ const get_personal_contents = async (
     start: number;
     end: number;
   },
-  type: string,
+  type: string
 ): Promise<content[] | randomContent[] | undefined> => {
   const response = await authInstance.get(
     requests.GET_PERSONAL_CONTENTS(option, fromTo, type)

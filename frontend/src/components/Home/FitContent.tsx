@@ -4,7 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 import { get_personal_contents } from '../../api/contents';
 import { useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
-import { homeFilterBtnState, homeFilterTimeState } from '../../recoils/Home/Atoms';
+import {
+  homeFilterBtnState,
+  homeFilterTimeState,
+} from '../../recoils/Home/Atoms';
 import Icon from '../common/Icon';
 
 const ContentListContainer = tw.div`
@@ -38,7 +41,7 @@ interface Props {
 
 type CategoryObjType = {
   [index: string]: string;
-  fit: string,
+  fit: string;
 };
 
 const CategoryObj: CategoryObjType = {
@@ -56,6 +59,7 @@ interface content {
   marked: boolean;
   tags: Array<string> | null;
   hit: number;
+  img: string;
 }
 
 interface randomContent {
@@ -99,7 +103,6 @@ const FitContent = ({ option }: Props) => {
   const { data } = useQuery({
     queryKey: ['get_personal_contents', option, timeFilterIdx, typeFilter],
     queryFn: () => {
-      
       const randomOrder = [0, 10, 20, 30, 40].sort(() => Math.random() - 0.5);
       setOrder([...randomOrder]);
       setShowingIdx(order.shift());
@@ -108,21 +111,26 @@ const FitContent = ({ option }: Props) => {
       localStorage.setItem('OrderArray', JSON.stringify(randomOrder));
 
       const fromTo = timeFilterArr[timeFilterIdx];
-      const type = typeFilter[0] === true
-        ? "video" 
-        : typeFilter[1] === true
-          ? "article"
-          : "all";
-      return get_personal_contents(option, fromTo, type)
+      const type =
+        typeFilter[0] === true
+          ? 'video'
+          : typeFilter[1] === true
+          ? 'article'
+          : 'all';
+      return get_personal_contents(option, fromTo, type);
     },
-    enabled: !!(timeFilterIdx !== undefined && typeFilter !== undefined && order?.length === 0),
+    enabled: !!(
+      timeFilterIdx !== undefined &&
+      typeFilter !== undefined &&
+      order?.length === 0
+    ),
     staleTime: 60 * 60 * 1000,
     cacheTime: Infinity,
   });
 
   useEffect(() => {
     const myOrderString = localStorage.getItem('OrderArray');
-    if(myOrderString) {
+    if (myOrderString) {
       const myOrder = JSON.parse(myOrderString);
       setOrder([...myOrder]);
       setShowingIdx(order.shift());
@@ -135,7 +143,7 @@ const FitContent = ({ option }: Props) => {
     setShowingIdx(order.shift());
     localStorage.removeItem('OrderArray');
     localStorage.setItem('OrderArray', JSON.stringify(randomOrder));
-  }, [])
+  }, []);
 
   return (
     <>
@@ -147,12 +155,15 @@ const FitContent = ({ option }: Props) => {
         <RowListContainer>
           {data?.map((content, idx) => {
             return (
-              showingIdx && idx >= showingIdx && idx < showingIdx+10 &&
+              showingIdx &&
+              idx >= showingIdx &&
+              idx < showingIdx + 10 && (
                 <ContentContainer key={idx}>
                   {!('items' in content) ? (
                     <ContentCardItem content={content} />
                   ) : null}
                 </ContentContainer>
+              )
             );
           })}
         </RowListContainer>

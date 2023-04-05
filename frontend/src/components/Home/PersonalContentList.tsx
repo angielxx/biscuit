@@ -4,7 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 import { get_personal_contents } from '../../api/contents';
 import { useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
-import { homeFilterBtnState, homeFilterTimeState } from '../../recoils/Home/Atoms';
+import {
+  homeFilterBtnState,
+  homeFilterTimeState,
+} from '../../recoils/Home/Atoms';
 import Icon from '../common/Icon';
 
 const ContentListContainer = tw.div`
@@ -58,6 +61,7 @@ interface content {
   marked: boolean;
   tags: Array<string> | null;
   hit: number;
+  img: string;
 }
 
 interface randomContent {
@@ -99,12 +103,13 @@ const PersonalContentList = ({ option }: Props) => {
     queryKey: ['get_personal_contents', option, timeFilterIdx, typeFilter],
     queryFn: () => {
       const fromTo = timeFilterArr[timeFilterIdx];
-      const type = typeFilter[0] === true
-        ? "video" 
-        : typeFilter[1] === true
-          ? "article"
-          : "all";
-      return get_personal_contents(option, fromTo, type)
+      const type =
+        typeFilter[0] === true
+          ? 'video'
+          : typeFilter[1] === true
+          ? 'article'
+          : 'all';
+      return get_personal_contents(option, fromTo, type);
     },
     enabled: !!(timeFilterIdx !== undefined && typeFilter !== undefined),
     staleTime: 60 * 60 * 1000,

@@ -32,6 +32,7 @@ interface content {
   marked: boolean;
   tags: Array<string> | null;
   hit: number;
+  img: string;
 }
 const recentContentState = atom<content>({
   key: 'recentContentState',
@@ -46,6 +47,7 @@ const recentContentState = atom<content>({
     marked: false,
     tags: [],
     hit: 0,
+    img: '',
   },
 });
 
