@@ -41,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {// Read the Authorization header, where the JWT Token should be
             String token = ((HttpServletRequest) request).getHeader(JwtTokenUtil.HEADER_STRING);
             if (token != null && tokenUtil.verifyToken(token)) {
-                String identifier = tokenUtil.getIdentifier(token);
+                String identifier = JwtTokenUtil.getIdentifier(token);
 
                 Member member = memberService.findByIdentifier(identifier);
                 log.debug("member : {}", member);

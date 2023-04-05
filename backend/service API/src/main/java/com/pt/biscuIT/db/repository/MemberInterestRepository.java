@@ -11,4 +11,6 @@ import java.util.List;
 @Repository
 public interface MemberInterestRepository extends JpaRepository<MemberInterest, Long> {
     List<MemberInterest> findAllByMemberId(Long id);
+
+    MemberInterest findByMemberIdAndCategoryId(Long memberId, Long categoryId);
 }

@@ -3,12 +3,14 @@ package com.pt.biscuIT.api.service;
 import com.pt.biscuIT.api.dto.history.MemberGraphDto;
 import com.pt.biscuIT.api.dto.history.MemberHistoryDto;
 import com.pt.biscuIT.api.dto.member.MemberDto;
+import com.pt.biscuIT.api.dto.member.MemberInfoDto;
 import com.pt.biscuIT.common.exception.MemberNotFoundException;
 import com.pt.biscuIT.db.entity.*;
 import com.pt.biscuIT.db.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service("memberService")
 public class MemberServiceImpl implements MemberService {
+    private final CategoryRepository categoryRepository;
     private final MemberRepository memberRepository;
     private final MemberRepositorySupport memberRepositorySupport;
     private final MemberPointRepositorySupport memberPointRepositorySupport;
@@ -34,13 +37,6 @@ public class MemberServiceImpl implements MemberService {
     private final MemberBookmarkRepository memberBookmarkRepository;
     private final MemberInterestRepository memberInterestRepository;
 
-    public Member findMemberById(Long id) {
-        if (memberRepository.findById(id).isPresent()) {
-            return memberRepository.findById(id).get();
-        }else {
-            throw new MemberNotFoundException("해당 회원이 존재하지 않습니다.");
-        }
-    }
 
     @Override
     public Member findByIdentifier(String identifier) {
@@ -53,9 +49,13 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
     public Member update(Member member) {
-        memberRepository.save(member);
-        return null;
+        if (memberRepository.findById(member.getId()).isPresent()) {
+            return memberRepository.save(member);
+        } else {
+            throw new MemberNotFoundException("해당 회원이 존재하지 않습니다.");
+        }
     }
 
     public List<MemberHistoryDto> getHistoriesByMember(Member member) {
@@ -72,7 +72,9 @@ public class MemberServiceImpl implements MemberService {
         return memberPointRepositorySupport.findPointByMemberId(member.getId());
     }
 
+
     @Override
+    @Transactional
     public MemberProfile updateProfile(MemberProfile profile) {
         if (memberProfilerepository.findById(profile.getMemberId()).isPresent()) {
             return memberProfilerepository.save(profile);
@@ -87,27 +89,13 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void updateNickName(Member member, String nickname) {
-        MemberDto memberDto = new MemberDto(member);
-        memberDto.setNickname(nickname);
-        memberRepository.save(memberDto.toEntity());
-    }
-
-    @Override
-    public void updateRole(Member member, String roleUser) {
-        MemberDto memberDto = new MemberDto(member);
-        memberDto.setRole(Role.valueOf(roleUser.toUpperCase()));
-        // TODO ENUM 값이 잘못 들어올 경우 Exception 처리
-        memberRepository.save(memberDto.toEntity());
-    }
-
-    @Override
     public List<Category> getInterestList(Member member) {
         List<MemberInterest> interestList =  memberInterestRepository.findAllByMemberId(member.getId());
         return interestList.stream().map(MemberInterest::getCategory).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public MemberProfile getMemberProfileByMemberId(Long id) {
         if (memberProfilerepository.findById(id).isPresent()) {
             return memberProfilerepository.findById(id).get();
@@ -115,4 +103,44 @@ public class MemberServiceImpl implements MemberService {
             throw new MemberNotFoundException("해당 회원이 존재하지 않습니다.");
         }
     }
+
+    @Override
+    @Transactional
+    public void updateMemberInfo(MemberInfoDto memberInfoDto) {
+        Optional<Member> member = memberRepository.findById(memberInfoDto.getMemberId());
+        if (member.isPresent()) {
+            // nickname 정보 업데이트
+            updateMemberNickNameAndRole(member.get(), memberInfoDto.getNickname());
+            // job, period 정보 업데이트
+            MemberProfile profile = MemberProfile.builder()
+                    .memberId(memberInfoDto.getMemberId())
+                    .job(Job.valueOf(memberInfoDto.getJob().toUpperCase()))
+                    .period(memberInfoDto.getPeriod())
+                    .build();
+            updateProfile(profile);
+            // intrests 정보 업데이트 TODO : 중복 체크
+            for (String interest : memberInfoDto.getInterests()) {
+                Category category = categoryRepository.findBySubName(interest);
+                if(memberInterestRepository.findByMemberIdAndCategoryId(memberInfoDto.getMemberId(), category.getId()) != null){
+                    continue;
+                }
+                memberInterestRepository.save(MemberInterest.builder()
+                        .member(member.get())
+                        .category(category)
+                        .build());
+            }
+        }else {
+            throw new MemberNotFoundException("해당 회원이 존재하지 않습니다.");
+        }
+    }
+
+
+    void updateMemberNickNameAndRole(Member member, String nickname) {
+        MemberDto memberDto = new MemberDto(member);
+        memberDto.setNickname(nickname);
+        // TODO ENUM 값이 잘못 들어올 경우 Exception 처리
+        memberDto.setRole(Role.ROLE_MEMBER);
+        memberRepository.save(memberDto.toEntity());
+    }
+
 }

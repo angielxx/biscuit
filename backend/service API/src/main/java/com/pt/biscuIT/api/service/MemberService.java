@@ -2,6 +2,7 @@ package com.pt.biscuIT.api.service;
 
 import com.pt.biscuIT.api.dto.history.MemberGraphDto;
 import com.pt.biscuIT.api.dto.history.MemberHistoryDto;
+import com.pt.biscuIT.api.dto.member.MemberInfoDto;
 import com.pt.biscuIT.db.entity.Category;
 import com.pt.biscuIT.db.entity.Member;
 import com.pt.biscuIT.db.entity.MemberInterest;
@@ -17,15 +18,13 @@ public interface MemberService {
     List<MemberGraphDto> getGraphsByMember(Member member);
     Integer getPointByMember(Member member);
 
-    MemberProfile updateProfile(MemberProfile profile);
-
     MemberInterest saveMemberInterest(MemberInterest memberInterest);
-
-    void updateNickName(Member member, String nickname);
-
-    void updateRole(Member member, String roleUser);
 
     List<Category> getInterestList(Member member);
 
     MemberProfile getMemberProfileByMemberId(Long id);
+
+    void updateMemberInfo(MemberInfoDto memberInfoDto);
+
+    MemberProfile updateProfile(MemberProfile profile);
 }
