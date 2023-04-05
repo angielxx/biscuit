@@ -83,7 +83,7 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
         />
       </Closeicon>
 
-      {!isNoob
+      {isNoob === false
         ? <AsideProfile isName={isName} />
         : <AsideLogin onClick={startModal} />
       }
