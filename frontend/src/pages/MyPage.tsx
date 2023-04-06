@@ -61,7 +61,7 @@ interface DashboardContent {
 interface MyInfoContent {
   nickname: string;
   job: string;
-  period: string;
+  period: number;
   interests: string[];
 }
 
