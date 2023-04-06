@@ -20,5 +20,6 @@ interface DashboardContent {
 }
 
 export const get_dashboard = async (): Promise<DashboardContent> => {
-  return await authInstance.get(requests.GET_DASHBOARD());
+  const response = await authInstance.get(requests.GET_DASHBOARD());
+  return response.data;
 }

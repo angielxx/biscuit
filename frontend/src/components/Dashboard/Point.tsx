@@ -40,7 +40,7 @@ export default function Point({point}: PointProps) {
       <Icon category="QuestionMark" />
       <PointContainer>
         <Icon category="Point" />
-        <PointValue>{point}</PointValue>
+        {point!==undefined && <PointValue>{point}</PointValue>}
       </PointContainer>
     </>
   )

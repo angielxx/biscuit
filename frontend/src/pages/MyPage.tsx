@@ -40,19 +40,59 @@ const Setting = ({ category }: { category: string }) => {
   return isExists === true ? <Logo src={imgSrc} /> : <Logo />;
 };
 
+type History = {
+  date: string;
+  count: number;
+};
+
+type GraphItem = {
+  category: string;
+  count: number;
+};
+
+interface DashboardContent {
+  status: number;
+  message: string;
+  histories: History[];
+  graphs: GraphItem[];
+  point: number;
+}
+
+interface MyInfoContent {
+  nickname: string;
+  job: string;
+  period: string;
+  interests: string[];
+}
+
 export default function MyPage() {
   const functionToggle = useRecoilValue(functionToggleState);
 
   const navigate = useNavigate();
-  const myInfoData = useQuery({
+  const myInfoQuery = useQuery({
     queryKey: ['get_myInfo'],
     queryFn: () => get_myInfo(),
-  }).data;
+  });
 
-  const dashBoardData = useQuery({
+  const dashBoardQuery = useQuery({
     queryKey: ['get_dashboard'],
     queryFn: () => get_dashboard(),
-  }).data;
+  });
+
+  const [myInfoData, setMyInfoData] = useState<MyInfoContent>();
+  const [dashBoardData, setDashBoardData] = useState<DashboardContent>();
+
+  useEffect(() => {
+    if (myInfoQuery !== undefined) {
+      setMyInfoData(myInfoQuery.data);
+    }
+  }, [myInfoQuery]);
+
+  useEffect(() => {
+    if (dashBoardQuery !== undefined) {
+      setDashBoardData(dashBoardQuery.data);
+    }
+  }, [dashBoardQuery]);
 
   return (
     <HomeContainer>

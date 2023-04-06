@@ -17,6 +17,7 @@ import AsideProfile from './AsideProfile';
 import AsideLogin from './AsideLogin';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { getCookie } from 'typescript-cookie';
+import Logout from './Logout';
 
 const Aside = styled.div`
   ${tw`h-full z-20 flex flex-col items-start p-2 fixed w-[314px] right-0 top-0 bg-black`}
@@ -79,6 +80,11 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
     }
   }, []);
 
+  const goToMypage = () => {
+    navigate('/mypage');
+    setIsOpen(false);
+  };
+
   return (
     <Aside className={isOpen ? 'open' : ''}>
       <Closeicon>
@@ -90,7 +96,7 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
       </Closeicon>
 
       {isNoob === false ? (
-        <AsideProfile isName={isName} />
+        <AsideProfile isName={isName} onClick={goToMypage} setIsOpen={setIsOpen} />
       ) : (
         <AsideLogin onClick={startModal} />
       )}
@@ -116,6 +122,15 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
           />
         );
       })}
+      
+    {/* 로그아웃 버튼 좀 추가할게 고마워 */}
+    {isNoob === false ? (
+        <Logout />
+      ) : (
+        // 원래는 지워야하는데 로컬 작업하느라 냅뒀습니다
+        // null이나 <></>로 빈값 보이게 바꿔주면 될 듯
+        <Logout />
+    )}
     </Aside>
   );
 };

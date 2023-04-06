@@ -23,37 +23,39 @@ const AsideBtn = styled.div`
 
 interface ProfileProps {
   isName: string;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AsideProfile = ({isName}: ProfileProps) => {
-  const navigate = useNavigate();
-
-  const goToMypage = () => {
-    navigate('/mypage');
-    // setIsOpen(false);
-  };
-
+const AsideProfile = ({isName, onClick, setIsOpen}: ProfileProps) => {
+  const asideState = () => {
+    setIsOpen(false);
+  }
+  
   return (
     <ProfileBox>
-      <Nickname onClick={goToMypage}>{isName} 님</Nickname>
+      <Nickname onClick={onClick}>{isName} 님</Nickname>
       <AsideBtn>
         <AsideButton
           to="/editProfile"
           src={setting}
           alt="setting"
           title="계정설정"
+          onClick={asideState}
         />
         <AsideButton
           to="/mystore"
           src={bookmark}
           alt="bookmark"
           title="북마크"
+          onClick={asideState}
         />
         <AsideButton
           to="/mystore"
           src={history}
           alt="history"
           title="히스토리"
+          onClick={asideState}
         />
       </AsideBtn>
     </ProfileBox>

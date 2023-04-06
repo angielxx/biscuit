@@ -96,4 +96,9 @@ export const requests = {
   GET_MYINFO() {
     return `/api/members`;
   },
+  },
+
+  POST_SIGNOUT() {
+    return `/api/auth/signout`;
+  }
 };
