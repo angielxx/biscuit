@@ -13,4 +13,6 @@ public interface MemberInterestRepository extends JpaRepository<MemberInterest, 
     List<MemberInterest> findAllByMemberId(Long id);
 
     MemberInterest findByMemberIdAndCategoryId(Long memberId, Long categoryId);
+
+    void deleteAllByMemberId(Long memberId);
 }
