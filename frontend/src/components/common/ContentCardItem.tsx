@@ -214,7 +214,7 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
             {content.creditBy} | {stringToDate(content.createdDate)}{' '}
           </span>
         </TextInfo>
-        {isAuth && (
+        {!isNoob && (
           <div onClick={changeMarkHandler}>
             {isMarked ? (
               <BookmarkSvg
