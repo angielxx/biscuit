@@ -20,6 +20,7 @@ import tw, { styled, css, TwStyle } from 'twin.macro';
 import { useGetMetaData } from '../../hooks/useGetMetaData';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { delete_bookmark, post_bookmark } from '../../api/bookmark';
+import { homeFilterBtnState, homeFilterTimeState } from '../../recoils/Home/Atoms';
 
 // Styled component
 const Tag = styled.div`
@@ -144,6 +145,27 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
     return `${year}.${month}.${day}`;
   };
 
+
+  // query 재요청 로직 추가 : 한별
+  type filterItem = {
+    id: number;
+    content: string;
+    status: boolean;
+  };
+  
+  const timeFilter = useRecoilValue(homeFilterTimeState);
+  const [timeFilterIdx, setTimeFilterIdx] = useState(6);
+  const typeFilter = useRecoilValue(homeFilterBtnState);
+
+  useEffect(() => {
+    let timeIdx: number = 6;
+    timeFilter.forEach((time: filterItem) => {
+      if (time.status === true) timeIdx = time.id;
+    });
+    setTimeFilterIdx(timeIdx);
+  }, [timeFilter]);
+
+
   // 북마크 버튼 클릭 시
   const changeMarkHandler = () => {
     // 북마크 추가
@@ -152,6 +174,8 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
     } else {
       deleteMarkMutate(content.id);
     }
+    // query 재요청 로직 추가 : 한별
+    queryClient.invalidateQueries(['get_personal_contents', "bookmarked", timeFilterIdx, typeFilter]);
   };
 
   // 북마크 추가
