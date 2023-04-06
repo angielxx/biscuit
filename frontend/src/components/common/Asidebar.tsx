@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { isNameState, isStartModalState } from '../../recoils/Start/Atoms';
 import { isNoobState } from '../../recoils/Start/Atoms';
-import ReactDOM from 'react-dom';
+import LogoutBox from './Logout';
 
 // components
 import BigCategory from './BigCategory';
@@ -18,7 +18,6 @@ import AsideProfile from './AsideProfile';
 import AsideLogin from './AsideLogin';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { getCookie } from 'typescript-cookie';
-import Logout from './Logout';
 import Modal from './Modal/Modal';
 
 const Aside = styled.div`
@@ -53,6 +52,10 @@ const BackdropWrapper = styled.div`
   ${tw`fixed top-0 left-0 w-full h-full z-20`}
 `;
 
+const Container = tw.div`absolute bottom-0 h-14 w-[calc(100% - 16px)] p-2 border-t border-solid border-dark-evaluated flex justify-end items-center`; 
+const Btn = tw.button`w-6 h-5`;
+const Img = tw.img`w-full h-full`;
+
 interface BackdropProps {
   onClose?: () => void;
 }
@@ -64,26 +67,9 @@ function Backdrop({ onClose }: BackdropProps) {
 interface AsidebarStatus {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  // setIsLogout: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 type ClickHanlder = (event: any, item: string) => void;
-
-const selectBtn = styled.button`
-  ${tw`h-9 flex items-center justify-center py-3 px-2 border-[1px] border-dark-primary rounded-[10px]`}
-`
-
-export const LogoutBox = () => {
-  return (
-    <div className='flex flex-col w-full justify-center items-center gap-4'>
-      <span>로그아웃 하시겠습니까?</span>
-      <div className='flex gap-4'>
-        <button className='h-9 w-15 flex items-center justify-center py-3 px-2 border-[1px] border-dark-primary rounded-[10px] text-tiny'>네</button>
-        <button className='h-9 w-15 flex items-center justify-center py-3 px-2 border-[1px] border-dark-primary rounded-[10px] text-tiny'>아니오</button>
-      </div>
-    </div>
-  )
-};
 
 const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
   const [isCategory, setIsCategory] = useState<boolean>(false);
@@ -167,13 +153,19 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
         
         {/* 로그아웃 버튼 좀 추가할게 고마워 */}
         {isNoob === false 
-          ? <Logout setIsOpen={setIsOpen} setIsLogout={setIsLogout} />
-          : <Logout setIsOpen={setIsOpen} setIsLogout={setIsLogout} />
+          ? (
+            <Container>
+              <Btn onClick={() => setIsLogout(true)}>
+                <Img src="assets/icons/logout.svg" />
+              </Btn>
+            </Container>
+          )
+          : null
         }
       </Aside>
 
       {isLogout
-        ? <Modal content={<LogoutBox />} onClose={isClose} isOnboarding={false} />
+        ? <Modal content={<LogoutBox setIsOpen={setIsOpen} setIsLogout={setIsLogout} />} onClose={isClose} isOnboarding={false} />
         : null
       }
     
