@@ -123,14 +123,11 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
         );
       })}
       
-    {/* 로그아웃 버튼 좀 추가할게 고마워 */}
-    {isNoob === false ? (
-        <Logout />
-      ) : (
-        // 원래는 지워야하는데 로컬 작업하느라 냅뒀습니다
-        // null이나 <></>로 빈값 보이게 바꿔주면 될 듯
-        <Logout />
-    )}
+      {/* 로그아웃 버튼 좀 추가할게 고마워 */}
+      {isNoob === false 
+        ? <Logout />
+        : null 
+      }
     </Aside>
   );
 };

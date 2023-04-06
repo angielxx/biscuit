@@ -54,7 +54,7 @@ const SubCategory = styled.div`
   &.show {
     max-height: 100vh;
     display: block;
-    animation: show 0.5s;
+    animation: show 2.5s;
   }
 
   &.hide {
@@ -70,7 +70,7 @@ const SubCategory = styled.div`
           display: none;
         }
         to {
-          max-height: 110px;
+          max-height: 100vh;
           display: block;
         }
       }

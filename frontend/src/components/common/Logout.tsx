@@ -5,8 +5,8 @@ import { isNoobState } from '../../recoils/Start/Atoms';
 import { useMutation } from '@tanstack/react-query';
 import { post_signout } from '../../api/logout';
 
-const Container = tw.div`absolute bottom-0 h-14 w-[calc(100% - 16px)] px-2 border-t border-solid border-dark-evaluated flex justify-end items-center`; 
-const Btn = tw.button`w-7 h-6 mr-4`
+const Container = tw.div`absolute bottom-0 h-14 w-[calc(100% - 16px)] p-2 border-t border-solid border-dark-evaluated flex justify-end items-center`; 
+const Btn = tw.button`w-6 h-5`
 const Img = tw.img`w-full h-full`;
 
 export default function Logout() {
