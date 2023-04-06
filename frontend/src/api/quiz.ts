@@ -7,5 +7,5 @@ export const get_quizzes = async (contentId: number) => {
 };
 
 export const post_quizzes = async (contentId: number) => {
-  await baseInstance.post(requests.QUIZZES(contentId));
+  await authInstance.post(requests.QUIZZES(contentId));
 };
