@@ -1,8 +1,10 @@
 import tw from "twin.macro";
 import Button from "../components/common/Button";
 import EditInfo from "../components/Dashboard/EditInfo";
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { useState, useEffect } from "react";
+import { put_myInfo } from "../api/editProfile";
+import { useNavigate } from "react-router-dom";
 
 const HomeContainer = tw.div`flex-col w-screen justify-center px-6 pt-4`;
 const MyInfoContainer = tw.div`pb-6 mb-6`;
@@ -21,6 +23,7 @@ interface MyInfoContent {
 export default function EditProfile() {
   const queryClient = useQueryClient();
   const myInfoData = queryClient.getQueryData<MyInfoContent>(['get_myInfo']);
+  const navigate = useNavigate();
 
   const [userData, setUserData] = useState<MyInfoContent>({
     nickname: "",
@@ -29,15 +32,18 @@ export default function EditProfile() {
     interests: [""],
   });
 
+  const { mutate: signOutMutate } = useMutation({
+    mutationFn: () => put_myInfo(userData),
+    onSuccess: () => {
+      navigate('/myProfile');
+    },
+  });
+
   useEffect(() => {
     if(myInfoData === undefined) return;
-    console.log("myInfoData : ", myInfoData);
     setUserData(myInfoData);
   }, [myInfoData])
 
-  useEffect(() => {
-    console.log("userData : ", userData);
-  }, [userData])
 
   return (
     <HomeContainer>

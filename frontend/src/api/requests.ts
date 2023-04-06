@@ -100,4 +100,8 @@ export const requests = {
   POST_SIGNOUT() {
     return `/api/auth/signout`;
   },
+
+  PUT_MYINFO() {
+    return `/api/members`;
+  }
 };
