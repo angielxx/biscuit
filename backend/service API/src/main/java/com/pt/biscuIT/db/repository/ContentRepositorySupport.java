@@ -296,7 +296,7 @@ public class ContentRepositorySupport {
 
         List<OrderSpecifier> ORDERS = getOrderSpecifiers(pageable.getSort());
         List<Content> contentList = jpaQueryFactory
-                .select(qContent)
+                .select(qContent).distinct()
                 .from(qContent, qMemberHistory)
                 .where(whereCondition)
                 .orderBy(ORDERS.stream().toArray(OrderSpecifier[]::new))
