@@ -18,8 +18,8 @@ export default function Logout() {
     onSuccess: () => {
       // document.cookie = "access-token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
       // document.cookie = "refresh-token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-      removeCookie('access-token');
-      removeCookie('refresh-token');
+      removeCookie('access-token', { path: '/', domain: 'https://j8a706.p.ssafy.io/' });
+      removeCookie('refresh-token', { path: '/', domain: 'https://j8a706.p.ssafy.io/' });
     },
   });
 
