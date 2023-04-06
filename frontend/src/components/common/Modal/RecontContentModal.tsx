@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getCookie } from 'typescript-cookie';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
@@ -93,9 +93,17 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   // 유저가 선택한 퀴즈의 정답
   const [userAnswers, setUserAnswers] = useState<AnswerState>({});
 
-  // useEffect(() => {
-  //   setIsNoob(false);
-  // }, []);
+  const queryClient = useQueryClient();
+  const cacheQuiz = queryClient.getQueryData<Quiz[]>([
+    'get_quizzes',
+    recentContent.id,
+  ]);
+
+  useEffect(() => {
+    // 캐쉬된 퀴즈 데이터가 있다면 가져오기
+    if (cacheQuiz === undefined) return;
+    setQuizzes(cacheQuiz);
+  }, [cacheQuiz]);
 
   interface mutateParams {
     contentId: number;
