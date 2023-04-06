@@ -99,18 +99,7 @@ const Banner = () => {
                   <SeeMoreBtn onClick={startModal}>비스킷 시작하기</SeeMoreBtn>
                 </BannerBg>
               </div>
-            : 
-              <>
-                {bannerList?.map((banner) => {
-                  return (
-                    <BannerContent
-                      key={banner.uid}
-                      bannerUrl={banner.bannerUrl}
-                      imgUrl={banner.imgUrl}
-                    />
-                  );
-                })}
-              </>
+            : null
           }
           {/* {bannerList?.map((banner) => {
             return (
