@@ -157,7 +157,7 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
           ? (
             <Container>
               <Btn onClick={() => setIsLogout(true)}>
-                <Img src="assets/icons/logout.svg" />
+                <Img src="/assets/icons/logout.svg" />
               </Btn>
             </Container>
           )
