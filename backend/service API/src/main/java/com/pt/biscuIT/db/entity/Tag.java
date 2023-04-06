@@ -19,7 +19,7 @@ public class Tag implements Serializable {
 	private Category category;
 	@Column(unique = true)
 	private String name;
-	@Column(columnDefinition = "integer default 0")
+	@Column(columnDefinition = "integer default 1")
 	private Integer contentCnt;
 
 }

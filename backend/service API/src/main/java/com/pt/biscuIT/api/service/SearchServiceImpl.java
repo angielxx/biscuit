@@ -16,7 +16,7 @@ import com.pt.biscuIT.db.entity.Content;
 import com.pt.biscuIT.db.entity.Member;
 import com.pt.biscuIT.db.entity.Type;
 import com.pt.biscuIT.db.repository.ContentRepositorySupport;
-import com.pt.biscuIT.db.repository.ContentTageRepositorySupport;
+import com.pt.biscuIT.db.repository.ContentTagRepositorySupport;
 import com.pt.biscuIT.db.repository.ContentViewRepositorySupport;
 import com.pt.biscuIT.db.repository.MemberBookmarkRepositorySupport;
 
@@ -30,7 +30,7 @@ public class SearchServiceImpl implements SearchService {
 
 	private final ContentRepositorySupport contentRepositorySupport;
 	private final ContentViewRepositorySupport contentViewRepositorySupport;
-	private final ContentTageRepositorySupport contentTageRepositorySupport;
+	private final ContentTagRepositorySupport contentTagRepositorySupport;
 	private final MemberBookmarkRepositorySupport memberBookmarkRepositorySupport;
 
 	@Override
@@ -55,7 +55,7 @@ public class SearchServiceImpl implements SearchService {
 
 		List<ContentInfoDto> contentInfoDtoList = new ArrayList<>();
 		for(Content content : contentList.getContent()) {
-			List<String> tags = contentTageRepositorySupport.findTagsByContentId(content.getId());
+			List<String> tags = contentTagRepositorySupport.findTagsByContentId(content.getId());
 			ContentInfoDto contentInfoDto = new ContentInfoDto(content);
 			contentInfoDto.setTags(tags);
 			if(member != null) { //로그인된 상태라면
