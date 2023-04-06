@@ -2,8 +2,6 @@ import { isNameState, isNoobState } from "../../recoils/Start/Atoms";
 import { useRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { get_myInfo } from "../../api/myInfo";
 
 const SocialLogin = () => {
   const navigate = useNavigate();
@@ -22,10 +20,6 @@ const SocialLogin = () => {
     // 뉴비가 아니면
     if (isNoob === "false" && nickname !== "") {
       console.log("login 안됨");      
-      const myInfoQuery = useQuery({
-        queryKey: ['get_myInfo'],
-        queryFn: () => get_myInfo(),
-      });
       navigate(`/`);
       setNoob(false);
       setIsName(nickname);
@@ -35,7 +29,6 @@ const SocialLogin = () => {
       navigate(`/onboarding`);
     }
   }, [])
-  
 
   return (
     <></>
