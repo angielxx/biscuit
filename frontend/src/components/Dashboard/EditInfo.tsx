@@ -127,7 +127,7 @@ export default function EditInfo({infoData, setInfoData}: MyInfoProps) {
   }, [infoData])
 
   useEffect(() => {
-    if(jobSelected === undefined || periodSelected === undefined) return;
+    if(nickname === undefined || jobSelected === undefined || periodSelected === undefined || selectList === undefined) return;
     const tmp = {...infoData};
     tmp.nickname = nickname;
     tmp.job = jobSelected;
