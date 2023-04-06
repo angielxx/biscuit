@@ -60,7 +60,7 @@ const Navbar = () => {
               isSearch ? setIsSearch(false) : setIsSearch(true);
             }}
           />
-          <img src={theme} alt="theme" />
+          {/* <img src={theme} alt="theme" /> */}
           <img
             src={menu}
             alt="aside-bar"
