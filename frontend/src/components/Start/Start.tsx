@@ -46,14 +46,14 @@ const Start = () => {
       <Introduce>
         <span className="text-h2">시작하기</span>
         <span className="text-main text-grey50">
-          어떤 설명이나 인사 문구 한 줄
+          비스킷 ? 캔ㅌ튜나
         </span>
       </Introduce>
       <LoginContainer>
-        <LoginBox className="bg-dark-grey20" onClick={GithubLogin}>
+        {/* <LoginBox className="bg-dark-grey20" onClick={GithubLogin}>
           <img src={Github} />
           <span>GitHub</span>
-        </LoginBox>
+        </LoginBox> */}
         <LoginBox className="bg-white" onClick={GoogleLogin}>
           <img src={Google} />
           <span className="text-black">Google</span>

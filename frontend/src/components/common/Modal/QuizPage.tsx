@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
+// image
+import working from '../../../assets/image/working.png';
+
 // Recoil
 import { isNoobState } from '../../../recoils/Start/Atoms';
 
@@ -89,8 +92,16 @@ const QuizPage = ({ onSubmit, quizzes }: QuizPageProps) => {
           />
         </>
       ) : (
-        <div>
-          <span>아쉽게도 이 글의 퀴즈가 아직 없어요</span>
+        <div className="flex flex-col justify-center items-center w-full">
+          <h3 className="text-h4">아쉽게도 이 글의 퀴즈가 아직 없어요</h3>
+          <p>비스킷팀이 열일하고 있어요!</p>
+          <div className="flex w-full justify-center items-center m-2">
+            <img src={working} alt="" className="w-[50%]" />
+          </div>
+          {/* <PageTitle
+            title="아쉽게도 이 글의 퀴즈가 아직 없어요"
+            desc="비스킷팀이 열일하고 있어요!"
+          /> */}
         </div>
       )}
     </>

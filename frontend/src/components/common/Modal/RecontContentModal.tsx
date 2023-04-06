@@ -121,9 +121,7 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
       const quizzes = data.quizzes.filter((quiz: Quiz) => quiz.answer !== -1);
       setQuizzes(data.quizzes);
     },
-    enabled: recentContent.type === 'ARTICLE',
-    staleTime: 1000 * 60 * 60,
-    cacheTime: 1000 * 60 * 65,
+    // enabled: recentContent.type === 'ARTICLE',
   });
 
   // 퀴즈 답 POST
@@ -147,6 +145,7 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
     if (!isNoob) quizMutate(recentContent.id);
     setUserAnswers(answers);
     setPage(2);
+    console.log('quiz submit isNoob :', isNoob);
   };
 
   return (
@@ -169,9 +168,6 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
       {page === 2 && isNoob && (
         <div className="flex flex-col justify-center items-center">
           <img src={eyes} alt="" className="aspect-ratio-1 h-20 w-20 mb-3" />
-          {/* <span className="text-sub text-dark-grey70">
-            로그인하고 정답을 확인해보세요
-          </span> */}
           <h1 className="text-h3 text-center mb-5">
             로그인하고 <br />
             정답을 확인해보세요!
@@ -182,7 +178,12 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
 
       <Container>
         {/* 피드백 */}
-        {page === 0 && <FeedbackPage onSubmit={feedbackSubmitHandler} />}
+        {page === 0 && (
+          <FeedbackPage
+            onSubmit={feedbackSubmitHandler}
+            quizStatus={recentContent.type === 'VIDEO' ? false : true}
+          />
+        )}
 
         {/* 퀴즈 */}
         {page === 1 && (

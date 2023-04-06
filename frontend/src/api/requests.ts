@@ -89,19 +89,32 @@ export const requests = {
     return `/api/members/onboarding`;
   },
 
+  // 대시보드
   GET_DASHBOARD() {
     return `/api/members/dashboard`;
   },
 
+  // 내 프로필 정보
   GET_MYINFO() {
     return `/api/members`;
   },
 
+  // 로그아웃
   POST_SIGNOUT() {
     return `/api/auth/signout`;
   },
 
   PUT_MYINFO() {
     return `/api/members`;
-  }
+  },
+
+  // 북마크 추가
+  POST_BOOKMARK() {
+    return `/api/bookmarks`;
+  },
+
+  // 북마크 삭제
+  DELETE_BOOKMARK(contentId: number) {
+    return `/api/bookmarks/${contentId}`;
+  },
 };

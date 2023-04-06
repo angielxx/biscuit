@@ -1,4 +1,9 @@
-import { QueryCache, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  QueryCache,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import defaultImg from '../../assets/image/default_thumbnail_img.png';
 import {
@@ -8,11 +13,13 @@ import {
   recentContentState,
   endTimeState,
 } from '../../recoils/Contents/Atoms';
+import { isNoobState } from '../../recoils/Start/Atoms';
 
 // twin macro
 import tw, { styled, css, TwStyle } from 'twin.macro';
 import { useGetMetaData } from '../../hooks/useGetMetaData';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { delete_bookmark, post_bookmark } from '../../api/bookmark';
 
 // Styled component
 const Tag = styled.div`
@@ -93,8 +100,10 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
   const [thumbImg, setThumbImg] = useState<string | undefined>('');
   // url
   const [url, setUrl] = useState<string>('');
+  // 로그인 상태
+  const [isNoob, setIsNoob] = useRecoilState(isNoobState);
   // 로그인 여부
-  const isAuth = false;
+  const isAuth = true;
 
   // 타입에 따라 썸네일, url 설정
   const queryClient = useQueryClient();
@@ -103,9 +112,6 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
       setUrl(`https://youtu.be/${content.source}`);
       setThumbImg(`https://img.youtube.com/vi/${content.source}/0.jpg`);
     } else {
-      // const cacheImg = queryClient.getQueryData(['thumbnail', content.id]) as
-      //   | string
-      //   | undefined;
       setUrl(content.source);
       setThumbImg(content.img);
     }
@@ -140,11 +146,27 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
 
   // 북마크 버튼 클릭 시
   const changeMarkHandler = () => {
-    // API 요청 : 북마크 추가 혹은 삭제
-    setIsMarked((prev) => {
-      return !prev;
-    });
+    // 북마크 추가
+    if (!isMarked) {
+      postMarkMutate(content.id);
+    } else {
+      deleteMarkMutate(content.id);
+    }
   };
+
+  // 북마크 추가
+  const { mutate: postMarkMutate } = useMutation({
+    mutationFn: (contentId: number) => post_bookmark(contentId),
+    // 성공하면 회원 북마크 정보 invalidate
+    onSuccess: () => setIsMarked(true),
+  });
+
+  // 북마크 삭제
+  const { mutate: deleteMarkMutate } = useMutation({
+    mutationFn: (contentId: number) => delete_bookmark(contentId),
+    // 성공하면 회원 북마크 정보 invalidate
+    onSuccess: () => setIsMarked(false),
+  });
 
   const startTime = useRecoilValue(startTimeState);
   const setStartTime = useSetRecoilState(startTimeState);
@@ -155,12 +177,10 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
   const clickContentHandler = (url: string) => {
     window.open(url, '_blank', 'noopener, noreferrer');
     setStartTime(Number(Date.now().toString()));
-    // console.log(Date.now().toString());
     setIsStart(true);
     if (!isModalOpen) {
       setIsModalOpen(true);
       setContent(content);
-      // console.log('content :', content);
     }
   };
 
@@ -183,7 +203,6 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
       </button>
 
       <ContentInfo>
-        {/* <div id="channel"></div> */}
         <TextInfo id="text">
           <p
             className="leading-5 max-h-[40px] overflow-hidden cursor-pointer text-main-bold hover:text-main-bold hover:text-primary"
@@ -195,7 +214,7 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
             {content.creditBy} | {stringToDate(content.createdDate)}{' '}
           </span>
         </TextInfo>
-        {isAuth && (
+        {!isNoob && (
           <div onClick={changeMarkHandler}>
             {isMarked ? (
               <BookmarkSvg
