@@ -21,6 +21,7 @@ import { useGetMetaData } from '../../hooks/useGetMetaData';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { delete_bookmark, post_bookmark } from '../../api/bookmark';
 import { homeFilterBtnState, homeFilterTimeState } from '../../recoils/Home/Atoms';
+import { get_visit } from '../../api/visit';
 
 // Styled component
 const Tag = styled.div`
@@ -206,6 +207,10 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
       setIsModalOpen(true);
       setContent(content);
     }
+    useQuery({
+      queryKey: ['get_visit', content.id],
+      queryFn: () => get_visit(content.id),
+    });
   };
 
   return (
