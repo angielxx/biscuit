@@ -128,27 +128,29 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
           <AsideLogin onClick={startModal} />
         )}
 
-        {data?.map((item, index) => {
-          return (
-            <BigCategory
-              key={item.id}
-              isCategory={page === index ? isCategory : false}
-              isClicked={isClicked}
-              item={item}
-              onClick={() => {
-                setPage(index);
-                // page !== index 일 경우, isCategory가 true면, 걍 true로 냅둬야한다.
-                isCategory
-                  ? page === index
-                    ? setIsCategory(false)
-                    : setIsCategory(true)
-                  : setIsCategory(true);
-              }}
-              selectList={[]}
-              locate="aside"
-            />
-          );
-        })}
+        <ul className='w-full'>
+          {data?.map((item, index) => {
+            return (
+              <BigCategory
+                key={item.id}
+                isCategory={page === index ? isCategory : false}
+                isClicked={isClicked}
+                item={item}
+                onClick={() => {
+                  setPage(index);
+                  // page !== index 일 경우, isCategory가 true면, 걍 true로 냅둬야한다.
+                  isCategory
+                    ? page === index
+                      ? setIsCategory(false)
+                      : setIsCategory(true)
+                    : setIsCategory(true);
+                }}
+                selectList={[]}
+                locate="aside"
+              />
+            );
+          })}
+        </ul>
         
         {/* 로그아웃 버튼 좀 추가할게 고마워 */}
         {isNoob === false 
