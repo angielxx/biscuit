@@ -146,7 +146,7 @@ const PersonalContentList = ({ option }: Props) => {
         </>
       ) : (
         <>
-        {data && <>
+        {data && data.length > 0 && <>
           <ListTitleContatiner>
             <Icon category={option} />
             <Title>{CategoryObj[option]}</Title>
