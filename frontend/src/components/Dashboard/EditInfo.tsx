@@ -144,6 +144,8 @@ export default function EditInfo({infoData, setInfoData}: MyInfoProps) {
 
   useEffect(() => {
     if(nickname === undefined || jobSelected === undefined || periodSelected === undefined || selectList === undefined) return;
+    if(nickname === "" || jobSelected === "" || periodSelected === "" || selectList.length === 0) return;
+
     console.log("여기서부터 모든걸 찍어보겠습니다.")
     console.log(infoData);
     console.log(nickname);
@@ -152,6 +154,7 @@ export default function EditInfo({infoData, setInfoData}: MyInfoProps) {
     console.log(selectList);
     
     const tmp = {...infoData};
+    console.log("tmp : ", tmp);
     tmp.nickname = nickname;
     tmp.job = jobSelected;
     tmp.period = yearToStr.indexOf(periodSelected);
