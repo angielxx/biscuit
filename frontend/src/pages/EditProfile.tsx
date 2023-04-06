@@ -32,7 +32,7 @@ export default function EditProfile() {
   useEffect(() => {
     if(myInfoData === undefined) return;
     console.log(myInfoData);
-    setUserData({...myInfoData});
+    setUserData(myInfoData);
   }, [myInfoData])
 
   useEffect(() => {
