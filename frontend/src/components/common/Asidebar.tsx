@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { isNameState, isStartModalState } from '../../recoils/Start/Atoms';
 import { isNoobState } from '../../recoils/Start/Atoms';
-import ReactDOM from 'react-dom';
+import LogoutBox from './Logout';
 
 // components
 import BigCategory from './BigCategory';
@@ -18,7 +18,7 @@ import AsideProfile from './AsideProfile';
 import AsideLogin from './AsideLogin';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { getCookie } from 'typescript-cookie';
-import Logout from './Logout';
+import Modal from './Modal/Modal';
 
 const Aside = styled.div`
   ${tw`h-full z-20 flex flex-col items-start p-2 fixed w-[314px] right-0 top-0 bg-black`}
@@ -51,6 +51,10 @@ const BackdropWrapper = styled.div`
   `}
   ${tw`fixed top-0 left-0 w-full h-full z-20`}
 `;
+
+const Container = tw.div`absolute bottom-0 h-14 w-[calc(100% - 16px)] p-2 border-t border-solid border-dark-evaluated flex justify-end items-center`; 
+const Btn = tw.button`w-6 h-5`;
+const Img = tw.img`w-full h-full`;
 
 interface BackdropProps {
   onClose?: () => void;
@@ -101,6 +105,11 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
     setIsOpen(false);
   };
 
+  const [isLogout, setIsLogout] = useState(false);
+  const isClose = () => {
+    return ;
+  }
+
   return (
     <>
       <Backdrop onClose={() => setIsOpen(false)} />
@@ -144,10 +153,21 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
         
         {/* 로그아웃 버튼 좀 추가할게 고마워 */}
         {isNoob === false 
-          ? <Logout setIsOpen={setIsOpen} />
-          : null 
+          ? (
+            <Container>
+              <Btn onClick={() => setIsLogout(true)}>
+                <Img src="assets/icons/logout.svg" />
+              </Btn>
+            </Container>
+          )
+          : null
         }
       </Aside>
+
+      {isLogout
+        ? <Modal content={<LogoutBox setIsOpen={setIsOpen} setIsLogout={setIsLogout} />} onClose={isClose} isOnboarding={false} />
+        : null
+      }
     
     </>
   );

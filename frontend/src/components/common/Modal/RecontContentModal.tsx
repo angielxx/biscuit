@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getCookie } from 'typescript-cookie';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
@@ -93,6 +93,21 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   // 유저가 선택한 퀴즈의 정답
   const [userAnswers, setUserAnswers] = useState<AnswerState>({});
 
+  const queryClient = useQueryClient();
+  type CacheQuizType = {
+    quizzes: Quiz[];
+  };
+  const cacheQuiz = queryClient.getQueryData<CacheQuizType>([
+    'get_quizzes',
+    recentContent.id,
+  ]);
+
+  useEffect(() => {
+    // 캐쉬된 퀴즈 데이터가 있다면 가져오기
+    if (cacheQuiz === undefined) return;
+    setQuizzes(cacheQuiz.quizzes);
+  }, [cacheQuiz]);
+
   interface mutateParams {
     contentId: number;
     feedback: number | null;
@@ -122,12 +137,36 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
       setQuizzes(data.quizzes);
     },
     // enabled: recentContent.type === 'ARTICLE',
+    staleTime: 1000 * 60 * 60,
+    cacheTime: 1000 * 60 * 5,
   });
 
   // 퀴즈 답 POST
+  interface QuizMutateParam {
+    contentId: number;
+    userAnswers: AnswerState;
+  }
+  type BodyType = {
+    answers: AnswerType[];
+  };
+  type AnswerType = {
+    quizId: number;
+    answer: boolean;
+  };
   const { mutate: quizMutate } = useMutation({
-    mutationFn: (contentId: number) => post_quizzes(contentId),
-    onSuccess: (data) => {}, // 퀴즈 제출하고 포인트 정보 받아와야 함
+    mutationFn: ({ contentId, userAnswers }: QuizMutateParam) => {
+      const body: BodyType = { answers: [] };
+      for (let quiz of quizzes) {
+        body.answers.push({
+          quizId: quiz.quizId,
+          answer: quiz.answer === userAnswers[quiz.quizId],
+        });
+      }
+      return post_quizzes(contentId, body);
+    },
+    onSuccess: (data) => {
+      console.log('퀴즈제출데이터 :', data);
+    }, // 퀴즈 제출하고 포인트 정보 받아와야 함
   });
 
   // 피드백 제출
@@ -142,7 +181,8 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
 
   const quizSubmitHandler = (answers: AnswerState) => {
     // 회원일 때만 퀴즈 제출
-    if (!isNoob) quizMutate(recentContent.id);
+    if (!isNoob)
+      quizMutate({ contentId: recentContent.id, userAnswers: answers });
     setUserAnswers(answers);
     setPage(2);
     console.log('quiz submit isNoob :', isNoob);
