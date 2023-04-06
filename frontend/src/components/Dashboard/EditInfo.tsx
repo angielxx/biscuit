@@ -2,7 +2,7 @@ import tw from "twin.macro";
 import Button from "../common/Button";
 import Modal from "../common/Modal/Modal";
 import AboutInterest from "../OnBoarding/AboutInterest";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { post_about_user } from "../../api/login";
@@ -21,6 +21,7 @@ const DropDownContainer = tw.div`w-[80%] h-14`;
 interface InfoProps {
   title: string;
   content: string;
+  setContent: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface InterestProps {
@@ -42,13 +43,13 @@ interface MyInfoProps {
   setInfoData: React.Dispatch<React.SetStateAction<MyInfoContent>>;
 }
 
-const Info = ({title, content}: InfoProps) => {
+const Info = ({title, content, setContent}: InfoProps) => {
   return (
     <InfoContainer>
       <TitleContainer>
         <Span>{title}</Span>
       </TitleContainer>
-      <TextBox value={content}/>
+      <TextBox value={content} onChange={(e) => setContent(e.target.value)}/>
     </InfoContainer>
   )
 }
@@ -159,7 +160,7 @@ export default function EditInfo({infoData, setInfoData}: MyInfoProps) {
 
   return (
     <>
-      {functionToggle.editNickname && nickname && <Info title="닉네임" content={nickname} />}
+      {functionToggle.editNickname && nickname && <Info title="닉네임" content={nickname} setContent={setNickName}/>}
         
       <InfoContainer>
         <TitleContainer>
