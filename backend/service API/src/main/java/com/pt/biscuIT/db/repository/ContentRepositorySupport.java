@@ -125,9 +125,10 @@ public class ContentRepositorySupport {
 
     public Page<Content> findRecentContentByTitleAndTag(String keyword, Pageable pageable, Long lastContentId, int from, int to, Type type) {
         BooleanBuilder whereCondition = new BooleanBuilder();
-        whereCondition.and(qContentTag.content.id.eq(qContent.id));
+//        whereCondition.and(qContentTag.content.id.eq(qContent.id));
         whereCondition.and(qContent.id.lt(lastContentId));
-        whereCondition.and(containTitle(keyword).or(cotainTag(keyword)));
+//        whereCondition.and(containTitle(keyword).or(cotainTag(keyword)));
+        whereCondition.and(qContent.title.contains(keyword));
         whereCondition.and(qContent.timeCost.between(from, to));
         if(type != Type.ALL) whereCondition.and(qContent.type.eq(type));
 
@@ -135,33 +136,37 @@ public class ContentRepositorySupport {
         List<Content> contents = jpaQueryFactory
             .select(qContent)
             .distinct()
-            .from(qContent, qContentTag)
+//            .from(qContent, qContentTag)
+            .from(qContent)
             .where(whereCondition)
             .orderBy(qContent.id.desc())
             .offset(0)
             .limit(pageable.getPageSize())
             .fetch();
         return new PageImpl<>(contents, pageable,
-            jpaQueryFactory
-                .select(qContent)
-                .distinct()
-                .from(qContent, qContentTag)
-                .where(whereCondition)
-                .orderBy(qContent.id.desc())
-                .fetch().size());
+                jpaQueryFactory
+                        .select(qContent)
+                        .distinct()
+//            .from(qContent, qContentTag)
+                        .from(qContent)
+                        .where(whereCondition)
+                        .orderBy(qContent.id.desc())
+                        .fetch().size());
     }
 
     public Page<Content> findPopularContentByTitleAndTag(String keyword, Pageable pageable, Long popularId, int from, int to, Type type) {
         BooleanBuilder whereCondition = new BooleanBuilder();
-        whereCondition.and(qContentTag.content.id.eq(qContent.id));
+//        whereCondition.and(qContentTag.content.id.eq(qContent.id));
         whereCondition.and(qContent.id.eq(qContentView.contentId));
-        whereCondition.and(containTitle(keyword).or(cotainTag(keyword)));
+//        whereCondition.and(containTitle(keyword).or(cotainTag(keyword)));
+        whereCondition.and(qContent.title.contains(keyword));
         whereCondition.and(qContentView.id.lt(popularId));
         whereCondition.and(qContent.timeCost.between(from, to));
         if(type != Type.ALL) whereCondition.and(qContent.type.eq(type));
         List<Content> contents = jpaQueryFactory
                 .select(qContent)
-                .from(qContent, qContentView, qContentTag)
+//                .from(qContent, qContentView, qContentTag)
+                .from(qContent, qContentView)
                 .distinct()
                 .where(whereCondition)
                 .orderBy(qContentView.id.desc())
@@ -169,9 +174,10 @@ public class ContentRepositorySupport {
                 .limit(pageable.getPageSize())
                 .fetch();
         return new PageImpl<>(contents, pageable,
-                    jpaQueryFactory
+                jpaQueryFactory
                         .select(qContent)
-                        .from(qContent, qContentView, qContentTag)
+//                .from(qContent, qContentView, qContentTag)
+                        .from(qContent, qContentView)
                         .distinct()
                         .where(whereCondition)
                         .orderBy(qContentView.id.desc())
