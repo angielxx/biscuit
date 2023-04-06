@@ -54,13 +54,13 @@ const SubCategory = styled.div`
   &.show {
     max-height: 100vh;
     display: block;
-    animation: show 2.5s;
+    animation: show 3.0s ease;
   }
 
   &.hide {
     max-height: 0;
     display: none;
-    animation: hide 0.5s;
+    animation: hide 3.0s ease;
   }
 
   ${css`

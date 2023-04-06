@@ -16,6 +16,7 @@ import { get_bookmark } from '../api/bookmark';
 import { get_history } from '../api/history';
 import BookmarkItem from '../components/MyStore/BookmarkItem';
 import Loading from '../components/common/Loading';
+import { useParams } from 'react-router-dom';
 
 // Styled component
 const ItemsContainer = styled.div`
@@ -58,6 +59,8 @@ interface History {
 const MyStore = () => {
   // 탭
   const [clickedTab, setClickedTab] = useState<number>(0);
+  const { page } = useParams();
+  
 
   // 북마크, 히스토리 get
   // const result = useQueries({
@@ -155,7 +158,7 @@ const MyStore = () => {
         clickedTab={clickedTab}
       />
       <ItemsContainer>
-        {clickedTab === 0 &&
+        {clickedTab === 0 && page === "0" &&
           bookmarkData?.pages.map((page, index: number) => (
             <React.Fragment key={index}>
               {page?.bookmarkList?.map((bookmark) => (
@@ -163,7 +166,7 @@ const MyStore = () => {
               ))}
             </React.Fragment>
           ))}
-        {clickedTab === 1 &&
+        {clickedTab === 1 && page === "1" &&
           historyData?.pages.map((page, index: number) => (
             <React.Fragment key={index}>
               {page?.historyList?.map((history) => (

@@ -40,7 +40,7 @@ export default function Routers() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/myStore" element={<MyStore />} />
+        <Route path="/mystore/:page" element={<MyStore />} />
         <Route path="/category/:name" element={<Category />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/editProfile" element={<EditProfile />} />
