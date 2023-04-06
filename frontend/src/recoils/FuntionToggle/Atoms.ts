@@ -19,6 +19,10 @@ const functionToggleState = atom({
     jobToggle: true,
     periodToggle: true,
     interestToggle: true,
+    editNickname: true,
+    editJob: true,
+    editPeriod: true,
+    editInterest: true,
   },
   effects_UNSTABLE: [persistAtom],
 })
