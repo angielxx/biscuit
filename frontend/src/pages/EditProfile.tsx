@@ -31,12 +31,12 @@ export default function EditProfile() {
 
   useEffect(() => {
     if(myInfoData === undefined) return;
-    console.log(myInfoData);
+    console.log("myInfoData : ", myInfoData);
     setUserData(myInfoData);
   }, [myInfoData])
 
   useEffect(() => {
-    console.log(userData);
+    console.log("userData : ", userData);
   }, [userData])
 
   return (
