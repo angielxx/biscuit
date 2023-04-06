@@ -16,6 +16,7 @@ import com.pt.biscuIT.api.service.RecommendService;
 import com.pt.biscuIT.db.entity.Member;
 import com.pt.biscuIT.db.entity.Type;
 import com.pt.biscuIT.db.repository.ContentRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,20 +29,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
+@Slf4j
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/recommends")
-@Slf4j
 public class RecommendController {
-    @Autowired
-    RecommendService recommendService;
-    @Autowired
-    ContentRepository contentRepositorySupport;
-    @Autowired
-    MemberServiceImpl memberServiceImpl;
-    @Autowired
-    MemberAuthService memberAuthService;
-    @Autowired
-    ContentService contentService;
+    private final RecommendService recommendService;
+    private final ContentRepository contentRepositorySupport;
+    private final MemberServiceImpl memberServiceImpl;
+    private final MemberAuthService memberAuthService;
+    private final ContentService contentService;
 
     /*
         TODO: 추천 컨텐츠를 제공하는 API
@@ -95,13 +92,22 @@ public class RecommendController {
         ));
     }
 
+    @GetMapping("/personal/fit")
+    public ResponseEntity<?> getFitContent(@RequestHeader(value = "Authorization") String token){
+        Member member = memberAuthService.getMember(token);
+
+
+
+        return null;
+    }
+
     @GetMapping("/personal/favorite")
     public ResponseEntity<? extends BaseResponseBody> getFavoriteCategoryContent(
             @PageableDefault(size = 30) Pageable pageable,
             @RequestParam(required = false, defaultValue = "0") int from,
             @RequestParam(required = false, defaultValue = "1440") int to,
             @RequestParam Type type,
-            @RequestHeader(required = false, value = "Authorization") String token
+            @RequestHeader(value = "Authorization") String token
     ) {
         Member member = memberAuthService.getMember(token);
         if(member == null) throw new BiscuitException(ErrorCode.MEMBER_NOT_FOUND);
@@ -124,7 +130,7 @@ public class RecommendController {
             @RequestParam(required = false, defaultValue = "1440") int to,
             @RequestParam Type type,
             @PathVariable String option,
-            @RequestHeader(required = false, value = "Authorization") String token
+            @RequestHeader(value = "Authorization") String token
     ) {
         Member member = memberAuthService.getMember(token);
         if(member == null) throw new BiscuitException(ErrorCode.MEMBER_NOT_FOUND);
