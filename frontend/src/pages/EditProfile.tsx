@@ -56,7 +56,7 @@ export default function EditProfile() {
           </SettingContainer>
         </HeaderContainer>
         {userData && userData.nickname !== "" && <EditInfo infoData={userData} setInfoData={setUserData}/>}
-        <Button title="입력완료" status="active" onClick={() => console.log("클릭")} />
+        <Button title="입력완료" status="active" onClick={() => signOutMutate()} />
       </MyInfoContainer>
     </HomeContainer>
   )
