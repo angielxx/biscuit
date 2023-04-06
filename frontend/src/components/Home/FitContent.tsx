@@ -148,7 +148,7 @@ const FitContent = ({ option }: Props) => {
         <RowListContainer>
           {data?.map((content, idx) => {
             return (
-              showingIdx &&
+              showingIdx !== undefined &&
               idx >= showingIdx &&
               idx < showingIdx + 10 && (
                 <ContentContainer key={idx}>
