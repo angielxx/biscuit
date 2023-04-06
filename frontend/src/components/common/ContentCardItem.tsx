@@ -199,6 +199,12 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
   const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState);
   const setContent = useSetRecoilState(recentContentState);
 
+  const useGetVisitContent = useQuery({
+    queryKey: ['get_visit'], 
+    queryFn: () => get_visit(content.id),
+    enabled: false,
+  });
+    
   const clickContentHandler = (url: string) => {
     window.open(url, '_blank', 'noopener, noreferrer');
     setStartTime(Number(Date.now().toString()));
@@ -207,11 +213,9 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
       setIsModalOpen(true);
       setContent(content);
     }
-    useQuery({
-      queryKey: ['get_visit', content.id],
-      queryFn: () => get_visit(content.id),
-    });
+    useGetVisitContent.refetch();
   };
+
 
   return (
     <div
