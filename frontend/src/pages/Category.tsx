@@ -125,12 +125,16 @@ const Category = () => {
 
   return (
     <div className="mt-20">
-      <SmallCategory title={categoryName} selectList={[]} />
-      <FilterBar2
-        filterBtnState={filterBtnState}
-        setFilterBtnState={setFilterBtnState}
-        setOption={setOption}
-      />
+      {categoryName && (
+        <>
+          <SmallCategory title={categoryName} selectList={[]} />
+          <FilterBar2
+            filterBtnState={filterBtnState}
+            setFilterBtnState={setFilterBtnState}
+            setOption={setOption}
+          />
+        </>
+      )}
       <CategoryContainer>
         {data?.pages.map((page, index: number) => (
           <React.Fragment key={index}>

@@ -10,7 +10,7 @@ const Btn = tw.button`w-7 h-6 mr-4`
 const Img = tw.img`w-full h-full`;
 
 export default function Logout() {
-  const setIsNoob = useSetRecoilState(isNoobState)
+  const setIsNoob = useSetRecoilState(isNoobState);
 
   const { mutate: signOutMutate } = useMutation({
     mutationFn: () => post_signout(),
