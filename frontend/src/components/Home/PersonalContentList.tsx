@@ -146,6 +146,7 @@ const PersonalContentList = ({ option }: Props) => {
         </>
       ) : (
         <>
+        {data && <>
           <ListTitleContatiner>
             <Icon category={option} />
             <Title>{CategoryObj[option]}</Title>
@@ -163,6 +164,7 @@ const PersonalContentList = ({ option }: Props) => {
               })}
             </RowListContainer>
           </ContentListContainer>
+          </>}
         </>
       )}
     </>

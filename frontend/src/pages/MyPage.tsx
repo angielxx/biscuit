@@ -23,7 +23,7 @@ const Span = tw.p`text-dark-grey70 text-sub`;
 const Logo = tw.img`w-6 h-6`;
 
 const Setting = ({ category }: { category: string }) => {
-  const imgSrc = `src/assets/icons/${category}.svg`;
+  const imgSrc = `/assets/icons/${category}.svg`;
   const [isExists, setIsExists] = useState(false);
   function checkLocalImgFileExists(imgSrc: string) {
     let img = new Image();
