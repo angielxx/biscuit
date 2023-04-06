@@ -2,8 +2,6 @@ import { isNameState, isNoobState } from "../../recoils/Start/Atoms";
 import { useRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { get_myInfo } from "../../api/myInfo";
 
 const SocialLogin = () => {
   const navigate = useNavigate();
