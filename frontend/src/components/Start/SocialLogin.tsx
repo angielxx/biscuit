@@ -17,10 +17,10 @@ const SocialLogin = () => {
   console.log("login");
   console.log(isNoob);
   console.log(nickname);
-  
+
   useEffect(() => {
     // 뉴비가 아니면
-    if (isNoob === "false") {
+    if (isNoob === "false" && nickname !== "") {
       console.log("login 안됨");      
       const myInfoQuery = useQuery({
         queryKey: ['get_myInfo'],
