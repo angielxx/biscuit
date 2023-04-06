@@ -175,22 +175,28 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
     } else {
       deleteMarkMutate(content.id);
     }
-    // query 재요청 로직 추가 : 한별
-    queryClient.invalidateQueries(['get_personal_contents', "bookmarked", timeFilterIdx, typeFilter]);
   };
 
   // 북마크 추가
   const { mutate: postMarkMutate } = useMutation({
     mutationFn: (contentId: number) => post_bookmark(contentId),
     // 성공하면 회원 북마크 정보 invalidate
-    onSuccess: () => setIsMarked(true),
+    onSuccess: () => {
+      setIsMarked(true);
+      // query 재요청 로직 추가 : 한별
+      queryClient.invalidateQueries(['get_personal_contents', "bookmarked", timeFilterIdx, typeFilter]);
+    },
   });
 
   // 북마크 삭제
   const { mutate: deleteMarkMutate } = useMutation({
     mutationFn: (contentId: number) => delete_bookmark(contentId),
     // 성공하면 회원 북마크 정보 invalidate
-    onSuccess: () => setIsMarked(false),
+    onSuccess: () => {
+      setIsMarked(false);
+      // query 재요청 로직 추가 : 한별
+      queryClient.invalidateQueries(['get_personal_contents', "bookmarked", timeFilterIdx, typeFilter]);
+    },
   });
 
   const startTime = useRecoilValue(startTimeState);
