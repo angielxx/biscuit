@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   endTimeState,
-  getTimeSelector,
   isStartState,
+  recentContentState,
 } from '../../../recoils/Contents/Atoms';
+import { isNoobState } from '../../../recoils/Start/Atoms';
 
 // image
 import neutral_face from '../../../assets/image/neutral-face.png';
@@ -43,13 +44,13 @@ const FeedbackBtnStyles: FeedbackBtnStylesType = {
 
 interface FeedbackPageProps {
   onSubmit: (feedback: number | null) => void;
+  quizStatus: boolean;
 }
 
-const FeedbackPage = ({ onSubmit }: FeedbackPageProps) => {
+const FeedbackPage = ({ onSubmit, quizStatus }: FeedbackPageProps) => {
   // 선택된 피드백 번호
   const [feedback, setFeedback] = useState<number | null>(null);
   const [isStart, setIsStart] = useRecoilState(isStartState);
-  const getTime = useRecoilValue(getTimeSelector);
   const setEndTime = useSetRecoilState(endTimeState);
 
   const endTimeHandler = () => {
@@ -62,8 +63,12 @@ const FeedbackPage = ({ onSubmit }: FeedbackPageProps) => {
   return (
     <>
       <PageTitle
-        title="방금 본 컨텐츠가 어땠는지 알려주세요."
-        desc="피드백을 주시면 더 정확한 컨텐츠를 받아보실 수 있어요."
+        title="방금 본 컨텐츠가 어땠나요?"
+        desc={
+          isNoobState
+            ? '피드백을 주시면 더 나은 컨텐츠를 제공해드릴 수 있어요.'
+            : '피드백을 주시면 더 정확한 컨텐츠를 받아보실 수 있어요.'
+        }
       />
       <FeedbackBtns>
         {['쉬웠어요', '적당해요', '어려웠어요'].map((text, index) => {
@@ -89,7 +94,7 @@ const FeedbackPage = ({ onSubmit }: FeedbackPageProps) => {
         })}
       </FeedbackBtns>
       <Button
-        title="선택 완료"
+        title={quizStatus ? '피드백 제출하고 퀴즈 풀러가기' : '피드백 제출하기'}
         status={feedback !== null ? 'active' : 'disabled'}
         onClick={() => {
           if (feedback !== null) onSubmit(feedback);

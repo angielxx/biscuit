@@ -6,6 +6,15 @@ export const get_quizzes = async (contentId: number) => {
   return data;
 };
 
-export const post_quizzes = async (contentId: number) => {
-  await baseInstance.post(requests.QUIZZES(contentId));
+type BodyType = {
+  answers: AnswerType[];
+};
+type AnswerType = {
+  quizId: number;
+  answer: boolean;
+};
+
+export const post_quizzes = async (contentId: number, body: BodyType) => {
+  const { data } = await authInstance.post(requests.QUIZZES(contentId), body);
+  return data;
 };

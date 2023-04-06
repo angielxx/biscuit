@@ -1,4 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
+import {
+  QueryCache,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import defaultImg from '../../assets/image/default_thumbnail_img.png';
 import {
@@ -8,18 +13,22 @@ import {
   recentContentState,
   endTimeState,
 } from '../../recoils/Contents/Atoms';
+import { isNoobState } from '../../recoils/Start/Atoms';
 
 // twin macro
 import tw, { styled, css, TwStyle } from 'twin.macro';
 import { useGetMetaData } from '../../hooks/useGetMetaData';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { delete_bookmark, post_bookmark } from '../../api/bookmark';
+import { homeFilterBtnState, homeFilterTimeState } from '../../recoils/Home/Atoms';
+import { get_visit } from '../../api/visit';
 
 // Styled component
 const Tag = styled.div`
   ${tw`rounded-full text-tiny px-[10px] py-1 bg-dark-grey50 w-fit `}
 `;
 
-const Thumbnail = styled.div<{ image: string | null }>`
+const Thumbnail = styled.div<{ image: string | undefined }>`
   ${tw`aspect-w-16 aspect-h-9 bg-center rounded-10 relative cursor-pointer`}
   ${({ image }) =>
     image
@@ -27,7 +36,7 @@ const Thumbnail = styled.div<{ image: string | null }>`
           background-image: url('${image}');
         `
       : css`
-          background-image: url('src/assets/image/default_thumbnail_image.png');
+          background-image: url('/assets/image/default_thumbnail_image.png');
         `}
   ${css`
     background-size: 102%;
@@ -69,7 +78,7 @@ const TextInfo = styled.div`
 interface content {
   id: number;
   title: string;
-  url: string;
+  source: string; // 영상: video_id, 글: url
   creditBy: string;
   createdDate: string;
   timeCost: number;
@@ -77,6 +86,7 @@ interface content {
   marked: boolean;
   tags: Array<string> | null;
   hit: number;
+  img: string;
 }
 
 interface ContentCardItemProps {
@@ -88,8 +98,44 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
   const [isMarked, setIsMarked] = useState<boolean>(content.marked);
   // 요약
   const [desc, setDesc] = useState<string | null>('');
+  // 썸네일 이미지
+  const [thumbImg, setThumbImg] = useState<string | undefined>('');
+  // url
+  const [url, setUrl] = useState<string>('');
+  // 로그인 상태
+  const [isNoob, setIsNoob] = useRecoilState(isNoobState);
   // 로그인 여부
-  const isAuth = false;
+  const isAuth = true;
+
+  // 타입에 따라 썸네일, url 설정
+  useEffect(() => {
+    if (content.type === 'VIDEO') {
+      setUrl(`https://youtu.be/${content.source}`);
+      setThumbImg(`https://img.youtube.com/vi/${content.source}/0.jpg`);
+    } else {
+      setUrl(content.source);
+      setThumbImg(content.img);
+    }
+    return () => {
+      setThumbImg('');
+    };
+  }, [content.id]);
+
+  // // 썸네일 가져오는 함수 (queryFn)
+  // const getMetaData = async (url: string) => {
+  //   const data = await useGetMetaData(url);
+  //   return data?.image;
+  // };
+
+  // // 리액트 쿼리로 썸네일 가져오기
+  // const { data } = useQuery({
+  //   queryKey: ['thumbnail', content.id],
+  //   queryFn: () => getMetaData(content.source),
+  //   staleTime: 1000 * 60 * 30,
+  //   cacheTime: 1000 * 60 * 60,
+  //   enabled: content.type === 'ARTICLE',
+  //   onSuccess: (image) => setThumbImg(image),
+  // });
 
   // 날짜 포맷
   const stringToDate = (date: string) => {
@@ -99,25 +145,58 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
     return `${year}.${month}.${day}`;
   };
 
+
+  // query 재요청 로직 추가 : 한별
+  type filterItem = {
+    id: number;
+    content: string;
+    status: boolean;
+  };
+  
+  const timeFilter = useRecoilValue(homeFilterTimeState);
+  const [timeFilterIdx, setTimeFilterIdx] = useState(6);
+  const typeFilter = useRecoilValue(homeFilterBtnState);
+
+  useEffect(() => {
+    let timeIdx: number = 6;
+    timeFilter.forEach((time: filterItem) => {
+      if (time.status === true) timeIdx = time.id;
+    });
+    setTimeFilterIdx(timeIdx);
+  }, [timeFilter]);
+
+
   // 북마크 버튼 클릭 시
   const changeMarkHandler = () => {
-    // API 요청 : 북마크 추가 혹은 삭제
-    setIsMarked((prev) => {
-      return !prev;
-    });
+    // 북마크 추가
+    if (!isMarked) {
+      postMarkMutate(content.id);
+    } else {
+      deleteMarkMutate(content.id);
+    }
   };
 
-  // 썸네일 가져오는 함수
-  const getMetaData = async (url: string) => {
-    const { image } = await useGetMetaData(url);
-    return image;
-  };
+  const queryClient = useQueryClient();
+  // 북마크 추가
+  const { mutate: postMarkMutate } = useMutation({
+    mutationFn: (contentId: number) => post_bookmark(contentId),
+    // 성공하면 회원 북마크 정보 invalidate
+    onSuccess: () => {
+      setIsMarked(true);
+      // query 재요청 로직 추가 : 한별
+      queryClient.invalidateQueries(['get_personal_contents', "bookmarked", timeFilterIdx, typeFilter]);
+    },
+  });
 
-  // 리액트 쿼리로 썸네일 가져오기
-  const { data: thumbImg } = useQuery({
-    queryKey: ['thumbnail', content.id],
-    queryFn: () => getMetaData(content.url),
-    staleTime: 1000 * 60 * 30,
+  // 북마크 삭제
+  const { mutate: deleteMarkMutate } = useMutation({
+    mutationFn: (contentId: number) => delete_bookmark(contentId),
+    // 성공하면 회원 북마크 정보 invalidate
+    onSuccess: () => {
+      setIsMarked(false);
+      // query 재요청 로직 추가 : 한별
+      queryClient.invalidateQueries(['get_personal_contents', "bookmarked", timeFilterIdx, typeFilter]);
+    },
   });
 
   const startTime = useRecoilValue(startTimeState);
@@ -126,17 +205,23 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
   const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState);
   const setContent = useSetRecoilState(recentContentState);
 
+  const useGetVisitContent = useQuery({
+    queryKey: ['get_visit'], 
+    queryFn: () => get_visit(content.id),
+    enabled: false,
+  });
+    
   const clickContentHandler = (url: string) => {
     window.open(url, '_blank', 'noopener, noreferrer');
     setStartTime(Number(Date.now().toString()));
-    // console.log(Date.now().toString());
     setIsStart(true);
     if (!isModalOpen) {
       setIsModalOpen(true);
       setContent(content);
-      // console.log('content :', content);
     }
+    useGetVisitContent.refetch();
   };
+
 
   return (
     <div
@@ -152,19 +237,15 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
           ))}
       </div>
 
-      <button
-        onClick={() => clickContentHandler(content.url)}
-        className="w-full"
-      >
-        <Thumbnail image={thumbImg ? thumbImg : ''} />
+      <button onClick={() => clickContentHandler(url)} className="w-full">
+        <Thumbnail image={thumbImg} />
       </button>
 
       <ContentInfo>
-        {/* <div id="channel"></div> */}
         <TextInfo id="text">
           <p
             className="leading-5 max-h-[40px] overflow-hidden cursor-pointer text-main-bold hover:text-main-bold hover:text-primary"
-            onClick={() => clickContentHandler(content.url)}
+            onClick={() => clickContentHandler(url)}
           >
             {content.title}
           </p>
@@ -172,7 +253,7 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
             {content.creditBy} | {stringToDate(content.createdDate)}{' '}
           </span>
         </TextInfo>
-        {isAuth && (
+        {!isNoob && (
           <div onClick={changeMarkHandler}>
             {isMarked ? (
               <BookmarkSvg

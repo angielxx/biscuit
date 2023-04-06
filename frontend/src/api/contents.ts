@@ -4,7 +4,7 @@ import { requests } from './requests';
 interface content {
   id: number;
   title: string;
-  url: string;
+  source: string; // 영상: video_id, 글: url
   creditBy: string;
   createdDate: string;
   timeCost: number;
@@ -12,6 +12,7 @@ interface content {
   marked: boolean;
   tags: Array<string> | null;
   hit: number;
+  img: string;
 }
 
 interface randomContent {
@@ -21,12 +22,31 @@ interface randomContent {
 
 const get_home_contents = async (
   classification: string,
-  categoryCount: number
+  categoryCount?: number,
+  fromTo?: {
+    start: number;
+    end: number;
+  },
+  type?: string
 ): Promise<content[] | randomContent[] | undefined> => {
   const response = await baseInstance.get(
-    requests.GET_HOME_CONTENTS(classification, categoryCount)
+    requests.GET_HOME_CONTENTS(classification, categoryCount, fromTo, type)
   );
   return response.data.results;
 };
 
-export { get_home_contents };
+const get_personal_contents = async (
+  option: string,
+  fromTo: {
+    start: number;
+    end: number;
+  },
+  type: string
+): Promise<content[] | randomContent[] | undefined> => {
+  const response = await authInstance.get(
+    requests.GET_PERSONAL_CONTENTS(option, fromTo, type)
+  );
+  return response.data.results;
+};
+
+export { get_home_contents, get_personal_contents };

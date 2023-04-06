@@ -3,6 +3,8 @@ import BannerContent from './BannerContent';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { isNoobState, isStartModalState } from '../../recoils/Start/Atoms';
 
 // 배너 배경 이미지
 import gradient_bg from '../../assets/image/banner_background.svg';
@@ -62,30 +64,43 @@ const Banner = () => {
     arrows: false,
   };
 
+  const [isStartModal, setIsStartModal] = useRecoilState(isStartModalState);
+
+  const startModal = () => {
+    setIsStartModal(true);
+  };
+
+  const isNoob = useRecoilValue(isNoobState);
+
   return (
     <BannerContainer>
       <div className="carousel">
         <Slider {...settings}>
-          <div>
-            <BannerBg key="1" img={gradient_bg}>
-              <div className="flex flex-col items-start gap-[2vh]">
-                <div className="flex flex-col items-start text-left text-[2rem] leading-10 tracking-tight relative z-auto px-1">
-                  <span className="z-10">
-                    나에게 딱! 맞는 <br />
-                    <span className="underline underline-offset-[-8px] decoration-primary decoration-[1rem] break-keep">
-                      <strong className="text-bold">테크 컨텐츠</strong> 추천
-                      서비스
+          
+          {isNoob === true
+            ?
+              <div>
+                <BannerBg key="1" img={gradient_bg}>
+                  <div className="flex flex-col items-start gap-[2vh]">
+                    <div className="flex flex-col items-start text-left text-[2rem] leading-10 tracking-tight relative z-auto px-1">
+                      <span className="z-10">
+                        나에게 딱! 맞는 <br />
+                        <span className="underline underline-offset-[-8px] decoration-primary decoration-[1rem] break-keep">
+                          <strong className="text-bold">테크 컨텐츠</strong> 추천
+                          서비스
+                        </span>
+                      </span>
+                      {/* <div className="bg-dark-primary w-full h-[1rem] absolute bottom-0 left-[1px]" /> */}
+                    </div>
+                    <span className="text-main px-1">
+                      지금 가입하고 바로 만나보세요.
                     </span>
-                  </span>
-                  {/* <div className="bg-dark-primary w-full h-[1rem] absolute bottom-0 left-[1px]" /> */}
-                </div>
-                <span className="text-main px-1">
-                  지금 가입하고 바로 만나보세요.
-                </span>
+                  </div>
+                  <SeeMoreBtn onClick={startModal}>비스킷 시작하기</SeeMoreBtn>
+                </BannerBg>
               </div>
-              <SeeMoreBtn>비스킷 시작하기</SeeMoreBtn>
-            </BannerBg>
-          </div>
+            : null
+          }
           {/* {bannerList?.map((banner) => {
             return (
               <BannerContent
