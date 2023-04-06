@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { endTimeState, isStartState } from '../../../recoils/Contents/Atoms';
+import {
+  endTimeState,
+  isStartState,
+  recentContentState,
+} from '../../../recoils/Contents/Atoms';
 import { isNoobState } from '../../../recoils/Start/Atoms';
 
 // image
@@ -40,9 +44,10 @@ const FeedbackBtnStyles: FeedbackBtnStylesType = {
 
 interface FeedbackPageProps {
   onSubmit: (feedback: number | null) => void;
+  quizStatus: boolean;
 }
 
-const FeedbackPage = ({ onSubmit }: FeedbackPageProps) => {
+const FeedbackPage = ({ onSubmit, quizStatus }: FeedbackPageProps) => {
   // 선택된 피드백 번호
   const [feedback, setFeedback] = useState<number | null>(null);
   const [isStart, setIsStart] = useRecoilState(isStartState);
@@ -89,7 +94,7 @@ const FeedbackPage = ({ onSubmit }: FeedbackPageProps) => {
         })}
       </FeedbackBtns>
       <Button
-        title="피드백 제출하고 퀴즈 풀러가기"
+        title={quizStatus ? '피드백 제출하고 퀴즈 풀러가기' : '피드백 제출하기'}
         status={feedback !== null ? 'active' : 'disabled'}
         onClick={() => {
           if (feedback !== null) onSubmit(feedback);
