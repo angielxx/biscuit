@@ -1,10 +1,6 @@
 // css
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import tw, { styled } from 'twin.macro';
-
-const Category = ({ category }: { category: string }) => {
-  return <img src={`/src/assets/icons/category/${category}.svg`} />;
-};
 
 const CategoryBox = styled.li`
   ${tw`flex flex-col items-start order-5 w-full px-4 py-3 gap-[10px] text-white border-b border-solid border-dark-grey10 cursor-pointer`}
@@ -29,11 +25,33 @@ interface SmallProps {
 }
 
 const SmallCategory = ({ isClicked, title, selectList }: SmallProps) => {
+  const [imgSrc, setImgSrc] = useState(`assets/icons/category/${title}.svg`);
+  const [isExists, setIsExists] = useState(false);
+
+  function checkLocalImgFileExists(imgSrc: string) {
+    let img = new Image();
+    img.src = imgSrc;
+    img.onload = function () {
+      setIsExists(true);
+    };
+    img.onerror = function () {
+      setImgSrc('assets/icons/category/Default.svg');
+      setIsExists(false);
+    };
+  }
+
+  useEffect(() => {
+    console.log('small category title :', title);
+    checkLocalImgFileExists(imgSrc);
+  }, [imgSrc, title]);
 
   return (
-    <CategoryBox onClick={isClicked} className={selectList.includes(title) ? "choose" : ""}>
+    <CategoryBox
+      onClick={isClicked}
+      className={selectList.includes(title) ? 'choose' : ''}
+    >
       <SubCategory>
-        <Category category={title} />
+        <img src={imgSrc} />
         <p className="text-h3">{title}</p>
       </SubCategory>
     </CategoryBox>

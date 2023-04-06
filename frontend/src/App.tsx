@@ -21,7 +21,7 @@ function App() {
             </div>
           </BrowserRouter>
         </RecoilRoot>
-        {/* <ReactQueryDevtools initialIsOpen={true} /> */}
+        <ReactQueryDevtools initialIsOpen={true} />
       </QueryClientProvider>
     </div>
   );

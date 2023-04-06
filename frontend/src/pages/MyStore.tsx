@@ -12,7 +12,7 @@ import StoreItem from '../components/MyStore/StoreItem';
 interface content {
   id: number;
   title: string;
-  url: string;
+  source: string; // 영상: video_id, 글: url
   creditBy: string;
   createdDate: string;
   timeCost: number;
@@ -20,6 +20,7 @@ interface content {
   marked: boolean;
   tags: Array<string> | null;
   hit: number;
+  img: string;
 }
 
 const MyStore = () => {
@@ -30,7 +31,8 @@ const MyStore = () => {
     {
       id: 52,
       title: '더 똑똑해진 GPT-4 발표! 무엇이 달라졌을까?',
-      url: 'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
+      source:
+        'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
       creditBy: '데보션',
       createdDate: '2023-03-16 00:00:00.000000',
       timeCost: 0,
@@ -38,11 +40,13 @@ const MyStore = () => {
       tags: [],
       hit: 0,
       marked: false,
+      img: '',
     },
     {
       id: 53,
       title: '더 똑똑해진 GPT-4 발표! 무엇이 달라졌을까?',
-      url: 'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
+      source:
+        'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
       creditBy: '데보션',
       createdDate: '2023-03-16 00:00:00.000000',
       timeCost: 0,
@@ -50,6 +54,7 @@ const MyStore = () => {
       tags: [],
       hit: 0,
       marked: false,
+      img: '',
     },
   ]);
   // 히스토리
@@ -57,7 +62,8 @@ const MyStore = () => {
     {
       id: 52,
       title: '더 똑똑해진 GPT-4 발표! 무엇이 달라졌을까?',
-      url: 'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
+      source:
+        'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
       creditBy: '데보션',
       createdDate: '2023-03-16 00:00:00.000000',
       timeCost: 0,
@@ -65,11 +71,13 @@ const MyStore = () => {
       tags: [],
       hit: 0,
       marked: false,
+      img: '',
     },
     {
       id: 53,
       title: '더 똑똑해진 GPT-4 발표! 무엇이 달라졌',
-      url: 'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
+      source:
+        'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
       creditBy: '데보션',
       createdDate: '2023-03-16 00:00:00.000000',
       timeCost: 0,
@@ -77,6 +85,7 @@ const MyStore = () => {
       tags: [],
       hit: 0,
       marked: false,
+      img: '',
     },
   ]);
 

@@ -15,14 +15,15 @@ interface DropDownProps {
   placeHolder: string;
   selected: string;
   setSelected: React.Dispatch<React.SetStateAction<string>>;
+  isOnboarding: boolean;
 }
 
-const DropDownContainer = styled.div`
-  ${tw`h-[160px] w-full overflow-scroll overflow-x-hidden z-20 fixed`};
-  ${css`
-    width: calc(100% - 80px);
-  `}
-`
+const DropDownContainer = styled.div((props: {isOnboarding: boolean}) => [
+  tw`h-[210px] w-full overflow-scroll overflow-x-hidden z-20 fixed`,
+  props.isOnboarding === true
+    ? css`width: calc(100% - 64px);`
+    : css`width: calc(80% - 38.4px);`
+])
 
 const DropDownBtn = tw.button
   `w-full h-14 rounded-10 flex justify-between items-center bg-dark-grey20 px-4`;
@@ -33,7 +34,6 @@ const ArrowDropDown = styled.div
     height: 24px;
     background-size: cover;
     background-image: url("${arrowDropDown}");
-    
   `}
 `;
 
@@ -46,7 +46,7 @@ const DropDownHolder = styled.span((props: { selected: string }) => [
 /** itemList는 드롭다운 아이템 리스트 {id: number, content:string},
  * placeHolder는 드롭다운 기본 홀더(string)
 */
-const DropDown = ({itemList, placeHolder, selected, setSelected}: DropDownProps) => {
+const DropDown = ({itemList, placeHolder, selected, setSelected, isOnboarding}: DropDownProps) => {
   const [isClicked, setIsClicked] = useState<boolean>(false);
 
 
@@ -66,7 +66,7 @@ const DropDown = ({itemList, placeHolder, selected, setSelected}: DropDownProps)
       </DropDownBtn>
       {isClicked
         ? 
-        <DropDownContainer>
+        <DropDownContainer isOnboarding={isOnboarding}>
           <DropDownList 
             itemList={itemList}
             setSelected={setSelected}

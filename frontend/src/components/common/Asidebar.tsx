@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { isStartModalState } from '../../recoils/Start/Atoms';
+import { isNameState, isStartModalState } from '../../recoils/Start/Atoms';
+import { isNoobState } from '../../recoils/Start/Atoms';
 
 // components
 import BigCategory from './BigCategory';
@@ -14,7 +15,9 @@ import { useQuery } from '@tanstack/react-query';
 import { get_categories } from '../../api/category';
 import AsideProfile from './AsideProfile';
 import AsideLogin from './AsideLogin';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { getCookie } from 'typescript-cookie';
+import Logout from './Logout';
 
 const Aside = styled.div`
   ${tw`h-full z-20 flex flex-col items-start p-2 fixed w-[314px] right-0 top-0 bg-black`}
@@ -46,7 +49,7 @@ interface AsidebarStatus {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-type ClickHanlder = (item: string) => void;
+type ClickHanlder = (event: any, item: string) => void;
 
 const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
   const [isCategory, setIsCategory] = useState<boolean>(false);
@@ -54,12 +57,14 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
   const [isStartModal, setIsStartModal] = useRecoilState(isStartModalState);
   const navigate = useNavigate();
 
-  const { data, isLoading } = useQuery(
-    ['get_categories'],
-    () => get_categories()
-  )
+  const isName = useRecoilValue(isNameState);
+  const [isNoob, setIsNoob] = useRecoilState(isNoobState);
 
-  const isClicked: ClickHanlder = (item: string) => {
+  const { data, isLoading } = useQuery(['get_categories'], () =>
+    get_categories()
+  );
+
+  const isClicked: ClickHanlder = (event: any, item: string) => {
     navigate(`/category/${item}`);
     setIsOpen(false);
   };
@@ -67,7 +72,18 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
   const startModal = () => {
     setIsStartModal(true);
     setIsOpen(false);
-  }
+  };
+
+  useEffect(() => {
+    if (!getCookie('access-token')) {
+      setIsNoob(true);
+    }
+  }, []);
+
+  const goToMypage = () => {
+    navigate('/mypage');
+    setIsOpen(false);
+  };
 
   return (
     <Aside className={isOpen ? 'open' : ''}>
@@ -79,13 +95,11 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
         />
       </Closeicon>
 
-      {/* 로그인 안했을 때 */}
-      <AsideLogin onClick={startModal} />
-      
-
-      {/* 로그인 했을 때 */}
-      {/* <AsideProfile /> */}
-      
+      {isNoob === false ? (
+        <AsideProfile isName={isName} onClick={goToMypage} setIsOpen={setIsOpen} />
+      ) : (
+        <AsideLogin onClick={startModal} />
+      )}
 
       {data?.map((item, index) => {
         return (
@@ -108,6 +122,12 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
           />
         );
       })}
+      
+      {/* 로그아웃 버튼 좀 추가할게 고마워 */}
+      {isNoob === false 
+        ? <Logout />
+        : null 
+      }
     </Aside>
   );
 };

@@ -3,6 +3,8 @@ import BannerContent from './BannerContent';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { useRecoilState } from 'recoil';
+import { isStartModalState } from '../../recoils/Start/Atoms';
 
 // 배너 배경 이미지
 import gradient_bg from '../../assets/image/banner_background.svg';
@@ -62,6 +64,12 @@ const Banner = () => {
     arrows: false,
   };
 
+  const [isStartModal, setIsStartModal] = useRecoilState(isStartModalState);
+
+  const startModal = () => {
+    setIsStartModal(true);
+  };
+
   return (
     <BannerContainer>
       <div className="carousel">
@@ -83,7 +91,7 @@ const Banner = () => {
                   지금 가입하고 바로 만나보세요.
                 </span>
               </div>
-              <SeeMoreBtn>비스킷 시작하기</SeeMoreBtn>
+              <SeeMoreBtn onClick={startModal}>비스킷 시작하기</SeeMoreBtn>
             </BannerBg>
           </div>
           {/* {bannerList?.map((banner) => {
