@@ -78,7 +78,7 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
             String targetUrl = target
                     .queryParam("is-noob", false)
                     .queryParam("nickname", member.getNickname())
-                    .build().toUriString();
+                    .build().encode().toUriString();
             log.info("this is oldie");
             getRedirectStrategy().sendRedirect(request, response, targetUrl);
         }
