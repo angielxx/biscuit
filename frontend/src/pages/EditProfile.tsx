@@ -35,7 +35,7 @@ export default function EditProfile() {
   const { mutate: signOutMutate } = useMutation({
     mutationFn: () => put_myInfo(userData),
     onSuccess: () => {
-      navigate('/myProfile');
+      navigate('/mypage');
     },
   });
 
