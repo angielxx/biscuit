@@ -36,7 +36,7 @@ const Thumbnail = styled.div<{ image: string | undefined }>`
           background-image: url('${image}');
         `
       : css`
-          background-image: url('/src/assets/image/default_thumbnail_image.png');
+          background-image: url('/assets/image/default_thumbnail_image.png');
         `}
   ${css`
     background-size: 102%;
