@@ -19,6 +19,7 @@ import AsideLogin from './AsideLogin';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { getCookie } from 'typescript-cookie';
 import Logout from './Logout';
+import Modal from './Modal/Modal';
 
 const Aside = styled.div`
   ${tw`h-full z-20 flex flex-col items-start p-2 fixed w-[314px] right-0 top-0 bg-black`}
@@ -63,9 +64,26 @@ function Backdrop({ onClose }: BackdropProps) {
 interface AsidebarStatus {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  // setIsLogout: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 type ClickHanlder = (event: any, item: string) => void;
+
+const selectBtn = styled.button`
+  ${tw`h-9 flex items-center justify-center py-3 px-2 border-[1px] border-dark-primary rounded-[10px]`}
+`
+
+export const LogoutBox = () => {
+  return (
+    <div className='flex flex-col w-full justify-center items-center gap-4'>
+      <span>로그아웃 하시겠습니까?</span>
+      <div className='flex gap-4'>
+        <button className='h-9 w-15 flex items-center justify-center py-3 px-2 border-[1px] border-dark-primary rounded-[10px] text-tiny'>네</button>
+        <button className='h-9 w-15 flex items-center justify-center py-3 px-2 border-[1px] border-dark-primary rounded-[10px] text-tiny'>아니오</button>
+      </div>
+    </div>
+  )
+};
 
 const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
   const [isCategory, setIsCategory] = useState<boolean>(false);
@@ -100,6 +118,11 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
     navigate('/mypage');
     setIsOpen(false);
   };
+
+  const [isLogout, setIsLogout] = useState(false);
+  const isClose = () => {
+    return ;
+  }
 
   return (
     <>
@@ -144,10 +167,15 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
         
         {/* 로그아웃 버튼 좀 추가할게 고마워 */}
         {isNoob === false 
-          ? <Logout setIsOpen={setIsOpen} />
-          : null 
+          ? <Logout setIsOpen={setIsOpen} setIsLogout={setIsLogout} />
+          : <Logout setIsOpen={setIsOpen} setIsLogout={setIsLogout} />
         }
       </Aside>
+
+      {isLogout
+        ? <Modal content={<LogoutBox />} onClose={isClose} isOnboarding={false} />
+        : null
+      }
     
     </>
   );

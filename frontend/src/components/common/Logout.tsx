@@ -13,9 +13,10 @@ const Img = tw.img`w-full h-full`;
 
 interface LogoutProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsLogout: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function Logout({ setIsOpen }: LogoutProps) {
+export default function Logout({ setIsOpen, setIsLogout }: LogoutProps) {
   const setIsNoob = useSetRecoilState(isNoobState);
   const navigate = useNavigate();
 
@@ -38,8 +39,9 @@ export default function Logout({ setIsOpen }: LogoutProps) {
 
   return (
     <Container>
-      <Btn onClick={() => onClick()}>
-        <Img src="/assets/icons/logout.svg" />
+      {/* <Btn onClick={() => onClick()}> */}
+      <Btn onClick={() => setIsLogout(true)}>
+        <Img src="assets/icons/logout.svg" />
       </Btn>
     </Container>
   )
