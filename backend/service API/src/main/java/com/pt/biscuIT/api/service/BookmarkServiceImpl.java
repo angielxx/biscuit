@@ -10,7 +10,7 @@ import com.pt.biscuIT.api.response.BookmarkContentRes;
 import com.pt.biscuIT.common.exception.BiscuitException;
 import com.pt.biscuIT.common.exception.ErrorCode;
 import com.pt.biscuIT.common.model.response.PageMetaData;
-import com.pt.biscuIT.db.repository.ContentTageRepositorySupport;
+import com.pt.biscuIT.db.repository.ContentTagRepositorySupport;
 import com.pt.biscuIT.db.repository.MemberBookmarkRepositorySupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +33,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 	private final MemberBookmarkRepository memberBookmarkRepository;
 	private final ContentRepository contentRepository;
 	private final MemberBookmarkRepositorySupport memberBookmarkRepositorySupport;
-	private final ContentTageRepositorySupport contentTageRepositorySupport;
+	private final ContentTagRepositorySupport contentTageRepositorySupport;
 
 	@Override
 	public void addBookmark(Member member, Long contentId) {

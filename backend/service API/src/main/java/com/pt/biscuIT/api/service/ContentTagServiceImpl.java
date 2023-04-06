@@ -21,7 +21,7 @@ public class ContentTagServiceImpl implements ContentTagService {
 
     @Override
     public List<String> getTags(Long contentId) {
-        return contentTagRepositorySupport.findByTagsByContentId(contentId);
+        return contentTagRepositorySupport.findTagsByContentId(contentId);
     }
 
     @Override
