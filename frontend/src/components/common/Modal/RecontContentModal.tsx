@@ -170,7 +170,7 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
     }, // 퀴즈 제출하고 포인트 정보 받아와야 함
   });
 
-  // 포인트 정보용 state
+  // 포인트 정보용 state : 한별 수정
   type QuizResultType = {
     memberPoint: number;
     changePoint: number;
@@ -213,7 +213,7 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
           </span>
           {/* <h1 className="text-h1">130 (+1)</h1> */}
           {/* 한별 수정, dashBoardQuery의 point 값을 들고와서 보여주기 */}
-          <h1 className="text-h1">{`${quizResult?.memberPoint} (+${quizResult.changePoint})`}</h1>
+          <h1 className="text-h1">{`${quizResult?.memberPoint+quizResult?.changePoint} (+${quizResult?.changePoint})`}</h1>
         </div>
       )}
       {page === 2 && isNoob && (
