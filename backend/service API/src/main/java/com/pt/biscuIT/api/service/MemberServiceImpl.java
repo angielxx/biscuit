@@ -114,16 +114,14 @@ public class MemberServiceImpl implements MemberService {
             // job, period 정보 업데이트
             MemberProfile profile = MemberProfile.builder()
                     .memberId(memberInfoDto.getMemberId())
-                    .job(Job.valueOf(memberInfoDto.getJob().toUpperCase()))
+                    .job(Job.valueOf(memberInfoDto.getJob()))
                     .period(memberInfoDto.getPeriod())
                     .build();
             updateProfile(profile);
-            // intrests 정보 업데이트 TODO : 중복 체크
+            // intrests 정보 업데이트
+            memberInterestRepository.deleteAllByMemberId(memberInfoDto.getMemberId());
             for (String interest : memberInfoDto.getInterests()) {
                 Category category = categoryRepository.findBySubName(interest);
-                if(memberInterestRepository.findByMemberIdAndCategoryId(memberInfoDto.getMemberId(), category.getId()) != null){
-                    continue;
-                }
                 memberInterestRepository.save(MemberInterest.builder()
                         .member(member.get())
                         .category(category)
