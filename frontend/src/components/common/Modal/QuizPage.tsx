@@ -39,13 +39,15 @@ const QuizPage = ({ onSubmit, quizzes }: QuizPageProps) => {
 
   // answer 초기값 설정
   useEffect(() => {
-    // console.log(quizzes);
-    quizzes?.forEach((quiz) =>
-      setAnswers((prev) => {
-        prev[quiz.quizId] = -1;
-        return prev;
-      })
-    );
+    console.log(quizzes);
+    if (quizzes.length) {
+      quizzes.forEach((quiz) =>
+        setAnswers((prev) => {
+          prev[quiz.quizId] = -1;
+          return prev;
+        })
+      );
+    }
     // console.log(answers);
   }, [quizzes]);
 
@@ -74,16 +76,15 @@ const QuizPage = ({ onSubmit, quizzes }: QuizPageProps) => {
             }
           />
           <div className="flex flex-col gap-6 py-6">
-            {quizzes.length &&
-              quizzes.map((quiz) => (
-                <QuizItem
-                  key={quiz.quizId}
-                  quiz={quiz}
-                  onClick={clickQuizOptionHandler}
-                  result={false}
-                  userAnswers={{}}
-                />
-              ))}
+            {quizzes.map((quiz) => (
+              <QuizItem
+                key={quiz.quizId}
+                quiz={quiz}
+                onClick={clickQuizOptionHandler}
+                result={false}
+                userAnswers={{}}
+              />
+            ))}
           </div>
           <Button
             title="다 풀었어요"
