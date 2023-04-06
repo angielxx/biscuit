@@ -4,13 +4,11 @@ import com.pt.biscuIT.api.dto.content.ContentInfoDto;
 import com.pt.biscuIT.common.exception.BiscuitException;
 import com.pt.biscuIT.common.exception.ErrorCode;
 import com.pt.biscuIT.db.entity.Content;
-import com.pt.biscuIT.db.entity.ContentView;
 import com.pt.biscuIT.db.entity.Member;
 import com.pt.biscuIT.db.entity.MemberHistory;
 import com.pt.biscuIT.db.entity.Type;
 import com.pt.biscuIT.db.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -75,4 +73,5 @@ public class ContentService {
             content.setMarked(memberBookmarkRepositorySupport.isMarked(memberId, content.getId()));
         });
     }
+
 }
