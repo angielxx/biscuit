@@ -94,7 +94,10 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   const [userAnswers, setUserAnswers] = useState<AnswerState>({});
 
   const queryClient = useQueryClient();
-  const cacheQuiz = queryClient.getQueryData<Quiz[]>([
+  type CacheQuizType = {
+    quizzes: Quiz[];
+  };
+  const cacheQuiz = queryClient.getQueryData<CacheQuizType>([
     'get_quizzes',
     recentContent.id,
   ]);
@@ -102,7 +105,7 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   useEffect(() => {
     // 캐쉬된 퀴즈 데이터가 있다면 가져오기
     if (cacheQuiz === undefined) return;
-    setQuizzes(cacheQuiz);
+    setQuizzes(cacheQuiz.quizzes);
   }, [cacheQuiz]);
 
   interface mutateParams {
