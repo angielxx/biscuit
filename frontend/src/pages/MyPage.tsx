@@ -121,13 +121,9 @@ export default function MyPage() {
             )}
           </PointContainer>
         </HeaderContainer>
-        {functionToggle.dashBoardToggle && dashBoardData && (
-          <Contributions histories={dashBoardData.histories} />
-        )}
-        <Span>님이 비스킷에서 가장 많이 본 콘텐츠에요.</Span>
-        {functionToggle.graphToggle && dashBoardData && (
-          <Graph graphs={dashBoardData.graphs} />
-        )}
+        {functionToggle.dashBoardToggle && dashBoardData && <Contributions histories={dashBoardData.histories} />}
+        {myInfoData && <Span>{myInfoData.nickname}님이 비스킷에서 가장 많이 본 콘텐츠에요.</Span>}
+        {functionToggle.graphToggle && dashBoardData && <Graph graphs={dashBoardData.graphs}/>}
       </DashboardContainer>
     </HomeContainer>
   );

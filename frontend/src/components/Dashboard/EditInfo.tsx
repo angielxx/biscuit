@@ -2,11 +2,12 @@ import tw from "twin.macro";
 import Button from "../common/Button";
 import Modal from "../common/Modal/Modal";
 import AboutInterest from "../OnBoarding/AboutInterest";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { post_about_user } from "../../api/login";
 import DropDown from "../common/DropDown/DropDown";
+import { useQueryClient } from '@tanstack/react-query';
 
 const InfoContainer = tw.div`w-full h-fit justify-between flex flex-row my-4`;
 const TitleContainer = tw.div`flex w-[20%] h-14 items-center`;
@@ -22,6 +23,21 @@ interface InfoProps {
 
 interface InterestProps {
   title: string;
+  selectList: string[];
+  setSelectList: React.Dispatch<React.SetStateAction<string[]>>;
+}
+
+
+type MyInfoContent = {
+  nickname: string,
+  job: string,
+	period: string,
+  interests: string[],
+}
+
+interface MyInfoProps {
+  infoData: MyInfoContent;
+  setInfoData: React.Dispatch<React.SetStateAction<MyInfoContent>>;
 }
 
 const Info = ({title, content}: InfoProps) => {
@@ -35,17 +51,8 @@ const Info = ({title, content}: InfoProps) => {
   )
 }
 
-const Interest = ({title}: InterestProps) => {
-  // api로 받아오기
-  const [selectList, setSelectList] = useState<string[]>([]);
-  const navigate = useNavigate();
+const Interest = ({title, selectList, setSelectList}: InterestProps) => {
   const [modalOpen, setModalOpen] = useState(false);
-  const [userData, setUserData] = useState({
-    nickname: "",
-    period: "",
-    job: "",
-    interests: [""],
-  });
   
   const isClose = () => {
     return setModalOpen(false);
@@ -66,18 +73,8 @@ const Interest = ({title}: InterestProps) => {
     }
   }
 
-  // userData 전달
-  const { mutate: userDataPost } = useMutation({
-    mutationFn: (userData: {}) => post_about_user(userData),
-  });
-
   const isSend = () => {
-    setUserData({...userData, interests: selectList});
-    userDataPost(userData);
-    console.log(selectList);
-
-    // 홈으로 이동
-    navigate(`/mypage`);
+    return setModalOpen(false);
   }
 
   return (
@@ -87,13 +84,13 @@ const Interest = ({title}: InterestProps) => {
       </TitleContainer>
       <BtnContainer>
         <Button title="관심사 설정하기" status="disabled" onClick={() => {setModalOpen(true)}} />
-      </BtnContainer>
-      {modalOpen && <Modal content={<AboutInterest isClicked={isClicked} isSend={isSend} isBack={isBack} selectList={selectList} />} onClose={isClose} isOnboarding={false} />}
+      </BtnContainer> 
+      {modalOpen && selectList && <Modal content={<AboutInterest isClicked={isClicked} isSend={isSend} isBack={isBack} selectList={selectList} />} onClose={isClose} isOnboarding={true} />}
     </InfoContainer>
   )
 }
 
-export default function EditInfo() {
+export default function EditInfo({infoData, setInfoData}: MyInfoProps) {
 
   const jobList = [
     { id: 0, content: "Frontend" },
@@ -116,25 +113,45 @@ export default function EditInfo() {
   ]
   
   // 얘도 api랑 연결해서 받아오기
+  const [nickname, setNickName] = useState<string>("");
   const [jobSelected, setJobSelected] = useState<string>("");
   const [periodSelected, setPeriodSelected] = useState<string>("");
+  const [selectList, setSelectList] = useState<string[]>([]);
+
+  useEffect(() => {
+    if(infoData === undefined) return;
+    setNickName(infoData.nickname);
+    setJobSelected(infoData.job);
+    setPeriodSelected(infoData.period);
+    setSelectList([...infoData.interests])
+  }, [infoData])
+
+  useEffect(() => {
+    if(jobSelected === undefined || periodSelected === undefined) return;
+    const tmp = {...infoData};
+    tmp.nickname = nickname;
+    tmp.job = jobSelected;
+    tmp.period = periodSelected;
+    tmp.interests = [...selectList];
+    setInfoData({...tmp});
+  }, [jobSelected, periodSelected, nickname, selectList])
   
   return (
     <>
-      <Info title="닉네임" content="탐정 제 이름은 코난이죠" />
+      {nickname && <Info title="닉네임" content={nickname} />}
       
     <InfoContainer>
       <TitleContainer>
         <Span>직무</Span>
       </TitleContainer>
       <DropDownContainer>
-        <DropDown
+        {jobSelected && <DropDown
           itemList={jobList} 
           placeHolder="직무 선택" 
           selected={jobSelected}
           setSelected={setJobSelected}
           isOnboarding={false}
-        />
+        />}
       </DropDownContainer>
     </InfoContainer>
     
@@ -143,17 +160,17 @@ export default function EditInfo() {
         <Span>직무</Span>
       </TitleContainer>
       <DropDownContainer>
-        <DropDown 
+        {periodSelected && <DropDown 
           itemList={yearsList} 
           placeHolder="연차 선택"
           selected={periodSelected}
           setSelected={setPeriodSelected}
           isOnboarding={false}
-        />
+        />}
       </DropDownContainer>
     </InfoContainer>
 
-      <Interest title="관심사"/>
+      <Interest title="관심사" selectList={selectList} setSelectList={setSelectList}/>
     </>
   )
 }
