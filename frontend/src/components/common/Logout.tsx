@@ -5,6 +5,7 @@ import { isNoobState } from '../../recoils/Start/Atoms';
 import { useMutation } from '@tanstack/react-query';
 import { post_signout } from '../../api/logout';
 import { removeCookie } from 'typescript-cookie';
+import { useNavigate } from 'react-router-dom';
 
 const Container = tw.div`absolute bottom-0 h-14 w-[calc(100% - 16px)] p-2 border-t border-solid border-dark-evaluated flex justify-end items-center`; 
 const Btn = tw.button`w-6 h-5`
@@ -12,6 +13,7 @@ const Img = tw.img`w-full h-full`;
 
 export default function Logout() {
   const setIsNoob = useSetRecoilState(isNoobState);
+  const navigate = useNavigate();
 
   const { mutate: signOutMutate } = useMutation({
     mutationFn: () => post_signout(),
@@ -26,6 +28,7 @@ export default function Logout() {
   const onClick = () => {
     setIsNoob(true);
     signOutMutate();
+    navigate(`/`);
   }
 
   return (
