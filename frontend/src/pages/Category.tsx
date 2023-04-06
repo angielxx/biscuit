@@ -91,7 +91,6 @@ const Category = () => {
 
   // 다음 페이지 로딩
   useEffect(() => {
-    console.log('hasNextPage :', hasNextPage);
     if (inView) {
       fetchNextPage();
       console.log('view', inView);

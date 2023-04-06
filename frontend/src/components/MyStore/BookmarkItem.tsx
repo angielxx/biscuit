@@ -45,25 +45,25 @@ const StoreItemContainer = styled.div`
   }
 `;
 
-interface content {
-  id: number;
-  title: string;
-  source: string; // 영상: video_id, 글: url
-  creditBy: string;
+interface Bookmark {
+  bookmarkId: number;
+  contentId: number;
   createdDate: string;
-  timeCost: number;
-  type: string;
-  marked: boolean;
-  tags: Array<string> | null;
+  creditBy: string;
   hit: number;
-  img: string;
+  marked: boolean;
+  source: string;
+  tags: string[];
+  timeCost: number;
+  title: string;
+  type: string;
 }
 
 interface StoreItemProps {
-  content: content;
+  bookmark: Bookmark;
 }
 
-const StoreItem = ({ content }: StoreItemProps) => {
+const BookmarkItem = ({ bookmark }: StoreItemProps) => {
   const [showMore, setShowMore] = useState<boolean>(false);
   // 썸네일 이미지
   const [thumbImg, setThumbImg] = useState<string | undefined>('');
@@ -72,13 +72,13 @@ const StoreItem = ({ content }: StoreItemProps) => {
 
   // 타입에 따라 썸네일, url 설정
   useEffect(() => {
-    if (content.type === 'VIDEO') {
-      setUrl(`https://youtu.be/${content.source}`);
-      setThumbImg(`https://img.youtube.com/vi/${content.source}/0.jpg`);
+    if (bookmark.type === 'VIDEO') {
+      setUrl(`https://youtu.be/${bookmark.source}`);
+      setThumbImg(`https://img.youtube.com/vi/${bookmark.source}/0.jpg`);
     } else {
-      setUrl(content.source);
+      setUrl(bookmark.source);
     }
-  }, [content]);
+  }, [bookmark]);
 
   // 날짜 포맷
   const stringToDate = (date: string) => {
@@ -89,7 +89,7 @@ const StoreItem = ({ content }: StoreItemProps) => {
   };
 
   const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState);
-  const setContent = useSetRecoilState(recentContentState);
+  // const setContent = useSetRecoilState(recentContentState);
 
   const clickContentHandler = (url: string) => {
     window.open(url, '_blank', 'noopener, noreferrer');
@@ -97,7 +97,7 @@ const StoreItem = ({ content }: StoreItemProps) => {
     // setIsStart(true);
     if (!isModalOpen) {
       setIsModalOpen(true);
-      setContent(content);
+      // setContent(bookmark);
     }
   };
 
@@ -115,10 +115,10 @@ const StoreItem = ({ content }: StoreItemProps) => {
             if (e.target === e.currentTarget) clickContentHandler(url);
           }}
         >
-          {content.title}
+          {bookmark.title}
         </p>
         <span>
-          {content.creditBy} | {stringToDate(content.createdDate)}{' '}
+          {bookmark.creditBy} | {stringToDate(bookmark.createdDate)}{' '}
         </span>
       </TextInfo>
       <div
@@ -149,4 +149,4 @@ const StoreItem = ({ content }: StoreItemProps) => {
   );
 };
 
-export default StoreItem;
+export default BookmarkItem;
