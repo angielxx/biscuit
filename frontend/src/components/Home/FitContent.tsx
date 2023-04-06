@@ -123,17 +123,17 @@ const FitContent = ({ option }: Props) => {
 
   useEffect(() => {
     const myOrderString = localStorage.getItem('OrderArray');
-    if (myOrderString) {
+    if (myOrderString !== undefined && myOrderString !== null) {
       const myOrder = JSON.parse(myOrderString);
+      setShowingIdx(myOrder.shift());
       setOrder([...myOrder]);
-      setShowingIdx(order.shift());
       localStorage.removeItem('OrderArray');
       localStorage.setItem('OrderArray', JSON.stringify(myOrder));
       return;
     }
     const randomOrder = [0, 10, 20, 30, 40].sort(() => Math.random() - 0.5);
+    setShowingIdx(randomOrder.shift());
     setOrder([...randomOrder]);
-    setShowingIdx(order.shift());
     localStorage.removeItem('OrderArray');
     localStorage.setItem('OrderArray', JSON.stringify(randomOrder));
   }, []);
