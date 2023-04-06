@@ -16,11 +16,12 @@ interface AsideBtnProps {
   src: string;
   alt: string;
   title: string;
+  onClick: React.MouseEventHandler<HTMLAnchorElement>;
 }
 
-const AsideButton = ({to, src, alt, title}: AsideBtnProps) => {
+const AsideButton = ({to, src, alt, title, onClick}: AsideBtnProps) => {
   return (
-    <Link to={to}>
+    <Link to={to} onClick={onClick}>
       <Btn>
         <img src={src} alt={alt} />
         <span>{title}</span>
