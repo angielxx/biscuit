@@ -48,7 +48,7 @@ export const get_category_contents = async (
   const contentList = data.results;
   console.log('data :', data);
   const nextLastContentId = contentList[contentList.length - 1]?.id;
-  // console.log('isLast :', isLast);
+
   return {
     contentList,
     nextLastContentId,

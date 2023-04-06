@@ -13,7 +13,7 @@ import Close from '../../../assets/icons/close.svg';
 import { JsxElement } from 'typescript';
 
 // Styled component
-const ModalContainer = styled.div((props: {isOnboarding: boolean}) => [
+const ModalContainer = styled.div((props: { isOnboarding: boolean }) => [
   tw`fixed z-50 bg-dark-evaluated p-6 text-white rounded-20`,
   tw`w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[45vw] 2xl:w-[40vw]`,
   css`
@@ -41,9 +41,11 @@ const ModalContainer = styled.div((props: {isOnboarding: boolean}) => [
     }
   `,
   props.isOnboarding === false
-    ? css`overflow: scroll;`
-    : null
-])
+    ? css`
+        overflow: scroll;
+      `
+    : null,
+]);
 
 const ModalContentContainer = styled.div`
   ${tw`overflow-scroll relative h-full`}
@@ -75,13 +77,11 @@ interface OverlayProps {
 function Overlay({ onClose, content, isOnboarding }: OverlayProps) {
   return (
     <ModalContainer isOnboarding={isOnboarding}>
-      {!isOnboarding
-        ?
-          <div id="close-row" className="flex justify-end">
-            <img src={Close} alt="모달 닫는 버튼" onClick={onClose} />
-          </div>
-        : null
-      }
+      {!isOnboarding ? (
+        <div id="close-row" className="flex justify-end">
+          <img src={Close} alt="모달 닫는 버튼" onClick={onClose} />
+        </div>
+      ) : null}
       <ModalContentContainer>{content}</ModalContentContainer>
     </ModalContainer>
   );
@@ -101,7 +101,11 @@ function Modal({ onClose, content, isOnboarding }: ModalProps) {
         document.getElementById('backdrop-root') as HTMLElement
       )}
       {ReactDOM.createPortal(
-        <Overlay content={content} onClose={onClose} isOnboarding={isOnboarding} />,
+        <Overlay
+          content={content}
+          onClose={onClose}
+          isOnboarding={isOnboarding}
+        />,
         document.getElementById('overlay-root') as HTMLElement
       )}
     </React.Fragment>

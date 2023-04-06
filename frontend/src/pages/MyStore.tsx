@@ -1,109 +1,122 @@
-import React, { useState } from 'react';
-import TabBar from '../components/MyStore/TabBar';
+import React, { useEffect, useState } from 'react';
+import { InView, useInView } from 'react-intersection-observer';
+import { useInfiniteQuery, useQueries, useQuery } from '@tanstack/react-query';
+import tw, { styled, css } from 'twin.macro';
 
 // Icons
 import historyIcon from '../assets/icons/history.svg';
 import bookmarkIcon from '../assets/icons/bookmark.svg';
-import { useQueries } from '@tanstack/react-query';
+
+// Component
+import StoreItem from '../components/MyStore/BookmarkItem';
+import TabBar from '../components/MyStore/TabBar';
+
+// API
 import { get_bookmark } from '../api/bookmark';
 import { get_history } from '../api/history';
-import StoreItem from '../components/MyStore/StoreItem';
+import BookmarkItem from '../components/MyStore/BookmarkItem';
+import Loading from '../components/common/Loading';
 
-interface content {
-  id: number;
+// Styled component
+const ItemsContainer = styled.div`
+  ${tw`flex flex-col px-4 gap-2 overflow-scroll pt-4`}
+  ${css`
+    height: calc(100vh - 145px);
+  `}
+`;
+
+// Type
+interface Bookmark {
+  bookmarkId: number;
+  contentId: number;
+  createdDate: string;
+  creditBy: string;
+  hit: number;
+  marked: boolean;
+  source: string;
+  tags: string[];
+  timeCost: number;
   title: string;
-  source: string; // 영상: video_id, 글: url
+  type: string;
+}
+
+interface History {
+  memberHistoryId: number;
+  contentId: number;
+  title: string;
+  url: string;
+  writer: string;
   creditBy: string;
   createdDate: string;
   timeCost: number;
   type: string;
   marked: boolean;
-  tags: Array<string> | null;
+  tags: string[];
   hit: number;
-  img: string;
 }
 
 const MyStore = () => {
   // 탭
   const [clickedTab, setClickedTab] = useState<number>(0);
-  // 북마크
-  const [bookmarks, setBookmarks] = useState<content[]>([
-    {
-      id: 52,
-      title: '더 똑똑해진 GPT-4 발표! 무엇이 달라졌을까?',
-      source:
-        'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
-      creditBy: '데보션',
-      createdDate: '2023-03-16 00:00:00.000000',
-      timeCost: 0,
-      type: 'POST',
-      tags: [],
-      hit: 0,
-      marked: false,
-      img: '',
-    },
-    {
-      id: 53,
-      title: '더 똑똑해진 GPT-4 발표! 무엇이 달라졌을까?',
-      source:
-        'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
-      creditBy: '데보션',
-      createdDate: '2023-03-16 00:00:00.000000',
-      timeCost: 0,
-      type: 'POST',
-      tags: [],
-      hit: 0,
-      marked: false,
-      img: '',
-    },
-  ]);
-  // 히스토리
-  const [histories, setHistories] = useState<content[]>([
-    {
-      id: 52,
-      title: '더 똑똑해진 GPT-4 발표! 무엇이 달라졌을까?',
-      source:
-        'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
-      creditBy: '데보션',
-      createdDate: '2023-03-16 00:00:00.000000',
-      timeCost: 0,
-      type: 'POST',
-      tags: [],
-      hit: 0,
-      marked: false,
-      img: '',
-    },
-    {
-      id: 53,
-      title: '더 똑똑해진 GPT-4 발표! 무엇이 달라졌',
-      source:
-        'https://devocean.sk.com/blog/techBoardDetail.do?ID=164627&boardType=techBlog',
-      creditBy: '데보션',
-      createdDate: '2023-03-16 00:00:00.000000',
-      timeCost: 0,
-      type: 'POST',
-      tags: [],
-      hit: 0,
-      marked: false,
-      img: '',
-    },
-  ]);
 
   // 북마크, 히스토리 get
-  const result = useQueries({
-    queries: [
-      {
-        queryKey: ['get_bookmark'],
-        queryFn: () => get_bookmark(),
-        // onSuccess: (data) => setBookmarks(data),
-      },
-      {
-        queryKey: ['get_history'],
-        queryFn: () => get_history(),
-        // onSuccess: (data) => setHistories(data),
-      },
-    ],
+  // const result = useQueries({
+  //   queries: [
+  //     {
+  //       queryKey: ['get_bookmark'],
+  //       queryFn: () => get_bookmark(),
+  //       onSuccess: (data) => setBookmarks(data),
+  //     },
+  //     {
+  //       queryKey: ['get_history'],
+  //       queryFn: () => get_history(),
+  //       onSuccess: (data) => setHistories(data),
+  //     },
+  //   ],
+  // });
+
+  // 북마크 get
+  const {
+    data: bookmarkData,
+    fetchNextPage: bookmarkFetchNextPage,
+    hasNextPage: bookmarkHasNextPage,
+    isFetchingNextPage: bookmarkIsFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ['get_bookmark'],
+    queryFn: ({ pageParam = 999999 }) => get_bookmark(pageParam, 20),
+    getNextPageParam: (lastPage) => {
+      return lastPage?.isLast ? undefined : lastPage?.nextLastContentId;
+    },
+    enabled: clickedTab === 0,
   });
+
+  // 히스토리 get
+  const {
+    data: historyData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ['get_history'],
+    queryFn: ({ pageParam = 999999 }) => get_history(pageParam, 20),
+    getNextPageParam: (lastPage) => {
+      return lastPage?.isLast ? undefined : lastPage?.nextLastContentId;
+    },
+    enabled: clickedTab === 1,
+  });
+
+  // 스크롤 옵져버
+  const { ref, inView } = useInView();
+
+  // 다음 페이지 로딩
+  useEffect(() => {
+    if (clickedTab === 0 && inView && bookmarkHasNextPage) {
+      bookmarkFetchNextPage();
+    }
+    if (clickedTab === 1 && inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView]);
 
   const tabList = [
     {
@@ -135,24 +148,35 @@ const MyStore = () => {
   ];
 
   return (
-    <div>
+    <div id="myStore" className="mt-20">
       <TabBar
         tabList={tabList}
         onClick={setClickedTab}
         clickedTab={clickedTab}
       />
-      <div className="flex flex-col gap-2 rounded p-4">
+      <ItemsContainer>
         {clickedTab === 0 &&
-          Array.isArray(bookmarks) &&
-          bookmarks?.map((content) => (
-            <StoreItem key={content.id} content={content} />
+          bookmarkData?.pages.map((page, index: number) => (
+            <React.Fragment key={index}>
+              {page?.bookmarkList?.map((bookmark) => (
+                <BookmarkItem key={bookmark.bookmarkId} bookmark={bookmark} />
+              ))}
+            </React.Fragment>
           ))}
         {clickedTab === 1 &&
-          Array.isArray(histories) &&
-          histories?.map((content) => (
-            <StoreItem key={content.id} content={content} />
+          historyData?.pages.map((page, index: number) => (
+            <React.Fragment key={index}>
+              {page?.historyList?.map((history) => (
+                <BookmarkItem key={history.bookmarkId} bookmark={history} />
+              ))}
+            </React.Fragment>
           ))}
-      </div>
+        {bookmarkIsFetchingNextPage || isFetchingNextPage ? (
+          <Loading />
+        ) : (
+          <div ref={ref} />
+        )}
+      </ItemsContainer>
     </div>
   );
 };

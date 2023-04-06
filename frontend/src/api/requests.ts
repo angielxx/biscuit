@@ -99,13 +99,17 @@ export const requests = {
     return `/api/members`;
   },
 
+  PUT_MYINFO() {
+    return `/api/members`;
+  },
+
   // 로그아웃
   POST_SIGNOUT() {
     return `/api/auth/signout`;
   },
-
-  PUT_MYINFO() {
-    return `/api/members`;
+  // 북마크 조회
+  GET_BOOKMARK(lastContentId: number, size: number) {
+    return `/api/bookmarks?lastContentId=${lastContentId}&size=${size}`;
   },
 
   // 북마크 추가
@@ -116,5 +120,10 @@ export const requests = {
   // 북마크 삭제
   DELETE_BOOKMARK(contentId: number) {
     return `/api/bookmarks/${contentId}`;
+  },
+
+  // 히스토리 조회
+  GET_HISTORY(lastContentId: number, size: number) {
+    return `/api/histories?lastContentId=${lastContentId}&size=${size}`;
   },
 };
