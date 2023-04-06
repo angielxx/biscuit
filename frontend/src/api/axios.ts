@@ -19,8 +19,8 @@ const setTokenHeader = (config: any) => {
   const token = getCookie('access-token');
 
   if (token) {
-    config.headers["Authorization"] = `Bearer ${token}`;
-  } 
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
   return config;
 };
 
@@ -49,15 +49,16 @@ authInstance.interceptors.response.use(
           url: BASE_URL + `/api/auth/refresh`,
           headers: {
             Authorization: `Bearer ${refreshToken}`,
-          }
+          },
         });
         if (data) {
           setCookie('access-token', data);
-          config.headers["Authorization"] = `Bearer ${getCookie('access-token')}`;
+          config.headers['Authorization'] = `Bearer ${getCookie(
+            'access-token'
+          )}`;
           return authInstance.request(config);
         }
-      }
-      catch (error) {
+      } catch (error) {
         console.log(error);
       }
     }
