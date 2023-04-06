@@ -5,7 +5,7 @@ const Logo = tw.img`w-8 h-8 mr-2`;
 const QuestionBtn = tw.img`w-5 h-5`
 
 const Icon = ({ category }: { category: string }) => {
-  const imgSrc = `src/assets/icons/${category}.svg`;
+  const imgSrc = `/assets/icons/${category}.svg`;
   const [isExists, setIsExists] = useState(false);
 
   function checkLocalImgFileExists(imgSrc: string) {
