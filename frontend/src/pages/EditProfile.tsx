@@ -45,7 +45,7 @@ export default function EditProfile() {
           <SettingContainer onClick={() => console.log("회원탈퇴 버튼")}>
           </SettingContainer>
         </HeaderContainer>
-        {userData && <EditInfo infoData={userData} setInfoData={setUserData}/>}
+        {userData && userData.nickname !== "" && <EditInfo infoData={userData} setInfoData={setUserData}/>}
         <Button title="입력완료" status="active" onClick={() => console.log("클릭")} />
       </MyInfoContainer>
     </HomeContainer>
