@@ -60,11 +60,8 @@ const MyStore = () => {
   // 탭
   const [clickedTab, setClickedTab] = useState<number>(0);
   const { page } = useParams();
-  const [isPage, setIsPage] = useState<number>(0);
   useEffect(() => {
-    if (page === "0" || page === "1") {
-      setIsPage(parseInt(page));
-    } else return;
+    if (page) setClickedTab(parseInt(page));
   }, [page])
 
   // 북마크, 히스토리 get
@@ -161,10 +158,9 @@ const MyStore = () => {
         tabList={tabList}
         onClick={setClickedTab}
         clickedTab={clickedTab}
-        page={isPage}
       />
       <ItemsContainer>
-        {clickedTab === 0 || page === "0" &&
+        {clickedTab === 0 &&
           bookmarkData?.pages.map((page, index: number) => (
             <React.Fragment key={index}>
               {page?.bookmarkList?.map((bookmark) => (
@@ -172,7 +168,7 @@ const MyStore = () => {
               ))}
             </React.Fragment>
           ))}
-        {clickedTab === 1 || page === "1" &&
+        {clickedTab === 1 &&
           historyData?.pages.map((page, index: number) => (
             <React.Fragment key={index}>
               {page?.historyList?.map((history) => (
