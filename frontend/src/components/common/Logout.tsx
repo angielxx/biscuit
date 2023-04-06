@@ -1,21 +1,23 @@
 // css
-import tw from 'twin.macro';
-import { useSetRecoilState } from 'recoil';
+import tw, { styled } from 'twin.macro';
+
+import { useNavigate } from 'react-router-dom';
 import { isNoobState } from '../../recoils/Start/Atoms';
+import { useSetRecoilState } from 'recoil';
 import { useMutation } from '@tanstack/react-query';
 import { post_signout } from '../../api/logout';
 import { removeCookie } from 'typescript-cookie';
-import { useNavigate } from 'react-router-dom';
 
-const Container = tw.div`absolute bottom-0 h-14 w-[calc(100% - 16px)] p-2 border-t border-solid border-dark-evaluated flex justify-end items-center`; 
-const Btn = tw.button`w-6 h-5`
-const Img = tw.img`w-full h-full`;
+const SelectBtn = styled.button`
+  ${tw`h-9 w-15 flex items-center justify-center py-3 px-2 border-[1px] border-dark-primary rounded-[10px] text-tiny`}
+`
 
 interface LogoutProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsLogout: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function Logout({ setIsOpen }: LogoutProps) {
+const LogoutBox = ({ setIsOpen, setIsLogout }: LogoutProps) => {
   const setIsNoob = useSetRecoilState(isNoobState);
   const navigate = useNavigate();
 
@@ -37,10 +39,14 @@ export default function Logout({ setIsOpen }: LogoutProps) {
   }
 
   return (
-    <Container>
-      <Btn onClick={() => onClick()}>
-        <Img src="/assets/icons/logout.svg" />
-      </Btn>
-    </Container>
+    <div className='flex flex-col w-full justify-center items-center gap-4 mb-2'>
+      <span>로그아웃 하시겠습니까?</span>
+      <div className='flex gap-4'>
+        <SelectBtn onClick={onClick}>네</SelectBtn>
+        <SelectBtn onClick={() => setIsLogout(false)}>아니오</SelectBtn>
+      </div>
+    </div>
   )
-}
+};
+
+export default LogoutBox;
