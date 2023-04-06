@@ -74,7 +74,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 		List<BookmarkContentInfoDto> contentInfoDtoList = new ArrayList<>();
 		for(MemberBookmark bookmark : bookmarkContentList.getContent()) {
 			Content content = contentRepository.findById(bookmark.getContent().getId()).orElseThrow(() -> new BiscuitException(ErrorCode.CONTENT_NOT_FOUND));
-			List<String> tags = contentTageRepositorySupport.findByTagsByContentId(content.getId());
+			List<String> tags = contentTageRepositorySupport.findTagsByContentId(content.getId());
 			BookmarkContentInfoDto contentInfoDto = new BookmarkContentInfoDto(content);
 			contentInfoDto.setTags(tags);
 			boolean isMarked = memberBookmarkRepositorySupport.isMarked(member.getId(), content.getId());

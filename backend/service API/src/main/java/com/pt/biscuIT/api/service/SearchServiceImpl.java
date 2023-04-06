@@ -55,7 +55,7 @@ public class SearchServiceImpl implements SearchService {
 
 		List<ContentInfoDto> contentInfoDtoList = new ArrayList<>();
 		for(Content content : contentList.getContent()) {
-			List<String> tags = contentTageRepositorySupport.findByTagsByContentId(content.getId());
+			List<String> tags = contentTageRepositorySupport.findTagsByContentId(content.getId());
 			ContentInfoDto contentInfoDto = new ContentInfoDto(content);
 			contentInfoDto.setTags(tags);
 			if(member != null) { //로그인된 상태라면
