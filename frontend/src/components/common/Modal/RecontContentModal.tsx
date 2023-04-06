@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { getCookie } from 'typescript-cookie';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  getTimeSelector,
+  recentContentState,
+} from '../../../recoils/Contents/Atoms';
+import { isNoobState } from '../../../recoils/Start/Atoms';
 
 // twin macro
 import tw, { styled, css, TwStyle } from 'twin.macro';
@@ -8,18 +15,16 @@ import tw, { styled, css, TwStyle } from 'twin.macro';
 // icons
 import Close from '../../../assets/icons/close.svg';
 import seed from '../../../assets/image/seed.png';
+import eyes from '../../../assets/image/eyes.png';
 
 // component
 import ContentCardItem from '../ContentCardItem';
 import QuizItem from './QuizItem';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import {
-  getTimeSelector,
-  recentContentState,
-} from '../../../recoils/Contents/Atoms';
 import QuizResultPage from './QuizResultPage';
 import QuizPage from './QuizPage';
 import FeedbackPage from './FeedbackPage';
+
+// API
 import { post_feedback } from '../../../api/feedback';
 import { get_quizzes, post_quizzes } from '../../../api/quiz';
 
@@ -69,49 +74,24 @@ interface Quiz {
   answer: number;
 }
 
+type AnswerState = {
+  [index: number]: number;
+};
+
 // Main component
 const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   // 페이지 (0:피드백, 1:퀴즈, 2:결과)
-  const [page, setPage] = useState<number>(2);
+  const [page, setPage] = useState<number>(0);
   // 방금 본 컨텐츠
   const [recentContent, setRecentContent] = useRecoilState(recentContentState);
+  // 로그인 상태
+  const [isNoob, setIsNoob] = useRecoilState(isNoobState);
   // 퀴즈
-  const [quizzes, setQuizzes] = useState<Quiz[]>([
-    {
-      quizId: 123,
-      question: '첫번째 질문',
-      multiple_choice: ['첫번째 보기', '두번째 보기', '세번째 보기'],
-      answer: 0,
-    },
-    {
-      quizId: 234,
-      question: '두번째 질문',
-      multiple_choice: [
-        '첫번째 보기입니다.',
-        '두번째 보기입니다.',
-        '세번째 보기입니다.',
-      ],
-      answer: 0,
-    },
-    {
-      quizId: 345,
-      question: '세번째 질문',
-      multiple_choice: [
-        '첫번째 보기입니다.',
-        '두번째 보기입니다.',
-        '세번째 보기입니다.',
-      ],
-      answer: 0,
-    },
-  ]);
+  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   // 콘텐츠 소비 시간
   const getTime = useRecoilValue(getTimeSelector);
   // 유저가 선택한 퀴즈의 정답
-  const [userAnswers, setUserAnswers] = useState<number[]>([]);
-
-  useEffect(() => {
-    // API get 요청 : 퀴즈 제공
-  }, []);
+  const [userAnswers, setUserAnswers] = useState<AnswerState>({});
 
   interface mutateParams {
     contentId: number;
@@ -123,20 +103,33 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   const { mutate: feedbackMutate } = useMutation({
     mutationFn: ({ contentId, feedback, timecost }: mutateParams) =>
       post_feedback(contentId, feedback, timecost),
-    onSuccess: () => setPage(1),
+    onSuccess: () => {
+      if (recentContent.type === 'ARTICLE') setPage(1);
+      else onClose();
+    },
+  });
+
+  // 퀴즈 GET
+  const {
+    data,
+    isError: isGetQuizError,
+    isSuccess: isGetQuizSuccess,
+  } = useQuery({
+    queryKey: ['get_quizzes', recentContent.id],
+    queryFn: () => get_quizzes(recentContent.id),
+    onSuccess: (data) => {
+      const quizzes = data.quizzes.filter((quiz: Quiz) => quiz.answer !== -1);
+      setQuizzes(data.quizzes);
+    },
+    enabled: recentContent.type === 'ARTICLE',
+    staleTime: 1000 * 60 * 60,
+    cacheTime: 1000 * 60 * 65,
   });
 
   // 퀴즈 답 POST
   const { mutate: quizMutate } = useMutation({
     mutationFn: (contentId: number) => post_quizzes(contentId),
-    onSuccess: (data) => setPage(2), // 퀴즈 제출하고 포인트 정보 받아와야 함
-  });
-
-  // 퀴즈 GET
-  const { data } = useQuery({
-    queryKey: ['get_quizzes', recentContent.id],
-    queryFn: () => get_quizzes(recentContent.id),
-    onSuccess: (data) => setQuizzes(data.quizzes),
+    onSuccess: (data) => {}, // 퀴즈 제출하고 포인트 정보 받아와야 함
   });
 
   // 피드백 제출
@@ -148,14 +141,12 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   };
 
   // 퀴즈 제출
-  const quizSubmitHandler = (
-    firstAnswer: number,
-    secondAnswer: number,
-    thirdAnswer: number
-  ) => {
-    // API POST 요청 : 퀴즈 제출 내역 저장
-    quizMutate(recentContent.id);
-    setUserAnswers([firstAnswer, secondAnswer, thirdAnswer]);
+
+  const quizSubmitHandler = (answers: AnswerState) => {
+    // 회원일 때만 퀴즈 제출
+    if (!isNoob) quizMutate(recentContent.id);
+    setUserAnswers(answers);
+    setPage(2);
   };
 
   return (
@@ -166,7 +157,7 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
           <ContentCardItem content={recentContent} />
         </div>
       )}
-      {page === 2 && (
+      {page === 2 && !isNoob && (
         <div className="flex flex-col justify-center items-center">
           <img src={seed} alt="" className="aspect-ratio-1 h-20 w-20 mb-3" />
           <span className="text-sub text-dark-grey70">
@@ -175,7 +166,19 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
           <h1 className="text-h1">130 (+1)</h1>
         </div>
       )}
-      <DivideLine />
+      {page === 2 && isNoob && (
+        <div className="flex flex-col justify-center items-center">
+          <img src={eyes} alt="" className="aspect-ratio-1 h-20 w-20 mb-3" />
+          {/* <span className="text-sub text-dark-grey70">
+            로그인하고 정답을 확인해보세요
+          </span> */}
+          <h1 className="text-h3 text-center mb-5">
+            로그인하고 <br />
+            정답을 확인해보세요!
+          </h1>
+        </div>
+      )}
+      {page !== 2 && <DivideLine />}
 
       <Container>
         {/* 피드백 */}
@@ -187,7 +190,7 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
         )}
 
         {/* 퀴즈 결과 */}
-        {page === 2 && (
+        {page === 2 && !isNoob && (
           <QuizResultPage quizzes={quizzes} userAnswers={userAnswers} />
         )}
       </Container>
