@@ -11,7 +11,11 @@ const Container = tw.div`absolute bottom-0 h-14 w-[calc(100% - 16px)] p-2 border
 const Btn = tw.button`w-6 h-5`
 const Img = tw.img`w-full h-full`;
 
-export default function Logout() {
+interface LogoutProps {
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function Logout({ setIsOpen }: LogoutProps) {
   const setIsNoob = useSetRecoilState(isNoobState);
   const navigate = useNavigate();
 
@@ -29,6 +33,7 @@ export default function Logout() {
     setIsNoob(true);
     signOutMutate();
     navigate(`/`);
+    setIsOpen(false);
   }
 
   return (
