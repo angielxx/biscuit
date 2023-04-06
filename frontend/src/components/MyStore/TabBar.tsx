@@ -16,10 +16,9 @@ interface TabBarProps {
   tabList: tab[];
   onClick: React.Dispatch<React.SetStateAction<number>>;
   clickedTab: number;
-  page: number;
 }
 
-const TabBar = ({ tabList, onClick, clickedTab, page }: TabBarProps) => {
+const TabBar = ({ tabList, onClick, clickedTab }: TabBarProps) => {
   return (
     <TabContainer>
       {tabList.map((tab, index) => (
@@ -27,7 +26,7 @@ const TabBar = ({ tabList, onClick, clickedTab, page }: TabBarProps) => {
           key={index}
           title={tab.title}
           icon={tab.icon}
-          status={clickedTab === index || page === index ? 'active' : 'inactive'}
+          status={clickedTab === index ? 'active' : 'inactive'}
           onClick={() => onClick(index)}
         />
       ))}
