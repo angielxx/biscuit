@@ -14,7 +14,7 @@ const Title = tw.p`text-white text-h2`;
 interface MyInfoContent {
   nickname: string,
   job: string,
-	period: string,
+	period: number,
   interests: string[],
 }
 
@@ -24,7 +24,7 @@ export default function EditProfile() {
 
   const [userData, setUserData] = useState<MyInfoContent>({
     nickname: "",
-    period: "",
+    period: 0,
     job: "",
     interests: [""],
   });

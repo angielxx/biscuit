@@ -4,7 +4,7 @@ import { requests } from "./requests";
 interface MyInfoContent {
   nickname: string,
   job: string,
-	period: string,
+	period: number,
   interests: string[],
 }
 
