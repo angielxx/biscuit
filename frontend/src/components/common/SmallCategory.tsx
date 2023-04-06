@@ -37,7 +37,7 @@ const SmallCategory = ({ isClicked, title, selectList }: SmallProps) => {
   }
 
   useEffect(() => {
-    console.log('small category title :', title);
+    // console.log('small category title :', title);
     checkLocalImgFileExists(imgSrc);
   }, [imgSrc, title]);
 

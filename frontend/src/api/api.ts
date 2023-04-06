@@ -46,7 +46,7 @@ export const get_category_contents = async (
   );
   const { last: isLast } = data.metaData;
   const contentList = data.results;
-  console.log('data :', data);
+  // console.log('data :', data);
   const nextLastContentId = contentList[contentList.length - 1]?.id;
 
   return {
@@ -89,7 +89,7 @@ export const get_search = async (
   );
   const { last: isLast } = data.metaData;
   const content = data.results;
-  console.log(data);
+  // console.log(data);
   const nextLastContentId = content[content.length - 1]?.id;
 
   return { content, nextLastContentId, isLast };

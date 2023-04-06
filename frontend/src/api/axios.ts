@@ -62,7 +62,7 @@ authInstance.interceptors.response.use(
           return authInstance.request(config);
         }
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
     return Promise.reject(error);

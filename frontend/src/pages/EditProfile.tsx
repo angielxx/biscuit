@@ -95,8 +95,7 @@ export default function EditProfile() {
           <DashboardHeader>
             <Title>회원정보 수정</Title>
           </DashboardHeader>
-          <SettingContainer onClick={() => console.log("회원탈퇴 버튼")}>
-          </SettingContainer>
+          <SettingContainer/>
         </HeaderContainer>
         {userData && userData.nickname !== "" && <EditInfo infoData={userData} setInfoData={setUserData}/>}
         <Button title="입력완료" status="active" onClick={() => onSubmit()} />

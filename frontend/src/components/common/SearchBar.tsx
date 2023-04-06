@@ -60,7 +60,7 @@ const Searchbar = ({ isSearch, setIsSearch, searchKey }: SearchProps) => {
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      console.log(search);
+      // console.log(search);
 
       // /search?q=리액트 같은 쿼리스트링 주소로 이동
       const URLSearch = new URLSearchParams(location.search);

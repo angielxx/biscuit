@@ -165,7 +165,7 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
       return post_quizzes(contentId, body);
     },
     onSuccess: (data) => {
-      console.log('퀴즈제출데이터 :', data);
+      // console.log('퀴즈제출데이터 :', data);
       setQuizResult(data);
     }, // 퀴즈 제출하고 포인트 정보 받아와야 함
   });
@@ -194,7 +194,7 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
       quizMutate({ contentId: recentContent.id, userAnswers: answers });
     setUserAnswers(answers);
     setPage(2);
-    console.log('quiz submit isNoob :', isNoob);
+    // console.log('quiz submit isNoob :', isNoob);
   };
 
   return (

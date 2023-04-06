@@ -12,19 +12,19 @@ const SocialLogin = () => {
   const [noob, setNoob] = useRecoilState(isNoobState);
   const [isName, setIsName] = useRecoilState(isNameState);
 
-  console.log("login");
-  console.log(isNoob);
-  console.log(nickname);
+  // console.log("login");
+  // console.log(isNoob);
+  // console.log(nickname);
 
   useEffect(() => {
     // 뉴비가 아니면
     if (isNoob === "false" && nickname !== "") {
-      console.log("login 안됨");      
+      // console.log("login 안됨");      
       navigate(`/`);
       setNoob(false);
       setIsName(nickname);
     } else {
-      console.log("온보딩");
+      // console.log("온보딩");
       // 뉴비이면
       navigate(`/onboarding`);
     }
