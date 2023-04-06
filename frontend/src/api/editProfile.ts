@@ -4,7 +4,7 @@ import { requests } from "./requests";
 type MyInfoType = {
   nickname: string;
   job: string;
-  period: string;
+  period: number;
   interests: string[];
 }
 
