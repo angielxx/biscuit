@@ -21,7 +21,7 @@ interface SmallProps {
 }
 
 const SmallCategory = ({ isClicked, title, selectList }: SmallProps) => {
-  const [imgSrc, setImgSrc] = useState(`assets/icons/category/${title}.svg`);
+  const [imgSrc, setImgSrc] = useState(`/assets/icons/category/${title}.svg`);
   const [isExists, setIsExists] = useState(false);
 
   function checkLocalImgFileExists(imgSrc: string) {
@@ -31,7 +31,7 @@ const SmallCategory = ({ isClicked, title, selectList }: SmallProps) => {
       setIsExists(true);
     };
     img.onerror = function () {
-      setImgSrc('assets/icons/category/Default.svg');
+      setImgSrc('/assets/icons/category/Default.svg');
       setIsExists(false);
     };
   }

@@ -39,7 +39,7 @@ export default function Logout({ setIsOpen }: LogoutProps) {
   return (
     <Container>
       <Btn onClick={() => onClick()}>
-        <Img src="assets/icons/logout.svg" />
+        <Img src="/assets/icons/logout.svg" />
       </Btn>
     </Container>
   )
