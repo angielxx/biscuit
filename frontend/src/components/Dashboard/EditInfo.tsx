@@ -121,12 +121,11 @@ export default function EditInfo({infoData, setInfoData}: MyInfoProps) {
   const [selectList, setSelectList] = useState<string[]>([]);
 
   useEffect(() => {
-    if(infoData === undefined) return;
     setNickName(infoData.nickname);
     setJobSelected(infoData.job);
     setPeriodSelected(infoData.period);
     setSelectList([...infoData.interests])
-  }, [infoData])
+  }, [])
 
   useEffect(() => {
     if(nickname === undefined || jobSelected === undefined || periodSelected === undefined || selectList === undefined) return;
@@ -149,7 +148,7 @@ export default function EditInfo({infoData, setInfoData}: MyInfoProps) {
           <Span>직무</Span>
         </TitleContainer>
         <DropDownContainer>
-          {functionToggle.editNickname && jobSelected && <DropDown
+          {functionToggle.editJob && jobSelected && <DropDown
             itemList={jobList} 
             placeHolder="직무 선택" 
             selected={jobSelected}
@@ -161,7 +160,7 @@ export default function EditInfo({infoData, setInfoData}: MyInfoProps) {
       
       <InfoContainer>
         <TitleContainer>
-          <Span>연차</Span>
+          <Span>경력</Span>
         </TitleContainer>
         <DropDownContainer>
           {functionToggle.editPeriod && periodSelected && <DropDown 
