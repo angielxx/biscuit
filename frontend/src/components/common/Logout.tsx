@@ -88,8 +88,8 @@ const LogoutBox = ({ setIsOpen, setIsLogout }: LogoutProps) => {
   const onClick = () => {
     setIsNoob(true);
     // signOutMutate();
-    removeCookie('access-token', { path: '/', domain: 'https://j8a706.p.ssafy.io/' });
-    removeCookie('refresh-token', { path: '/', domain: 'https://j8a706.p.ssafy.io/' });
+    removeCookie('access-token', { path: '/'});
+    removeCookie('refresh-token', { path: '/'});
     navigate(`/`);
     setIsOpen(false);
   }
