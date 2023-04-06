@@ -1,5 +1,5 @@
 import tw from 'twin.macro';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Contributions from '../components/Dashboard/Contributions';
 import Graph from '../components/Dashboard/Graph';
