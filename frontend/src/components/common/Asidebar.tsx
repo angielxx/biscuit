@@ -18,7 +18,6 @@ import AsideProfile from './AsideProfile';
 import AsideLogin from './AsideLogin';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { getCookie } from 'typescript-cookie';
-import Modal from './Modal/Modal';
 
 const Aside = styled.div`
   ${tw`h-full z-20 flex flex-col items-start p-2 fixed w-[314px] right-0 top-0 bg-black`}
@@ -165,7 +164,7 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
       </Aside>
 
       {isLogout
-        ? <Modal content={<LogoutBox setIsOpen={setIsOpen} setIsLogout={setIsLogout} />} onClose={isClose} isOnboarding={false} />
+        ? <LogoutBox setIsOpen={setIsOpen} setIsLogout={setIsLogout} />
         : null
       }
     
