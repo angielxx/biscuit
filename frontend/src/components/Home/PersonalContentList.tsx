@@ -86,6 +86,7 @@ const timeFilterArr = [
 ];
 
 const PersonalContentList = ({ option }: Props) => {
+  const [isRerender, setIsRerender] = useState(true);
   const timeFilter = useRecoilValue(homeFilterTimeState);
   const [timeFilterIdx, setTimeFilterIdx] = useState(6);
   const typeFilter = useRecoilValue(homeFilterBtnState);
@@ -115,6 +116,10 @@ const PersonalContentList = ({ option }: Props) => {
     staleTime: 60 * 60 * 1000,
     cacheTime: Infinity,
   });
+
+  useEffect(() => {
+    setIsRerender(true);
+  }, [data])
 
   return (
     <>
@@ -167,6 +172,7 @@ const PersonalContentList = ({ option }: Props) => {
           </>}
         </>
       )}
+      {isRerender && null}
     </>
   );
 };
