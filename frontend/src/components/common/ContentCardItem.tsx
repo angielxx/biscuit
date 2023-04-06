@@ -108,7 +108,6 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
   const isAuth = true;
 
   // 타입에 따라 썸네일, url 설정
-  const queryClient = useQueryClient();
   useEffect(() => {
     if (content.type === 'VIDEO') {
       setUrl(`https://youtu.be/${content.source}`);
@@ -177,6 +176,7 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
     }
   };
 
+  const queryClient = useQueryClient();
   // 북마크 추가
   const { mutate: postMarkMutate } = useMutation({
     mutationFn: (contentId: number) => post_bookmark(contentId),
