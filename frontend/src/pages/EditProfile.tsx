@@ -70,6 +70,7 @@ export default function EditProfile() {
   const { mutate: signOutMutate } = useMutation({
     mutationFn: () => put_myInfo(userData),
     onSuccess: async () => {
+      console.log("제출시 userData : ", userData);
       await queryClient.invalidateQueries(['get_personal_contents', "bookmarked", timeFilterIdx, typeFilter]);
       navigate('/mypage');
     },

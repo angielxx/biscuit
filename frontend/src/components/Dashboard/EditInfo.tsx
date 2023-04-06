@@ -66,8 +66,10 @@ const Interest = ({title, selectList, setSelectList}: InterestProps) => {
     if (selectList.includes(item)) {
       const newArr = selectList.filter((element) => element !== item);
       setSelectList(newArr);
+      console.log(newArr);
     } else {
       setSelectList([...selectList, item]);
+      console.log([...selectList, item])
     }
   }
 
