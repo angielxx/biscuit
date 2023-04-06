@@ -39,11 +39,14 @@ public class BookmarkServiceImpl implements BookmarkService {
 	public void addBookmark(Member member, Long contentId) {
 		Content content = contentRepository.findById(contentId)
 			.orElseThrow(() -> new IllegalArgumentException("해당 컨텐츠가 없습니다."));
-		memberBookmarkRepository.save(MemberBookmark.builder()
-				.createdDate(LocalDateTime.now())
-				.content(content)
-				.member(member)
-				.build());
+		//사용자가 해당 컨텐츠를 북마크했는지 확인
+		if(!memberBookmarkRepositorySupport.isMarked(member.getId(), contentId)) {
+			memberBookmarkRepository.save(MemberBookmark.builder()
+					.createdDate(LocalDateTime.now())
+					.content(content)
+					.member(member)
+					.build());
+		}
 	}
 
 	@Override
