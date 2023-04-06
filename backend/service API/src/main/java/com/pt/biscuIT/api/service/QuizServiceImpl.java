@@ -59,14 +59,19 @@ public class QuizServiceImpl implements QuizService{
 			//보기 배열 만들기
 			String c = "";
 			String[] choice = new String[3];
+			String[] tmpChoice = new String[3];
 			int idx = 0;
 			choice = quiz.getMultipleChoice().split("//");
+			for(int j=0; j<choice.length; j++) {
+				tmpChoice[j] = choice[j].replaceAll(" ", "");
+			}
 			
 			//답안 만들기
 			int answer = -1;
 			String ans = quiz.getAnswer();
+			String tmpAns = ans.replaceAll(" ", "");
 			for(int j=0; j<choice.length; j++) {
-				if(ans.contains(choice[j]) || ans.equals(choice[j])) {
+				if(tmpAns.equals(tmpChoice[j])) {
 					answer = j;
 					break;
 				}
