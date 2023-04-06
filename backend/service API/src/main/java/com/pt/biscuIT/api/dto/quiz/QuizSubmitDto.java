@@ -7,4 +7,5 @@ import lombok.Data;
 @Builder
 public class QuizSubmitDto {
 	private Integer memberPoint;
+	private Integer changePoint;
 }

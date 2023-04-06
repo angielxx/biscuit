@@ -22,6 +22,7 @@ public class QuizServiceImpl implements QuizService{
 	private final MemberPointRepositorySupport memberPointRepositorySupport;
 	private final MemberSubmissionRepository memberSubmissionRepository;
 	private final MemberPointRepository memberPointRepository;
+	private final MemberSubmissionRepositorySupport memberSubmissionRepositorySupport;
 
 	@Override
 	public ProvideQuizDto provideQuiz(Long contentId) {
@@ -97,19 +98,42 @@ public class QuizServiceImpl implements QuizService{
 
 		List<QuizSubmitDetailRequestDto> answers = requestDto.getAnswers();
 
-		//사용자의 풀이내역 저장 + 갱신될 point 정보 확인
+		//사용자의 풀이내역 저장 + 갱신될 point 정보 확인 + 이미 풀었던 내역인지 확인 + 틀렸던 문제인지 확인
 		int upPoint = 0;
-		for(int i=0; i<answers.size(); i++) {
-			if(answers.get(i).getAnswer()) {
-				upPoint++;
-			}
-			Quiz quiz = quizRepository.findById(answers.get(i).getQuizId()).get();
 
-			memberSubmissionRepository.save(MemberSubmission.builder()
-							.member(member)
-							.quiz(quiz)
-							.isCorrect(answers.get(i).getAnswer())
-							.build());
+		for(int i=0; i<answers.size(); i++) {
+			Quiz quiz = quizRepository.findById(answers.get(i).getQuizId()).get();
+			//이미 풀었던 문제인지 확인 + 틀렸던 문제인지 확인
+			MemberSubmission memberSubmission = memberSubmissionRepositorySupport.findMemberSubmissionByMemeberIdAndQuizId(member.getId(), answers.get(i).getQuizId());
+			//풀지 않은 문제
+			if(memberSubmission == null) {
+				if(answers.get(i).getAnswer()) {
+					upPoint++;
+				}
+				memberSubmissionRepository.save(MemberSubmission.builder()
+						.member(member)
+						.quiz(quiz)
+						.isCorrect(answers.get(i).getAnswer())
+						.build());
+			}
+			//풀었던 문제
+			else {
+				//틀렸던 문제
+				if(!memberSubmission.getIsCorrect()) {
+					//이번에 맞았다면
+					if (answers.get(i).getAnswer()) {
+						upPoint++;
+
+						memberSubmissionRepository.save(MemberSubmission.builder()
+								.id(memberSubmission.getId())
+								.member(member)
+								.quiz(quiz)
+								.isCorrect(answers.get(i).getAnswer())
+								.build());
+
+					}
+				}
+			}
 		}
 
 		//사용자의 갱신된 point정보 저장
@@ -121,7 +145,7 @@ public class QuizServiceImpl implements QuizService{
 					.member(member)
 					.build());
 		}
-		return QuizSubmitDto.builder().memberPoint(pointByMemberId).build();
+		return QuizSubmitDto.builder().memberPoint(pointByMemberId).changePoint(upPoint).build();
 	}
 
 	private static boolean exists(int a[], int index) {
