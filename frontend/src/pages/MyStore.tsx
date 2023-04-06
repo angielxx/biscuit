@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { InView, useInView } from 'react-intersection-observer';
 import { useInfiniteQuery, useQueries, useQuery } from '@tanstack/react-query';
+import tw, { styled, css } from 'twin.macro';
 
 // Icons
 import historyIcon from '../assets/icons/history.svg';
@@ -15,6 +16,14 @@ import { get_bookmark } from '../api/bookmark';
 import { get_history } from '../api/history';
 import BookmarkItem from '../components/MyStore/BookmarkItem';
 import Loading from '../components/common/Loading';
+
+// Styled component
+const ItemsContainer = styled.div`
+  ${tw`flex flex-col px-4 gap-2 overflow-scroll pt-4`}
+  ${css`
+    height: calc(100vh - 145px);
+  `}
+`;
 
 // Type
 interface Bookmark {
@@ -101,14 +110,14 @@ const MyStore = () => {
 
   // 다음 페이지 로딩
   useEffect(() => {
-    if (clickedTab === 0 && InView) {
+    if (clickedTab === 0 && inView) {
       console.log('here');
       bookmarkFetchNextPage();
     }
-    if (clickedTab === 1 && InView) {
+    if (clickedTab === 1 && inView) {
       fetchNextPage();
     }
-  }, [InView]);
+  }, [inView]);
 
   const tabList = [
     {
@@ -140,26 +149,31 @@ const MyStore = () => {
   ];
 
   return (
-    <div>
+    <div id="myStore" className="mt-20">
       <TabBar
         tabList={tabList}
         onClick={setClickedTab}
         clickedTab={clickedTab}
       />
-      <div className="flex flex-col gap-2 rounded p-4">
-        {clickedTab === 0 && (
-          <>
-            {bookmarkData?.pages.map((page, index: number) => (
-              <React.Fragment key={index}>
-                {page?.bookmarkList?.map((bookmark) => (
-                  <BookmarkItem key={bookmark.bookmarkId} bookmark={bookmark} />
-                ))}
-                {bookmarkIsFetchingNextPage ? <Loading /> : <div ref={ref} />}
-              </React.Fragment>
-            ))}
-          </>
-        )}
-      </div>
+      <ItemsContainer>
+        {clickedTab === 0 &&
+          bookmarkData?.pages.map((page, index: number) => (
+            <React.Fragment key={index}>
+              {page?.bookmarkList?.map((bookmark) => (
+                <BookmarkItem key={bookmark.bookmarkId} bookmark={bookmark} />
+              ))}
+            </React.Fragment>
+          ))}
+        {clickedTab === 1 &&
+          historyData?.pages.map((page, index: number) => (
+            <React.Fragment key={index}>
+              {page?.historyList?.map((history) => (
+                <BookmarkItem key={history.bookmarkId} bookmark={history} />
+              ))}
+            </React.Fragment>
+          ))}
+        {bookmarkIsFetchingNextPage ? <Loading /> : <div ref={ref} />}
+      </ItemsContainer>
     </div>
   );
 };
