@@ -110,11 +110,10 @@ const MyStore = () => {
 
   // 다음 페이지 로딩
   useEffect(() => {
-    if (clickedTab === 0 && inView) {
-      console.log('here');
+    if (clickedTab === 0 && inView && bookmarkHasNextPage) {
       bookmarkFetchNextPage();
     }
-    if (clickedTab === 1 && inView) {
+    if (clickedTab === 1 && inView && hasNextPage) {
       fetchNextPage();
     }
   }, [inView]);
@@ -172,7 +171,11 @@ const MyStore = () => {
               ))}
             </React.Fragment>
           ))}
-        {bookmarkIsFetchingNextPage ? <Loading /> : <div ref={ref} />}
+        {bookmarkIsFetchingNextPage || isFetchingNextPage ? (
+          <Loading />
+        ) : (
+          <div ref={ref} />
+        )}
       </ItemsContainer>
     </div>
   );
