@@ -60,6 +60,12 @@ const MyStore = () => {
   // 탭
   const [clickedTab, setClickedTab] = useState<number>(0);
   const { page } = useParams();
+  const [isPage, setIsPage] = useState<number>(0);
+  useEffect(() => {
+    if (page === "0" || page === "1") {
+      setIsPage(parseInt(page));
+    } else return;
+  }, [page])
 
   // 북마크, 히스토리 get
   // const result = useQueries({
@@ -155,6 +161,7 @@ const MyStore = () => {
         tabList={tabList}
         onClick={setClickedTab}
         clickedTab={clickedTab}
+        page={isPage}
       />
       <ItemsContainer>
         {clickedTab === 0 || page === "0" &&
