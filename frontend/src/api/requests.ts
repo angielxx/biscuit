@@ -54,7 +54,7 @@ export const requests = {
 
   // 퀴즈 제공(GET), 퀴즈 제출 내역 저장(POST)
   QUIZZES(contentId: number) {
-    return `/api/${contentId}/quizzes`;
+    return `/api/quizzes/${contentId}`;
   },
 
   // 홈 인기/최신/랜덤 컨텐츠 추천 목록 조회
@@ -62,7 +62,7 @@ export const requests = {
     classification: string,
     categoryCount?: number,
     fromTo?: { start: number; end: number },
-    type?: string,
+    type?: string
   ) {
     let route = '/api/recommends/random';
     route +=
@@ -79,7 +79,7 @@ export const requests = {
       start: number;
       end: number;
     },
-    type: string,
+    type: string
   ) {
     return `/api/recommends/personal/${option}?type=${type}&from=${fromTo?.start}&to=${fromTo?.end}`;
   },
@@ -99,5 +99,5 @@ export const requests = {
 
   POST_SIGNOUT() {
     return `/api/auth/signout`;
-  }
+  },
 };
