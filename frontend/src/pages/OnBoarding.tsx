@@ -52,7 +52,7 @@ const OnBoarding = () => {
       // 유저 닉네임 저장
       localStorage.setItem("nickname", isName);
       setPage(1);
-      console.log(isName);
+      // console.log(isName);
     } else {
       return ;
     }
@@ -95,7 +95,7 @@ const OnBoarding = () => {
     if (jobSelected !== "" && periodSelected !== "") {
       setUserData({...userData, job: jobSelected, period: yearsList[periodSelected]})
       setPage(2);
-      console.log(jobSelected, periodSelected);
+      // console.log(jobSelected, periodSelected);
     } else {
       return ;
     }
@@ -135,7 +135,7 @@ const OnBoarding = () => {
   }, [noob])
   
   const isSend = () => {
-    console.log(selectList);
+    // console.log(selectList);
     userDataPost(userData);
     setNoob(false);
 

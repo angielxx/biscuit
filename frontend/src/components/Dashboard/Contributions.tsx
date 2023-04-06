@@ -72,20 +72,20 @@ export default function Contributions({histories}: ContributionsProps) {
   useEffect(() => {
     if(histories === undefined) return;
 
-    console.log(todayDate);
+    // console.log(todayDate);
 
     histories.forEach((history: History) => {
       const historyDate = Date.parse(history.date)
       const dateDiff = (Date.parse(todayDate) - historyDate) / (1000 * 60 * 60 * 24);
 
-      console.log(dateDiff);
+      // console.log(dateDiff);
 
       if(dateDiff >= 7 * 16) return;
       tmpData[15 - Math.floor(dateDiff / 7)][todayDay - dateDiff % 7] = history.count;
     });
     setDashBoardState(tmpData);
-    console.log("histories:", histories);
-    console.log(tmpData);
+    // console.log("histories:", histories);
+    // console.log(tmpData);
   }, [histories])
   
   return (
