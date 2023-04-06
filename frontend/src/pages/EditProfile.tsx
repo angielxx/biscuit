@@ -22,7 +22,7 @@ export default function EditProfile() {
   const queryClient = useQueryClient();
   const myInfoData = queryClient.getQueryData<MyInfoContent>(['get_myInfo']);
 
-  const [userData, setUserData] = useState({
+  const [userData, setUserData] = useState<MyInfoContent>({
     nickname: "",
     period: "",
     job: "",
@@ -34,6 +34,10 @@ export default function EditProfile() {
     console.log(myInfoData);
     setUserData({...myInfoData});
   }, [myInfoData])
+
+  useEffect(() => {
+    console.log(userData);
+  }, [userData])
 
   return (
     <HomeContainer>
