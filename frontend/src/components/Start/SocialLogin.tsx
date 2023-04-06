@@ -22,10 +22,6 @@ const SocialLogin = () => {
     // 뉴비가 아니면
     if (isNoob === "false" && nickname !== "") {
       console.log("login 안됨");      
-      const myInfoQuery = useQuery({
-        queryKey: ['get_myInfo'],
-        queryFn: () => get_myInfo(),
-      });
       navigate(`/`);
       setNoob(false);
       setIsName(nickname);
@@ -35,7 +31,6 @@ const SocialLogin = () => {
       navigate(`/onboarding`);
     }
   }, [])
-  
 
   return (
     <></>
