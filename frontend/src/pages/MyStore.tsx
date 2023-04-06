@@ -60,7 +60,6 @@ const MyStore = () => {
   // 탭
   const [clickedTab, setClickedTab] = useState<number>(0);
   const { page } = useParams();
-  
 
   // 북마크, 히스토리 get
   // const result = useQueries({
@@ -113,10 +112,10 @@ const MyStore = () => {
 
   // 다음 페이지 로딩
   useEffect(() => {
-    if (clickedTab === 0 && page === "0" && inView && bookmarkHasNextPage) {
+    if (clickedTab === 0 && inView && bookmarkHasNextPage) {
       bookmarkFetchNextPage();
     }
-    if (clickedTab === 1 && page === "1" && inView && hasNextPage) {
+    if (clickedTab === 1 && inView && hasNextPage) {
       fetchNextPage();
     }
   }, [inView]);
@@ -158,7 +157,7 @@ const MyStore = () => {
         clickedTab={clickedTab}
       />
       <ItemsContainer>
-        {clickedTab === 0 && page === "0" &&
+        {clickedTab === 0 || page === "0" &&
           bookmarkData?.pages.map((page, index: number) => (
             <React.Fragment key={index}>
               {page?.bookmarkList?.map((bookmark) => (
@@ -166,7 +165,7 @@ const MyStore = () => {
               ))}
             </React.Fragment>
           ))}
-        {clickedTab === 1 && page === "1" &&
+        {clickedTab === 1 || page === "1" &&
           historyData?.pages.map((page, index: number) => (
             <React.Fragment key={index}>
               {page?.historyList?.map((history) => (
