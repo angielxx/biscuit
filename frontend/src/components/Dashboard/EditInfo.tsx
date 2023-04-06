@@ -8,6 +8,8 @@ import { useMutation } from "@tanstack/react-query";
 import { post_about_user } from "../../api/login";
 import DropDown from "../common/DropDown/DropDown";
 import { useQueryClient } from '@tanstack/react-query';
+import { useRecoilValue } from "recoil";
+import { functionToggleState } from "../../recoils/FuntionToggle/Atoms";
 
 const InfoContainer = tw.div`w-full h-fit justify-between flex flex-row my-4`;
 const TitleContainer = tw.div`flex w-[20%] h-14 items-center`;
@@ -127,7 +129,7 @@ export default function EditInfo({infoData, setInfoData}: MyInfoProps) {
   }, [infoData])
 
   useEffect(() => {
-    if(jobSelected === undefined || periodSelected === undefined) return;
+    if(nickname === undefined || jobSelected === undefined || periodSelected === undefined || selectList === undefined) return;
     const tmp = {...infoData};
     tmp.nickname = nickname;
     tmp.job = jobSelected;
@@ -136,41 +138,43 @@ export default function EditInfo({infoData, setInfoData}: MyInfoProps) {
     setInfoData({...tmp});
   }, [jobSelected, periodSelected, nickname, selectList])
   
+  const functionToggle = useRecoilValue(functionToggleState);
+
   return (
     <>
-      {nickname && <Info title="닉네임" content={nickname} />}
+      {functionToggle.editNickname && nickname && <Info title="닉네임" content={nickname} />}
+        
+      <InfoContainer>
+        <TitleContainer>
+          <Span>직무</Span>
+        </TitleContainer>
+        <DropDownContainer>
+          {functionToggle.editNickname && jobSelected && <DropDown
+            itemList={jobList} 
+            placeHolder="직무 선택" 
+            selected={jobSelected}
+            setSelected={setJobSelected}
+            isOnboarding={false}
+          />}
+        </DropDownContainer>
+      </InfoContainer>
       
-    <InfoContainer>
-      <TitleContainer>
-        <Span>직무</Span>
-      </TitleContainer>
-      <DropDownContainer>
-        {jobSelected && <DropDown
-          itemList={jobList} 
-          placeHolder="직무 선택" 
-          selected={jobSelected}
-          setSelected={setJobSelected}
-          isOnboarding={false}
-        />}
-      </DropDownContainer>
-    </InfoContainer>
-    
-    <InfoContainer>
-      <TitleContainer>
-        <Span>직무</Span>
-      </TitleContainer>
-      <DropDownContainer>
-        {periodSelected && <DropDown 
-          itemList={yearsList} 
-          placeHolder="연차 선택"
-          selected={periodSelected}
-          setSelected={setPeriodSelected}
-          isOnboarding={false}
-        />}
-      </DropDownContainer>
-    </InfoContainer>
+      <InfoContainer>
+        <TitleContainer>
+          <Span>연차</Span>
+        </TitleContainer>
+        <DropDownContainer>
+          {functionToggle.editPeriod && periodSelected && <DropDown 
+            itemList={yearsList} 
+            placeHolder="연차 선택"
+            selected={periodSelected}
+            setSelected={setPeriodSelected}
+            isOnboarding={false}
+          />}
+        </DropDownContainer>
+      </InfoContainer>
 
-      <Interest title="관심사" selectList={selectList} setSelectList={setSelectList}/>
+      {functionToggle.editInterest && <Interest title="관심사" selectList={selectList} setSelectList={setSelectList}/>}
     </>
   )
 }
