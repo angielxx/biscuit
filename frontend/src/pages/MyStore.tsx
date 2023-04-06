@@ -113,10 +113,10 @@ const MyStore = () => {
 
   // 다음 페이지 로딩
   useEffect(() => {
-    if (clickedTab === 0 && inView && bookmarkHasNextPage) {
+    if (clickedTab === 0 && page === "0" && inView && bookmarkHasNextPage) {
       bookmarkFetchNextPage();
     }
-    if (clickedTab === 1 && inView && hasNextPage) {
+    if (clickedTab === 1 && page === "1" && inView && hasNextPage) {
       fetchNextPage();
     }
   }, [inView]);
