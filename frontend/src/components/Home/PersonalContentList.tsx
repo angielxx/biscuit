@@ -100,7 +100,7 @@ const PersonalContentList = ({ option }: Props) => {
   }, [timeFilter]);
 
   // 해당 카테고리에 맞는 글들 불러오기
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['get_personal_contents', option, timeFilterIdx, typeFilter],
     queryFn: () => {
       const fromTo = timeFilterArr[timeFilterIdx];
@@ -117,9 +117,7 @@ const PersonalContentList = ({ option }: Props) => {
     cacheTime: Infinity,
   });
 
-  useEffect(() => {
-    setIsRerender(true);
-  }, [data])
+  if(isLoading) return <></>;
 
   return (
     <>
@@ -172,7 +170,6 @@ const PersonalContentList = ({ option }: Props) => {
           </>}
         </>
       )}
-      {isRerender && null}
     </>
   );
 };
