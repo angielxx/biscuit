@@ -1,33 +1,34 @@
 package com.pt.biscuIT.api.controller;
 
 import com.pt.biscuIT.api.dto.content.ContentInfoListCategoryDto;
+import com.pt.biscuIT.api.dto.history.HistoryContentInfoDto;
+import com.pt.biscuIT.api.dto.tag.RelativeTagDto;
 import com.pt.biscuIT.api.response.ContentInfoListRes;
 import com.pt.biscuIT.api.response.RandomCategoryContentRes;
-import com.pt.biscuIT.api.service.ContentService;
-import com.pt.biscuIT.api.service.MemberAuthService;
-import com.pt.biscuIT.api.service.MemberServiceImpl;
+import com.pt.biscuIT.api.service.*;
 import com.pt.biscuIT.common.exception.BiscuitException;
 import com.pt.biscuIT.common.exception.ErrorCode;
 import com.pt.biscuIT.common.model.response.BaseResponseBody;
 import com.pt.biscuIT.common.model.response.PageMetaData;
 import com.pt.biscuIT.api.dto.content.ContentInfoDto;
 import com.pt.biscuIT.api.response.MetaDataContentListRes;
-import com.pt.biscuIT.api.service.RecommendService;
+import com.pt.biscuIT.db.entity.ContentTag;
 import com.pt.biscuIT.db.entity.Member;
 import com.pt.biscuIT.db.entity.Type;
 import com.pt.biscuIT.db.repository.ContentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,6 +40,8 @@ public class RecommendController {
     private final MemberServiceImpl memberServiceImpl;
     private final MemberAuthService memberAuthService;
     private final ContentService contentService;
+    private final MemberHistoryService memberHistoryService;
+    private final ContentTagService contentTagService;
 
     /*
         TODO: 추천 컨텐츠를 제공하는 API
@@ -92,13 +95,44 @@ public class RecommendController {
         ));
     }
 
+
+    /**
+     * 개인화된 추천 컨텐츠를 제공하는 API
+     *
+     * 1. 최근 n개의 히스토리에서 태그를 따온다.
+     * 2-1. 주어진 히스토리에서 많이 겹치는 태그를 고른다.
+     * 2-2. 피인용수(관련된 컨텐츠가 많은) 태그를 고른다.
+     * 3. 2번에서 고른 태그를 가지고 있는 컨텐츠 중 일부를 가져온다. (현재 조회수 기준)
+     * 4. 컨텐츠의 수가 50 + n개가 될 때까지 2번과 3번 과정을 반복한다.
+     * 5. 4번에서 만들어진 컨텐츠에서 최근 n개의 히스토리를 제외한 컨텐츠 중 50개를 랜덤으로 고른다.
+     * @param token
+     * @return
+     */
     @GetMapping("/personal/fit")
     public ResponseEntity<?> getFitContent(@RequestHeader(value = "Authorization") String token){
         Member member = memberAuthService.getMember(token);
+        // 1. 최근 n개의 히스토리에서 태그를 따온다.
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        List<HistoryContentInfoDto> historyContentInfoDtoList = memberHistoryService.getHistory(member, 999999L, pageRequest).getResults();
+        List<String> tags = new ArrayList<>();
+        for (HistoryContentInfoDto historyContentInfoDto : historyContentInfoDtoList) {
+            tags.addAll(contentTagService.getTags(historyContentInfoDto.getContentId()));
+        }
+        // 2-1. 주어진 히스토리에서 겹치는 빈도 + 피인용수(관련된 컨텐츠가 많은)를 고려하여 태그를 고른다. 8:6의 비율
+        PriorityQueue<RelativeTagDto> pq = contentTagService.getRelativeTags(tags);
+        // 3. 2번에서 고른 태그를 가지고 있는 컨텐츠 중 일부를 가져온다. (현재 조회수 기준)
+        List<ContentInfoDto> contentInfoDtoList = new ArrayList<>();
+        while (pq != null && !pq.isEmpty() && contentInfoDtoList.size() < 50) {
+            contentInfoDtoList.addAll(contentTagService.getContentByTag(pq.poll().getTag()).stream().map(contentTag -> new ContentInfoDto(contentTag.getContent())).collect(Collectors.toList()));
+        }
 
-
-
-        return null;
+        return ResponseEntity.status(200).body(MetaDataContentListRes.of(
+                HttpStatus.OK.value(),
+                "SUCCESS",
+                MetaDataContentListRes.builder()
+                        .results(contentInfoDtoList)
+                        .build()
+        ));
     }
 
     @GetMapping("/personal/favorite")

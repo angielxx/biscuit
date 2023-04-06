@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.pt.biscuIT.api.dto.content.ContentInfoDto;
 import com.pt.biscuIT.api.dto.history.HistoryContentInfoDto;
 import com.pt.biscuIT.api.response.HistoryContentRes;
 import com.pt.biscuIT.common.exception.BiscuitException;
@@ -17,12 +16,11 @@ import com.pt.biscuIT.db.entity.Content;
 import com.pt.biscuIT.db.entity.Member;
 import com.pt.biscuIT.db.entity.MemberHistory;
 import com.pt.biscuIT.db.repository.ContentRepository;
-import com.pt.biscuIT.db.repository.ContentTageRepositorySupport;
+import com.pt.biscuIT.db.repository.ContentTagRepositorySupport;
 import com.pt.biscuIT.db.repository.MemberBookmarkRepositorySupport;
 import com.pt.biscuIT.db.repository.MemberHistoryRepository;
 import com.pt.biscuIT.db.repository.MemberHistoryRepositorySupport;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberHistoryServiceImpl implements MemberHistoryService{
 	private final MemberHistoryRepository memberHistoryRepository;
 	private final MemberHistoryRepositorySupport memberHistoryRepositorySupport;
-	private final ContentTageRepositorySupport contentTageRepositorySupport;
+	private final ContentTagRepositorySupport contentTagRepositorySupport;
 	private final MemberBookmarkRepositorySupport memberBookmarkRepositorySupport;
 	private final ContentRepository contentRepository;
 
@@ -50,6 +48,14 @@ public class MemberHistoryServiceImpl implements MemberHistoryService{
 		}
 	}
 
+
+	/**
+	 * 히스토리 조회
+	 * @param member
+	 * @param lastContentId
+	 * @param pageable
+	 * @return
+	 */
 	@Override
 	public HistoryContentRes getHistory(Member member, Long lastContentId, Pageable pageable) {
 		Page<MemberHistory> historyContentList = memberHistoryRepositorySupport.findHistoryContentByMemberId(
@@ -65,7 +71,7 @@ public class MemberHistoryServiceImpl implements MemberHistoryService{
 		List<HistoryContentInfoDto> contentInfoDtoList = new ArrayList<>();
 		for(MemberHistory history : historyContentList.getContent()) {
 			Content content = contentRepository.findById(history.getContent().getId()).orElseThrow(() -> new BiscuitException(ErrorCode.CONTENT_NOT_FOUND));
-			List<String> tags = contentTageRepositorySupport.findTagsByContentId(content.getId());
+			List<String> tags = contentTagRepositorySupport.findByTagsByContentId(content.getId());
 			HistoryContentInfoDto contentInfoDto = new HistoryContentInfoDto(content);
 			contentInfoDto.setTags(tags);
 			boolean isMarked = memberBookmarkRepositorySupport.isMarked(member.getId(), content.getId());
