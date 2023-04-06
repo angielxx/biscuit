@@ -35,17 +35,18 @@ public class ContentTageRepositorySupport {
 
     QContentCategory qContentCategory = QContentCategory.contentCategory;
 
-    public List<String> findByTagsByContentId(Long contentId) {
+    public List<String> findTagsByContentId(Long contentId) {
         BooleanBuilder whereCondition = new BooleanBuilder();
         whereCondition.and(qContent.id.eq(contentId));
         whereCondition.and(qContent.id.eq(qContentTag.content.id));
         whereCondition.and(qTag.id.eq(qContentTag.tag.id));
-        String[] tags = jpaQueryFactory
-                .select(qTag)
+        Object[] objects = jpaQueryFactory
+                .select(qTag.name)
                 .from(qContentTag, qContent, qTag)
                 .where(whereCondition)
                 .fetch()
-                .toArray(new String[0]);
+                .toArray();
+        String[] tags = Arrays.copyOf(objects, objects.length, String[].class);
         return Arrays.asList(tags);
     }
 }

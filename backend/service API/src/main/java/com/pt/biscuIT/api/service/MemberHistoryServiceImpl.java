@@ -65,7 +65,7 @@ public class MemberHistoryServiceImpl implements MemberHistoryService{
 		List<HistoryContentInfoDto> contentInfoDtoList = new ArrayList<>();
 		for(MemberHistory history : historyContentList.getContent()) {
 			Content content = contentRepository.findById(history.getContent().getId()).orElseThrow(() -> new BiscuitException(ErrorCode.CONTENT_NOT_FOUND));
-			List<String> tags = contentTageRepositorySupport.findByTagsByContentId(content.getId());
+			List<String> tags = contentTageRepositorySupport.findTagsByContentId(content.getId());
 			HistoryContentInfoDto contentInfoDto = new HistoryContentInfoDto(content);
 			contentInfoDto.setTags(tags);
 			boolean isMarked = memberBookmarkRepositorySupport.isMarked(member.getId(), content.getId());
