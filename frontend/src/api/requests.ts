@@ -104,6 +104,10 @@ export const requests = {
     return `/api/auth/signout`;
   },
 
+  PUT_MYINFO() {
+    return `/api/members`;
+  },
+
   // 북마크 추가
   POST_BOOKMARK() {
     return `/api/bookmarks`;
