@@ -1,5 +1,7 @@
 package com.pt.biscuIT.db.entity;
 
+import lombok.*;
+
 import java.io.Serializable;
 
 import javax.persistence.Entity;
@@ -10,6 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
+@Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class MemberInterest implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -14,5 +14,5 @@ import lombok.Data;
 @Builder
 public class SearchContentRes {
 	PageMetaData metaData;
-	Page<ContentInfoDto> results;
+	List<ContentInfoDto> results;
 }

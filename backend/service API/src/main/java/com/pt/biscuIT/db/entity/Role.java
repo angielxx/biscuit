@@ -1,5 +1,5 @@
 package com.pt.biscuIT.db.entity;
 
 public enum Role {
-	BASIC, ADMIN
+	ROLE_NEWBIE, ROLE_MEMBER, ROLE_ADMIN
 }

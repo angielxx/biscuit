@@ -66,6 +66,12 @@ tasks.named('asciidoctor') {
 	dependsOn test
 }
 
+tasks {
+	processResources {
+		duplicatesStrategy = DuplicatesStrategy.INCLUDE
+	}
+}
+
 def querydslDir = "$buildDir/generated/querydsl"
 
 querydsl {
@@ -75,6 +81,11 @@ querydsl {
 
 sourceSets {
 	main.java.srcDir querydslDir
+	main {
+		resources {
+			srcDirs ("src/main/resources")
+		}
+	}
 }
 
 compileQuerydsl {
@@ -83,4 +94,5 @@ compileQuerydsl {
 
 jar {
 	enabled = false
+	duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
 }

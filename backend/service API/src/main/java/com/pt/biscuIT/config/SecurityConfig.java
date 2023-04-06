@@ -1,112 +1,112 @@
 package com.pt.biscuIT.config;
-import com.pt.biscuIT.common.auth.BiscuitMemberDetailsService;
-import com.pt.biscuIT.api.service.MemberService;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pt.biscuIT.api.service.MemberAuthService;
+import com.pt.biscuIT.api.service.MemberService;
+import com.pt.biscuIT.common.util.FilterSkipMatcher;
+import com.pt.biscuIT.common.util.JwtTokenUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import javax.servlet.Filter;
+import java.util.List;
 
 /**
- * 인증(authentication) 와 인가(authorization) 처리를 위한 스프링 시큐리티 설정 정의.
+ * Spring Security 설정
  */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private static String[] SWAGGER_PATH = new String[] {
-            "/v2/api-docs/**",
-            "/swagger-ui/**",
-            "/swagger-resources/**",
-            "/webjars/**"
-    };
-    private static String[] OPEN_API_GET = new String[] {
-            "/api/v1/auth/**",
-            "/api/v1/lessons/**",
-            "/api/v1/mails/**",
-            "/api/v1/notice/**",
-            "/api/v1/photocard/list",
-            "/api/v1/review/list/**",
-            "/api/v1/users/duplicate/**",
-            "/api/v1/users/**/check",
-            "/api/v1/article/**"
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+    // 인증이 필요없는 API 목록
+    private static final String[] OPEN_API_GET = new String[] {
+            "/api/auth/**",
+            "/api/contents/**",
+            "/api/search/**",
+            "/api/categories/**",
+            "/api/recommends/random/**",
+            "/api/quizzes/**",
+            "/login/**",
+            "/oauth2/**",
+            "/api/quizzes/**"
     };
 
-    private static String[] OPEN_API_POST = new String[] {
-            "/api/v1/auth/login",
-            "/api/v1/users",
-            "/api/v1/photocard"
+    private static final String[] OPEN_API_POST = new String[] {
+            "/api/auth/signin/**",
+            "/api/contents/**/feedback",
     };
 
-    private static String[] OPEN_API_PUT = new String[] {
-            "/api/v1/users/**/password"
+    private static final String[] ADMIN_API_POST = new String[] {
+            "/api/admin/**",
     };
 
-    @Autowired
-    private BiscuitMemberDetailsService biscuitMemberDetailsService;
+    private final MemberAuthService memberAuthService;
+    private final MemberService memberService;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final ObjectMapper objectMapper;
+    private final SavedRequestAwareAuthenticationSuccessHandler successHandler;
 
-    @Autowired
-    private MemberService memberService;
-
-//    @Autowired
-//    private RedisTemplate redisTemplate;
-
-    // Password 인코딩 방식에 BCrypt 암호화 방식 사용
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
-
-    // DAO 기반으로 Authentication Provider를 생성
-    // BCrypt Password Encoder와 UserDetailService 구현체를 설정
     @Bean
-    DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        daoAuthenticationProvider.setUserDetailsService(this.biscuitMemberDetailsService);
-        return daoAuthenticationProvider;
-    }
-
-    // DAO 기반의 Authentication Provider가 적용되도록 설정
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(authenticationProvider());
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .httpBasic().disable()
-//                .csrf().disable()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 사용 하지않음
-//                .and()
-//                .addFilter(new JwtAuthenticationFilter(authenticationManager(), memberService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
-//                .authorizeRequests()
-//                .antMatchers(SWAGGER_PATH).permitAll()
-//                .antMatchers(HttpMethod.GET, OPEN_API_GET).permitAll()
-//                .antMatchers(HttpMethod.POST, OPEN_API_POST).permitAll()
-//                .antMatchers(HttpMethod.PUT, OPEN_API_PUT).permitAll()
-//                .anyRequest().authenticated()
-//                .and().cors();
-
+    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .httpBasic().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 사용 하지않음
                 .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), memberService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
                 .authorizeRequests()
-                .antMatchers(SWAGGER_PATH).permitAll()
-                .anyRequest().permitAll()
-                .and().cors();
+                .antMatchers(HttpMethod.GET, OPEN_API_GET).permitAll()
+                .antMatchers(HttpMethod.POST, OPEN_API_POST).permitAll()
+                .anyRequest().authenticated()
+                .and().cors()
+                    .and()
+                // OAuth2 로그인 설정
+                .oauth2Login()          // OAuth2기반의 로그인인 경우
+                .userInfoEndpoint()     // OAuth2 로그인 성공 이후 사용자 정보를 가져올 때의 설정들을 담당
+                .userService(memberAuthService)  // 소셜 provider에서 인가 성공 시 후속 조치를 진행할 OAuth2UserService 인터페이스의 구현체를 등록
+                    .and()
+                .successHandler(successHandler);    // 로그인 성공 시 후속 조치를 진행할 핸들러를 등록
 
+//        http
+//                .httpBasic().disable()
+//                .csrf().disable()
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 사용 하지않음
+//                .and()
+////                .addFilter(new JwtAuthenticationFilter(authenticationManager(), memberService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
+//                .authorizeRequests()
+//                .anyRequest().permitAll()
+//                .and().cors();
+        // JWT Authentication filter chain configuration
+        http.addFilterBefore(new JwtAuthenticationFilter(memberService, jwtTokenUtil),
+                OAuth2AuthorizationRequestRedirectFilter.class);    // OAuth2AuthorizationRequestRedirectFilter
+        http.addFilterBefore(jwtRefreshFilter(), JwtAuthenticationFilter.class);
+        return http.build();
+    }
+
+    // jwt 갱신 필터
+    public Filter jwtRefreshFilter() throws Exception {
+        return new JwtRefreshFilter(
+                jwtTokenUtil,
+                objectMapper,
+                new AntPathRequestMatcher("/api/refresh"));
     }
 }

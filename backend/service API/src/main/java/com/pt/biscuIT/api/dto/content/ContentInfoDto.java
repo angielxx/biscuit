@@ -6,8 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.util.HtmlUtils;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -22,24 +23,26 @@ import java.util.List;
 public class ContentInfoDto {
     private Long id;
     private String title;
-    private String url;
+    private String source;
     private String creditBy;
-    private LocalDateTime createdDate;
+    private LocalDate createdDate;
     private Integer timeCost;
-    private String type;
+    private Type type;
     private boolean isMarked;
     private List<String> tags;
     private Integer hit;
+    private String img;
 
     public ContentInfoDto(Content content) {
         this.id = content.getId();
-        this.title = content.getTitle();
-        this.url = content.getUrl();
+        this.title = HtmlUtils.htmlUnescape(content.getTitle());
+        this.source = content.getSource();
         this.creditBy = content.getChannel();
         this.createdDate = content.getCreatedDate();
         this.timeCost = content.getTimeCost();
-        this.type = Type.POST.toString();
+        this.type = content.getType();
         this.isMarked = false;
         this.hit = content.getHit();
+        this.img = content.getImg();
     }
 }

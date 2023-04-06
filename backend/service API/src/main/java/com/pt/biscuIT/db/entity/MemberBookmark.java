@@ -1,5 +1,8 @@
 package com.pt.biscuIT.db.entity;
 
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -11,6 +14,10 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+@AllArgsConstructor
 public class MemberBookmark implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,5 +27,7 @@ public class MemberBookmark implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Content content;
 	// TODO: content 삭제 시 MemberBookmark도 삭제시키기
+	@CreatedDate
 	private LocalDateTime createdDate;
+
 }

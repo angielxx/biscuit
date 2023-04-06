@@ -1,5 +1,8 @@
 package com.pt.biscuIT.db.entity;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -13,6 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ContentTag implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -5,14 +5,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-import com.pt.biscuIT.api.dto.quiz.ProvideQuizDetailDto;
-import com.pt.biscuIT.api.dto.quiz.ProvideQuizDto;
+import com.pt.biscuIT.api.dto.quiz.*;
+import com.pt.biscuIT.db.entity.*;
+import com.pt.biscuIT.db.repository.*;
 import org.springframework.stereotype.Service;
-
-import com.pt.biscuIT.db.entity.Content;
-import com.pt.biscuIT.db.entity.Quiz;
-import com.pt.biscuIT.db.repository.ContentRepository;
-import com.pt.biscuIT.db.repository.QuizRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,64 +19,141 @@ import lombok.extern.slf4j.Slf4j;
 public class QuizServiceImpl implements QuizService{
 	private final QuizRepository quizRepository;
 	private final ContentRepository contentRepository;
+	private final MemberPointRepositorySupport memberPointRepositorySupport;
+	private final MemberSubmissionRepository memberSubmissionRepository;
+	private final MemberPointRepository memberPointRepository;
+	private final MemberSubmissionRepositorySupport memberSubmissionRepositorySupport;
 
 	@Override
 	public ProvideQuizDto provideQuiz(Long contentId) {
 		ProvideQuizDto responseDto = new ProvideQuizDto();
-		//컨텐츠 가져오기
+		//컨텐츠 정보 가져오기
 		Content content = null;
 		Optional<Content> opContent = contentRepository.findById(contentId);
 		if(opContent.isPresent()) {
 			content = opContent.get();
 		}
-		//중복없는 난수 생성
+
+		//컨텐츠에 해당하는 퀴즈 가져오기
+		List<Quiz> findQuizzes = quizRepository.findQuizByContent(content);
+		int quizzesSize = findQuizzes.size();
+
+		//퀴즈 개수 중에 중복없는 난수 생성
 		int cnt = 3;
+		if(quizzesSize <= 3) {
+			cnt = quizzesSize;
+		}
 		int a[] = new int[cnt]; //퀴즈 뽑을 난수
+		int index = 0;
 		Random rand = new Random();
 		for(int i=0; i<cnt; i++) {
-			a[i] = rand.nextInt(4);
-			for(int j=0; j<i; j++) {
-				if(a[i] == a[j]){
-					i--;
-				}
-			}
+			do {
+				index = (int)(Math.random() * quizzesSize);
+			}while(exists(a, index));
+			a[i] = index;
 		}
+
 		//생성한 난수에 해당하는 퀴즈 반환
-		List<ProvideQuizDetailDto> quizzes = new ArrayList<>();
-		List<Quiz> findQuizzes = quizRepository.findQuizByContent(content);
+		List<ProvideQuizDetailDto> quizzes = new ArrayList<>(); //반환용 quiz
 		for(int i=0; i<cnt; i++) {
 			Quiz quiz = findQuizzes.get(a[i]);
 			//보기 배열 만들기
 			String c = "";
 			String[] choice = new String[3];
+			String[] tmpChoice = new String[3];
 			int idx = 0;
-			for(int j=0; j<quiz.getMultipleChoice().length(); j++) {
-				if(quiz.getMultipleChoice().charAt(j)==' ') {
-					c = c.substring(0, c.length()-2);
-					choice[idx] = c;
-					idx++;
-					c = "";
-				}
-				else {
-					c += quiz.getMultipleChoice().charAt(j);
+			choice = quiz.getMultipleChoice().split("//");
+			for(int j=0; j<choice.length; j++) {
+				tmpChoice[j] = choice[j].replaceAll(" ", "");
+			}
+			
+			//답안 만들기
+			int answer = -1;
+			String ans = quiz.getAnswer();
+			String tmpAns = ans.replaceAll(" ", "");
+			for(int j=0; j<choice.length; j++) {
+				if(tmpAns.equals(tmpChoice[j])) {
+					answer = j;
+					break;
 				}
 			}
-			choice[idx] = c.substring(0, c.length()-2);
 
-			//답안 배열 만들기
-			List<Integer> ans = new ArrayList<>();
-			for(int j=0; j<quiz.getAnswer().length(); j++) {
-				ans.add((quiz.getAnswer().charAt(j) - 'a') +1);
-			}
+			//DTO 생성
 			ProvideQuizDetailDto dto = ProvideQuizDetailDto.builder()
 				.quizId(quiz.getId())
 				.question(quiz.getQuestion())
 				.multiple_choice(choice)
-				.answer(ans.toArray(new Integer[ans.size()]))
+				.answer(answer)
 				.build();
 			quizzes.add(dto);
 		}
 		responseDto.setQuizzes(quizzes);
 		return responseDto;
+	}
+
+	@Override
+	public QuizSubmitDto submitQuiz(Member member, Long contentId, QuizSubmitRequestDto requestDto) {
+		//사용자의 원래 point
+		Integer pointByMemberId = memberPointRepositorySupport.findPointByMemberId(member.getId());
+
+		List<QuizSubmitDetailRequestDto> answers = requestDto.getAnswers();
+
+		//사용자의 풀이내역 저장 + 갱신될 point 정보 확인 + 이미 풀었던 내역인지 확인 + 틀렸던 문제인지 확인
+		int upPoint = 0;
+
+		for(int i=0; i<answers.size(); i++) {
+			Quiz quiz = quizRepository.findById(answers.get(i).getQuizId()).get();
+			//이미 풀었던 문제인지 확인 + 틀렸던 문제인지 확인
+			MemberSubmission memberSubmission = memberSubmissionRepositorySupport.findMemberSubmissionByMemeberIdAndQuizId(member.getId(), answers.get(i).getQuizId());
+			//풀지 않은 문제
+			if(memberSubmission == null) {
+				if(answers.get(i).getAnswer()) {
+					upPoint++;
+				}
+				memberSubmissionRepository.save(MemberSubmission.builder()
+						.member(member)
+						.quiz(quiz)
+						.isCorrect(answers.get(i).getAnswer())
+						.build());
+			}
+			//풀었던 문제
+			else {
+				//틀렸던 문제
+				if(!memberSubmission.getIsCorrect()) {
+					//이번에 맞았다면
+					if (answers.get(i).getAnswer()) {
+						upPoint++;
+
+						memberSubmissionRepository.save(MemberSubmission.builder()
+								.id(memberSubmission.getId())
+								.member(member)
+								.quiz(quiz)
+								.isCorrect(answers.get(i).getAnswer())
+								.build());
+
+					}
+				}
+			}
+		}
+
+		//사용자의 갱신된 point정보 저장
+		if(upPoint > 0) {
+			memberPointRepository.save(MemberPoint.builder()
+					.changedPoints(upPoint)
+					.pointTrigger(PointTrigger.QUIZ)
+					.totalPoints(pointByMemberId+upPoint)
+					.member(member)
+					.build());
+		}
+		return QuizSubmitDto.builder().memberPoint(pointByMemberId).changePoint(upPoint).build();
+	}
+
+	private static boolean exists(int a[], int index) {
+		for(int i=0; i<a.length; i++) {
+			if(a[i]==index) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
