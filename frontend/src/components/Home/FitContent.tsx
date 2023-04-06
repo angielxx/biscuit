@@ -123,7 +123,7 @@ const FitContent = ({ option }: Props) => {
 
   useEffect(() => {
     const myOrderString = localStorage.getItem('OrderArray');
-    if (myOrderString !== undefined && myOrderString !== null) {
+    if (myOrderString !== undefined && myOrderString !== null && myOrderString !== "[]") {
       const myOrder = JSON.parse(myOrderString);
       setShowingIdx(myOrder.shift());
       setOrder([...myOrder]);
