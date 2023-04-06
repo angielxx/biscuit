@@ -118,7 +118,7 @@ const PersonalContentList = ({ option }: Props) => {
   });
 
   useEffect(() => {
-    setIsRerender(true);
+    setIsRerender(!isRerender);
   }, [data])
 
   return (
