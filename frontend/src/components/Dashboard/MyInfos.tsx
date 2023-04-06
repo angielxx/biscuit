@@ -26,7 +26,7 @@ const Info = ({title, content}: InfoProps) => {
 type MyInfo = {
   nickname: string,
   job: string,
-	period: string,
+	period: number,
   interests: string[],
 }
 
@@ -36,11 +36,24 @@ interface MyInfoContent {
 
 export default function MyInfos({myInfo}: MyInfoContent) {
   const functionToggle = useRecoilValue(functionToggleState);
+  const yearsList= [
+    "1년 미만",
+    "1년차",
+    "2년차",
+    "3년차",
+    "4년차",
+    "5년차",
+    "6년차",
+    "7년차",
+    "8년차",
+    "9년차",
+    "10년 이상",
+  ]
 
   return (
     <>
       {functionToggle.jobToggle && <Info title="직무" content={myInfo?.job} />}
-      {functionToggle.periodToggle && <Info title="경력" content={myInfo?.period} />}
+      {functionToggle.periodToggle && <Info title="경력" content={yearsList[myInfo?.period]} />}
       {functionToggle.interestToggle
         && myInfo !==undefined
         && myInfo.interests !== undefined

@@ -14,7 +14,7 @@ const Title = tw.p`text-white text-h2`;
 interface MyInfoContent {
   nickname: string,
   job: string,
-	period: string,
+	period: number,
   interests: string[],
 }
 
@@ -22,18 +22,22 @@ export default function EditProfile() {
   const queryClient = useQueryClient();
   const myInfoData = queryClient.getQueryData<MyInfoContent>(['get_myInfo']);
 
-  const [userData, setUserData] = useState({
+  const [userData, setUserData] = useState<MyInfoContent>({
     nickname: "",
-    period: "",
+    period: 0,
     job: "",
     interests: [""],
   });
 
   useEffect(() => {
     if(myInfoData === undefined) return;
-    console.log(myInfoData);
-    setUserData({...myInfoData});
+    console.log("myInfoData : ", myInfoData);
+    setUserData(myInfoData);
   }, [myInfoData])
+
+  useEffect(() => {
+    console.log("userData : ", userData);
+  }, [userData])
 
   return (
     <HomeContainer>

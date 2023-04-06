@@ -33,7 +33,7 @@ interface InterestProps {
 type MyInfoContent = {
   nickname: string,
   job: string,
-	period: string,
+	period: number,
   interests: string[],
 }
 
@@ -113,6 +113,21 @@ export default function EditInfo({infoData, setInfoData}: MyInfoProps) {
     { id: 9, content: "9년차" },
     { id: 10, content: "10년 이상" },
   ]
+
+  
+  const yearToStr = [
+    "1년 미만",
+    "1년차",
+    "2년차",
+    "3년차",
+    "4년차",
+    "5년차",
+    "6년차",
+    "7년차",
+    "8년차",
+    "9년차",
+    "10년 이상",
+  ]
   
   // 얘도 api랑 연결해서 받아오기
   const [nickname, setNickName] = useState<string>("");
@@ -123,18 +138,32 @@ export default function EditInfo({infoData, setInfoData}: MyInfoProps) {
   useEffect(() => {
     setNickName(infoData.nickname);
     setJobSelected(infoData.job);
-    setPeriodSelected(infoData.period);
+    setPeriodSelected(yearToStr[infoData.period]);
     setSelectList([...infoData.interests])
   }, [])
 
   useEffect(() => {
     if(nickname === undefined || jobSelected === undefined || periodSelected === undefined || selectList === undefined) return;
+    if(nickname === "" || jobSelected === "" || periodSelected === "" || selectList.length === 0) return;
+
+    console.log("여기서부터 모든걸 찍어보겠습니다.")
+    console.log(infoData);
+    console.log(nickname);
+    console.log(jobSelected);
+    console.log(periodSelected);
+    console.log(selectList);
+    
     const tmp = {...infoData};
+    console.log("tmp : ", tmp);
     tmp.nickname = nickname;
     tmp.job = jobSelected;
-    tmp.period = periodSelected;
+    tmp.period = yearToStr.indexOf(periodSelected);
     tmp.interests = [...selectList];
     setInfoData({...tmp});
+
+    console.log("tmp : ", tmp);
+    console.log("여기까지 한덩이")
+
   }, [jobSelected, periodSelected, nickname, selectList])
   
   const functionToggle = useRecoilValue(functionToggleState);
