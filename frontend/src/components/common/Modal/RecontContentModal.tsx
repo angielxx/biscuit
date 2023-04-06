@@ -15,6 +15,7 @@ import tw, { styled, css, TwStyle } from 'twin.macro';
 // icons
 import Close from '../../../assets/icons/close.svg';
 import seed from '../../../assets/image/seed.png';
+import eyes from '../../../assets/image/eyes.png';
 
 // component
 import ContentCardItem from '../ContentCardItem';
@@ -73,13 +74,8 @@ interface Quiz {
   answer: number;
 }
 
-type AnswerType = {
-  status: boolean; // 유저가 답을 선택했는지에 대한 싱태
-  userAnswer: number;
-};
-
 type AnswerState = {
-  [index: number]: AnswerType;
+  [index: number]: number;
 };
 
 // Main component
@@ -91,38 +87,11 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   // 로그인 상태
   const [isNoob, setIsNoob] = useRecoilState(isNoobState);
   // 퀴즈
-  const [quizzes, setQuizzes] = useState<Quiz[]>([
-    {
-      quizId: 123,
-      question: '첫번째 질문',
-      multiple_choice: ['첫번째 보기', '두번째 보기', '세번째 보기'],
-      answer: 0,
-    },
-    {
-      quizId: 234,
-      question: '두번째 질문',
-      multiple_choice: [
-        '첫번째 보기입니다.',
-        '두번째 보기입니다.',
-        '세번째 보기입니다.',
-      ],
-      answer: 0,
-    },
-    {
-      quizId: 345,
-      question: '세번째 질문',
-      multiple_choice: [
-        '첫번째 보기입니다.',
-        '두번째 보기입니다.',
-        '세번째 보기입니다.',
-      ],
-      answer: 0,
-    },
-  ]);
+  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   // 콘텐츠 소비 시간
   const getTime = useRecoilValue(getTimeSelector);
   // 유저가 선택한 퀴즈의 정답
-  const [userAnswers, setUserAnswers] = useState<AnswerState>([]);
+  const [userAnswers, setUserAnswers] = useState<AnswerState>({});
 
   interface mutateParams {
     contentId: number;
@@ -149,48 +118,18 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
     queryKey: ['get_quizzes', recentContent.id],
     queryFn: () => get_quizzes(recentContent.id),
     onSuccess: (data) => {
-      const quizzes = data.quizzes;
-      // setQuizzes(data.quizzes);
-      setQuizzes([
-        {
-          quizId: 106,
-          question: 'Logstash는 어떤 역할을 하나요?',
-          multiple_choice: [
-            '서버를 생성하여 아파치 로그를 생성하는 역할을 합니다.',
-            'Elasticsearch 클러스터의 데이터를 조회하고 시각화하는 역할을 합니다.',
-            '아파치 로그를 Elasticsearch Service 클러스터로 전송하여 데이터를 적재하는 역할을 합니다.',
-          ],
-          answer: 2,
-        },
-        {
-          quizId: 107,
-          question: 'Kibana에서 어떤 기능이 제공되나요?',
-          multiple_choice: [
-            'Lucene query로 검색이 가능하며, 다양한 기능을 활용하여 데이터 시각화가 가능합니다.',
-            '데이터를 전송하는 역할을 합니다.',
-            'Visualize를 하나 생성하는 역할을 합니다.',
-          ],
-          answer: 0,
-        },
-        {
-          quizId: 104,
-          question: 'SubAccount란 무엇인가요?',
-          multiple_choice: [
-            '네이버 클라우드 플랫폼의 인증서비스',
-            '네이버 클라우드 플랫폼의 서비스 관리 도구',
-            '사용자를 서브 계정으로 등록하고, 특정 서비스에 대한 권한을 부여할 수 있는 상품',
-          ],
-          answer: 2,
-        },
-      ]);
+      const quizzes = data.quizzes.filter((quiz: Quiz) => quiz.answer !== -1);
+      setQuizzes(data.quizzes);
     },
     enabled: recentContent.type === 'ARTICLE',
+    staleTime: 1000 * 60 * 60,
+    cacheTime: 1000 * 60 * 65,
   });
 
   // 퀴즈 답 POST
   const { mutate: quizMutate } = useMutation({
     mutationFn: (contentId: number) => post_quizzes(contentId),
-    onSuccess: (data) => setPage(2), // 퀴즈 제출하고 포인트 정보 받아와야 함
+    onSuccess: (data) => {}, // 퀴즈 제출하고 포인트 정보 받아와야 함
   });
 
   // 피드백 제출
@@ -204,9 +143,10 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   // 퀴즈 제출
 
   const quizSubmitHandler = (answers: AnswerState) => {
-    // API POST 요청 : 퀴즈 제출 내역 저장
-    quizMutate(recentContent.id);
+    // 회원일 때만 퀴즈 제출
+    if (!isNoob) quizMutate(recentContent.id);
     setUserAnswers(answers);
+    setPage(2);
   };
 
   return (
@@ -217,7 +157,7 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
           <ContentCardItem content={recentContent} />
         </div>
       )}
-      {page === 2 && (
+      {page === 2 && !isNoob && (
         <div className="flex flex-col justify-center items-center">
           <img src={seed} alt="" className="aspect-ratio-1 h-20 w-20 mb-3" />
           <span className="text-sub text-dark-grey70">
@@ -226,7 +166,19 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
           <h1 className="text-h1">130 (+1)</h1>
         </div>
       )}
-      <DivideLine />
+      {page === 2 && isNoob && (
+        <div className="flex flex-col justify-center items-center">
+          <img src={eyes} alt="" className="aspect-ratio-1 h-20 w-20 mb-3" />
+          {/* <span className="text-sub text-dark-grey70">
+            로그인하고 정답을 확인해보세요
+          </span> */}
+          <h1 className="text-h3 text-center mb-5">
+            로그인하고 <br />
+            정답을 확인해보세요!
+          </h1>
+        </div>
+      )}
+      {page !== 2 && <DivideLine />}
 
       <Container>
         {/* 피드백 */}
@@ -238,7 +190,7 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
         )}
 
         {/* 퀴즈 결과 */}
-        {page === 2 && (
+        {page === 2 && !isNoob && (
           <QuizResultPage quizzes={quizzes} userAnswers={userAnswers} />
         )}
       </Container>

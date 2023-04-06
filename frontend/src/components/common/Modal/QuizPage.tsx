@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
+
+// Recoil
+import { isNoobState } from '../../../recoils/Start/Atoms';
+
+// Component
 import Button from '../Button';
 import PageTitle from './PageTitle';
 import QuizItem from './QuizItem';
 
+// Type
 interface Quiz {
   quizId: number;
   question: string;
@@ -14,12 +20,14 @@ interface QuizPageProps {
   onSubmit: (answers: AnswerState) => void;
   quizzes: Quiz[];
 }
+
 type AnswerState = {
   [index: number]: number;
 };
 
 type StatusType = 'active' | 'disabled' | 'danger' | 'activeHover';
 
+// Main Component
 const QuizPage = ({ onSubmit, quizzes }: QuizPageProps) => {
   // 퀴즈에 대해 유저가 선택한 답 저장
   const [answers, setAnswers] = useState<AnswerState>({});
@@ -55,8 +63,12 @@ const QuizPage = ({ onSubmit, quizzes }: QuizPageProps) => {
       {quizzes.length ? (
         <>
           <PageTitle
-            title="방금 본 컨텐츠를 잘 이해했는지 확인해보세요."
-            desc="퀴즈를 제출하면 오늘의 잔디가 자라나요."
+            title="퀴즈를 풀고 잘 이해했는지 확인해보세요"
+            desc={
+              isNoobState
+                ? '로그인을 하시면 정답을 확인할 수 있어요.'
+                : '퀴즈를 풀면 오늘의 잔디가 자라나요.'
+            }
           />
           <div className="flex flex-col gap-6 py-6">
             {quizzes.length &&
@@ -66,6 +78,7 @@ const QuizPage = ({ onSubmit, quizzes }: QuizPageProps) => {
                   quiz={quiz}
                   onClick={clickQuizOptionHandler}
                   result={false}
+                  userAnswers={{}}
                 />
               ))}
           </div>

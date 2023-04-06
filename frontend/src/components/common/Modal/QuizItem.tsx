@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import QuizOption from '../Modal/QuizOption';
 import tw from 'twin.macro';
 
-interface Answer {
-  quizId: number;
-  userAnswer: number;
-  status: boolean; // 유저가 답을 선택했는지에 대한 싱태
-}
+type AnswerState = {
+  [index: number]: number;
+};
 
 interface Quiz {
   quizId: number;
@@ -17,10 +15,9 @@ interface Quiz {
 
 interface QuizItemProps {
   quiz: Quiz;
-  onClick: (quizId: number, answer: number) => void;
+  onClick: (quizI: number, answer: number) => void;
   result: boolean; // 퀴즈결과 페이지라면 true
-  userAnswer?: number;
-  answer?: number;
+  userAnswers: AnswerState;
 }
 
 const Question = tw.h4`text-h4 text-white`;
@@ -29,20 +26,16 @@ const QuizItemContainer = tw.div`flex flex-col gap-2 items-center`;
 
 const OptionsContainer = tw.div`flex flex-wrap gap-2 justify-center items-center`;
 
-const QuizItem = ({
-  quiz,
-  onClick,
-  result,
-  userAnswer,
-  answer,
-}: QuizItemProps) => {
+const QuizItem = ({ quiz, onClick, result, userAnswers }: QuizItemProps) => {
   const [clickedOption, setClickedOption] = useState<number>(99);
 
   const setOptionStatus = (index: number) => {
     // 퀴즈 결과 페이지일 때
     if (result) {
-      if (index === userAnswer && index === answer) return 'right';
-      if (index === userAnswer && index !== answer) return 'wrong';
+      if (index === userAnswers[quiz.quizId] && index === quiz.answer)
+        return 'right';
+      if (index === userAnswers[quiz.quizId] && index !== quiz.answer)
+        return 'wrong';
       return 'default';
     }
     return clickedOption === index ? 'selected' : 'default';
