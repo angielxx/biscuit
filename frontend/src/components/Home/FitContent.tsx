@@ -103,13 +103,6 @@ const FitContent = ({ option }: Props) => {
   const { data } = useQuery({
     queryKey: ['get_personal_contents', option, timeFilterIdx, typeFilter],
     queryFn: () => {
-      const randomOrder = [0, 10, 20, 30, 40].sort(() => Math.random() - 0.5);
-      setOrder([...randomOrder]);
-      setShowingIdx(order.shift());
-
-      localStorage.removeItem('OrderArray');
-      localStorage.setItem('OrderArray', JSON.stringify(randomOrder));
-
       const fromTo = timeFilterArr[timeFilterIdx];
       const type =
         typeFilter[0] === true

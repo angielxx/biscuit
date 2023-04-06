@@ -66,10 +66,8 @@ const Interest = ({title, selectList, setSelectList}: InterestProps) => {
     if (selectList.includes(item)) {
       const newArr = selectList.filter((element) => element !== item);
       setSelectList(newArr);
-      console.log(newArr);
     } else {
       setSelectList([...selectList, item]);
-      console.log([...selectList, item])
     }
   }
 
@@ -127,7 +125,6 @@ export default function EditInfo({infoData, setInfoData}: MyInfoProps) {
     "10년 이상",
   ]
   
-  // 얘도 api랑 연결해서 받아오기
   const [nickname, setNickName] = useState<string>("");
   const [jobSelected, setJobSelected] = useState<string>("");
   const [periodSelected, setPeriodSelected] = useState<string>("");
