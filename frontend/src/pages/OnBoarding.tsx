@@ -127,6 +127,7 @@ const OnBoarding = () => {
     setUserData({...userData, interests: selectList});
   }, [selectList]);
 
+  // 뉴비가 아니면 홈으로 보내기
   useEffect(() => {
     if (noob === false) {
       navigate(`/`);
@@ -139,7 +140,7 @@ const OnBoarding = () => {
     setNoob(false);
 
     // 홈으로 이동
-    navigate(`/`, {replace: true});
+    navigate(`/`);
   }
 
   return (
