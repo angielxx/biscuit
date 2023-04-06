@@ -6,6 +6,8 @@ import { useState, useEffect } from "react";
 import { put_myInfo } from "../api/editProfile";
 import { useNavigate } from "react-router-dom";
 import { get_myInfo } from "../api/myInfo";
+import { useSetRecoilState } from "recoil";
+import { isNameState } from "../recoils/Start/Atoms";
 
 const HomeContainer = tw.div`flex-col w-screen justify-center px-6 pt-4`;
 const MyInfoContainer = tw.div`pb-6 mb-6`;
@@ -52,6 +54,13 @@ export default function EditProfile() {
     },
   });
 
+  const setIsNameState = useSetRecoilState(isNameState);
+
+  const onSubmit = () => {
+    setIsNameState(userData.nickname);
+    signOutMutate();
+  }
+
   useEffect(() => {
     if(myInfoData === undefined) return;
     setUserData(myInfoData);
@@ -69,7 +78,7 @@ export default function EditProfile() {
           </SettingContainer>
         </HeaderContainer>
         {userData && userData.nickname !== "" && <EditInfo infoData={userData} setInfoData={setUserData}/>}
-        <Button title="입력완료" status="active" onClick={() => signOutMutate()} />
+        <Button title="입력완료" status="active" onClick={() => onSubmit()} />
       </MyInfoContainer>
     </HomeContainer>
   )

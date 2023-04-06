@@ -3,11 +3,7 @@ import Button from "../common/Button";
 import Modal from "../common/Modal/Modal";
 import AboutInterest from "../OnBoarding/AboutInterest";
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
-import { post_about_user } from "../../api/login";
 import DropDown from "../common/DropDown/DropDown";
-import { useQueryClient } from '@tanstack/react-query';
 import { useRecoilValue } from "recoil";
 import { functionToggleState } from "../../recoils/FuntionToggle/Atoms";
 
@@ -29,7 +25,6 @@ interface InterestProps {
   selectList: string[];
   setSelectList: React.Dispatch<React.SetStateAction<string[]>>;
 }
-
 
 type MyInfoContent = {
   nickname: string,
@@ -160,7 +155,7 @@ export default function EditInfo({infoData, setInfoData}: MyInfoProps) {
 
   return (
     <>
-      {functionToggle.editNickname && nickname && <Info title="닉네임" content={nickname} setContent={setNickName}/>}
+      {functionToggle.editNickname && nickname !== undefined && <Info title="닉네임" content={nickname} setContent={setNickName}/>}
         
       <InfoContainer>
         <TitleContainer>
