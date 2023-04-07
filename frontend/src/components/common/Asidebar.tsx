@@ -51,6 +51,19 @@ const BackdropWrapper = styled.div`
   ${tw`fixed top-0 left-0 w-full h-full z-20`}
 `;
 
+const CategoryList = styled.ul`
+  ${tw`w-full overflow-scroll relative`}
+
+  ${css`
+    @media (max-height: 700px) {
+      height: 440px;
+    }
+    @media (min-height: 700px) {
+      height: 100vh;
+    }
+  `}
+`
+
 const Container = tw.div`absolute bottom-0 h-14 w-[calc(100% - 16px)] p-2 border-t border-solid border-dark-evaluated flex justify-end items-center bg-black`; 
 const Btn = tw.button`w-6 h-5`;
 const Img = tw.img`w-full h-full`;
@@ -129,7 +142,7 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
             <AsideLogin onClick={startModal} />
           )}
 
-          <ul className='w-full h-[400px] overflow-scroll relative'>
+          <CategoryList>
             {data?.map((item, index) => {
               return (
                 <BigCategory
@@ -151,7 +164,7 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
                 />
               );
             })}
-          </ul>
+          </CategoryList>
           
           {/* 로그아웃 버튼 좀 추가할게 고마워 */}
           {isNoob === false 
