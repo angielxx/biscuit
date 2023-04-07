@@ -20,7 +20,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { getCookie } from 'typescript-cookie';
 
 const Aside = styled.div`
-  ${tw`absolute h-full z-30 flex flex-col items-start p-2 w-[314px] right-0 top-0 bg-black`}
+  ${tw`absolute h-full z-[100] flex flex-col items-start p-2 w-[314px] right-0 top-0 bg-black`}
 
   &.open {
     ${css`
@@ -113,7 +113,7 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
     <>
       <Backdrop onClose={() => setIsOpen(false)} />
 
-      <div className='fixed w-full h-full z-[999] top-0 left-0'>
+      <div className='fixed w-full h-full z-[99] top-0 left-0'>
         <Aside className={isOpen ? 'open' : ''}>
           <Closeicon>
             <img
@@ -129,7 +129,7 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
             <AsideLogin onClick={startModal} />
           )}
 
-          <ul className='w-full h-[450px] overflow-scroll relative'>
+          <ul className='w-full h-[400px] overflow-scroll relative'>
             {data?.map((item, index) => {
               return (
                 <BigCategory
