@@ -63,7 +63,7 @@ public class ContentRepositorySupport {
         if(type != Type.ALL) whereCondition.and(qContent.type.eq(type));
 
         List<Content> contentList = jpaQueryFactory
-                .select(qContent)
+                .select(qContent).distinct()
                 .from(qContent, qContentCategory)
                 .where(whereCondition)
                 .orderBy(qContent.id.desc())
@@ -103,7 +103,7 @@ public class ContentRepositorySupport {
         if(type != Type.ALL) whereCondition.and(qContent.type.eq(type));
 
         List<Content> contentList = jpaQueryFactory
-                .select(qContent)
+                .select(qContent).distinct()
                 .from(qContent, qContentView, qContentCategory)
                 .where(whereCondition)
                 .orderBy(qContentView.id.desc())
