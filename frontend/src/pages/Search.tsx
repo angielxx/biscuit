@@ -40,6 +40,8 @@ const Search = () => {
   const [isSearch, setIsSearch] = useState<boolean>(false);
   // 검색어
   const [searchKey, setSearchKey] = useState<string>('');
+  // 인코딩 검색어
+  const [encodedKey, setEncodedKey] = useState<string>('');
   // 옵션 필터 (최근순, 인기순)
   const [option, setOption] = useState<'recent' | 'hit'>('recent');
   // 타입 (영상, 글)
@@ -63,9 +65,13 @@ const Search = () => {
   useEffect(() => {
     // 임시로 저장
     const temp = serchParams.get('q');
+    // console.log(encodeURIComponent(temp));
     // null이 아닐 때만 저장
-    if (temp) query = temp;
-    setSearchKey(query);
+    if (temp) {
+      query = temp;
+      setEncodedKey(encodeURIComponent(temp));
+      setSearchKey(query);
+    }
 
     // 필터바 세팅
     if (!filterBtnState[0] && filterBtnState[1]) setType('article');
@@ -92,7 +98,7 @@ const Search = () => {
       queryFn: ({ pageParam = 999999 }) =>
         get_search(
           option,
-          searchKey,
+          encodedKey,
           'content',
           pageParam,
           size,
@@ -112,11 +118,13 @@ const Search = () => {
         searchKey={searchKey}
         setIsSearch={setIsSearch}
       />
+
       <FilterBar2
         filterBtnState={filterBtnState}
         setFilterBtnState={setFilterBtnState}
         setOption={setOption}
       />
+
       <ResultContainer id="result-container">
         {data?.pages.map((page, index: number) => (
           <React.Fragment key={index}>

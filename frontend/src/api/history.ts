@@ -13,6 +13,7 @@ interface History {
   timeCost: number;
   title: string;
   type: string;
+  img: string;
 }
 
 export const get_history = async (
