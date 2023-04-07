@@ -20,7 +20,10 @@ import tw, { styled, css, TwStyle } from 'twin.macro';
 import { useGetMetaData } from '../../hooks/useGetMetaData';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { delete_bookmark, post_bookmark } from '../../api/bookmark';
-import { homeFilterBtnState, homeFilterTimeState } from '../../recoils/Home/Atoms';
+import {
+  homeFilterBtnState,
+  homeFilterTimeState,
+} from '../../recoils/Home/Atoms';
 import { get_visit } from '../../api/visit';
 
 // Styled component
@@ -145,14 +148,13 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
     return `${year}.${month}.${day}`;
   };
 
-
   // query 재요청 로직 추가 : 한별
   type filterItem = {
     id: number;
     content: string;
     status: boolean;
   };
-  
+
   const timeFilter = useRecoilValue(homeFilterTimeState);
   const [timeFilterIdx, setTimeFilterIdx] = useState(6);
   const typeFilter = useRecoilValue(homeFilterBtnState);
@@ -164,7 +166,6 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
     });
     setTimeFilterIdx(timeIdx);
   }, [timeFilter]);
-
 
   // 북마크 버튼 클릭 시
   const changeMarkHandler = () => {
@@ -184,7 +185,12 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
     onSuccess: () => {
       setIsMarked(true);
       // query 재요청 로직 추가 : 한별
-      queryClient.invalidateQueries(['get_personal_contents', "bookmarked", timeFilterIdx, typeFilter]);
+      queryClient.invalidateQueries([
+        'get_personal_contents',
+        'bookmarked',
+        timeFilterIdx,
+        typeFilter,
+      ]);
     },
   });
 
@@ -195,7 +201,12 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
     onSuccess: () => {
       setIsMarked(false);
       // query 재요청 로직 추가 : 한별
-      queryClient.invalidateQueries(['get_personal_contents', "bookmarked", timeFilterIdx, typeFilter]);
+      queryClient.invalidateQueries([
+        'get_personal_contents',
+        'bookmarked',
+        timeFilterIdx,
+        typeFilter,
+      ]);
     },
   });
 
@@ -206,11 +217,11 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
   const setContent = useSetRecoilState(recentContentState);
 
   const useGetVisitContent = useQuery({
-    queryKey: ['get_visit'], 
+    queryKey: ['get_visit'],
     queryFn: () => get_visit(content.id),
     enabled: false,
   });
-    
+
   const clickContentHandler = (url: string) => {
     window.open(url, '_blank', 'noopener, noreferrer');
     setStartTime(Number(Date.now().toString()));
@@ -222,14 +233,13 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
     useGetVisitContent.refetch();
   };
 
-
   return (
     <div
       id="content-area"
       className="flex flex-col gap-4 text-white w-full min-w-[240px]"
     >
       <div className="flex gap-2">
-        {content.tags &&
+        {content.tags?.slice(0, 2) &&
           content.tags.map((tag, index) => (
             <Tag key={index}>
               <span>{tag}</span>
