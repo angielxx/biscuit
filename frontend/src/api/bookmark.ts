@@ -29,11 +29,11 @@ export const get_bookmark = async (
   const bookmarkList = data.results;
   const nextLastContentId = data.metaData.lastContentId;
   const isLast = data.metaData.last;
-  console.log({
-    bookmarkList,
-    nextLastContentId,
-    isLast,
-  });
+  // console.log({
+  //   bookmarkList,
+  //   nextLastContentId,
+  //   isLast,
+  // });
   return {
     bookmarkList,
     nextLastContentId,

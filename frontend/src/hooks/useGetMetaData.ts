@@ -47,7 +47,7 @@ export const useGetMetaData = async (url: string) => {
     const { image, desc } = scrap(doc, url);
     return { image, desc };
   } catch (error) {
-    console.log(url, error);
+    // console.log(url, error);
     return;
   }
 };

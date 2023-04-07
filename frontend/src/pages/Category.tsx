@@ -93,7 +93,7 @@ const Category = () => {
   useEffect(() => {
     if (inView) {
       fetchNextPage();
-      console.log('view', inView);
+      // console.log('view', inView);
     }
   }, [inView]);
 

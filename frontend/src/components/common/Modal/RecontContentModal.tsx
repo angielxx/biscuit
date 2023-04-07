@@ -165,9 +165,18 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
       return post_quizzes(contentId, body);
     },
     onSuccess: (data) => {
-      console.log('퀴즈제출데이터 :', data);
+      // console.log('퀴즈제출데이터 :', data);
+      setQuizResult(data);
     }, // 퀴즈 제출하고 포인트 정보 받아와야 함
   });
+
+  // 포인트 정보용 state : 한별 수정
+  type QuizResultType = {
+    memberPoint: number;
+    changePoint: number;
+  }
+  const [quizResult, setQuizResult] = useState<QuizResultType>({memberPoint: 0, changePoint: 0});
+
 
   // 피드백 제출
   const feedbackSubmitHandler = (feedback: number | null) => {
@@ -185,7 +194,7 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
       quizMutate({ contentId: recentContent.id, userAnswers: answers });
     setUserAnswers(answers);
     setPage(2);
-    console.log('quiz submit isNoob :', isNoob);
+    // console.log('quiz submit isNoob :', isNoob);
   };
 
   return (
@@ -202,7 +211,9 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
           <span className="text-sub text-dark-grey70">
             포인트를 획득하였습니다!
           </span>
-          <h1 className="text-h1">130 (+1)</h1>
+          {/* <h1 className="text-h1">130 (+1)</h1> */}
+          {/* 한별 수정, dashBoardQuery의 point 값을 들고와서 보여주기 */}
+          <h1 className="text-h1">{`${quizResult?.memberPoint+quizResult?.changePoint} (+${quizResult?.changePoint})`}</h1>
         </div>
       )}
       {page === 2 && isNoob && (

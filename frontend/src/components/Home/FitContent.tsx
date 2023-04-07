@@ -103,13 +103,6 @@ const FitContent = ({ option }: Props) => {
   const { data } = useQuery({
     queryKey: ['get_personal_contents', option, timeFilterIdx, typeFilter],
     queryFn: () => {
-      const randomOrder = [0, 10, 20, 30, 40].sort(() => Math.random() - 0.5);
-      setOrder([...randomOrder]);
-      setShowingIdx(order.shift());
-
-      localStorage.removeItem('OrderArray');
-      localStorage.setItem('OrderArray', JSON.stringify(randomOrder));
-
       const fromTo = timeFilterArr[timeFilterIdx];
       const type =
         typeFilter[0] === true
@@ -130,17 +123,17 @@ const FitContent = ({ option }: Props) => {
 
   useEffect(() => {
     const myOrderString = localStorage.getItem('OrderArray');
-    if (myOrderString) {
+    if (myOrderString !== undefined && myOrderString !== null && myOrderString !== "[]") {
       const myOrder = JSON.parse(myOrderString);
+      setShowingIdx(myOrder.shift());
       setOrder([...myOrder]);
-      setShowingIdx(order.shift());
       localStorage.removeItem('OrderArray');
       localStorage.setItem('OrderArray', JSON.stringify(myOrder));
       return;
     }
     const randomOrder = [0, 10, 20, 30, 40].sort(() => Math.random() - 0.5);
+    setShowingIdx(randomOrder.shift());
     setOrder([...randomOrder]);
-    setShowingIdx(order.shift());
     localStorage.removeItem('OrderArray');
     localStorage.setItem('OrderArray', JSON.stringify(randomOrder));
   }, []);
@@ -155,7 +148,7 @@ const FitContent = ({ option }: Props) => {
         <RowListContainer>
           {data?.map((content, idx) => {
             return (
-              showingIdx &&
+              showingIdx !== undefined &&
               idx >= showingIdx &&
               idx < showingIdx + 10 && (
                 <ContentContainer key={idx}>

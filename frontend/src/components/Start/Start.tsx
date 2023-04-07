@@ -44,9 +44,9 @@ const Start = () => {
   return (
     <Container>
       <Introduce>
-        <span className="text-h2">시작하기</span>
-        <span className="text-main text-grey50">
-          비스킷 ? 캔ㅌ튜나
+        <span className="text-h2">비스킷 시작하기</span>
+        <span className="text-main text-grey50 text-center">
+          지금 로그인하고<br/> 추천 컨텐츠를 받아보세요!
         </span>
       </Introduce>
       <LoginContainer>

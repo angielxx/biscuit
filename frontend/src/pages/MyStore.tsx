@@ -16,6 +16,7 @@ import { get_bookmark } from '../api/bookmark';
 import { get_history } from '../api/history';
 import BookmarkItem from '../components/MyStore/BookmarkItem';
 import Loading from '../components/common/Loading';
+import { useParams } from 'react-router-dom';
 
 // Styled component
 const ItemsContainer = styled.div`
@@ -58,6 +59,10 @@ interface History {
 const MyStore = () => {
   // 탭
   const [clickedTab, setClickedTab] = useState<number>(0);
+  const { page } = useParams();
+  useEffect(() => {
+    if (page) setClickedTab(parseInt(page));
+  }, [page])
 
   // 북마크, 히스토리 get
   // const result = useQueries({

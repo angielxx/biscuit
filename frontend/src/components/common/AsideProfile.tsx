@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import AsideButton from "./AsideButton";
 
 // css
@@ -44,14 +44,15 @@ const AsideProfile = ({isName, onClick, setIsOpen}: ProfileProps) => {
           onClick={asideState}
         />
         <AsideButton
-          to="/mystore"
+          to="/mystore/0"
           src={bookmark}
           alt="bookmark"
           title="북마크"
           onClick={asideState}
+
         />
         <AsideButton
-          to="/mystore"
+          to="/mystore/1"
           src={history}
           alt="history"
           title="히스토리"

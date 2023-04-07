@@ -20,6 +20,8 @@ import tw, { styled, css, TwStyle } from 'twin.macro';
 import { useGetMetaData } from '../../hooks/useGetMetaData';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { delete_bookmark, post_bookmark } from '../../api/bookmark';
+import { homeFilterBtnState, homeFilterTimeState } from '../../recoils/Home/Atoms';
+import { get_visit } from '../../api/visit';
 
 // Styled component
 const Tag = styled.div`
@@ -34,7 +36,7 @@ const Thumbnail = styled.div<{ image: string | undefined }>`
           background-image: url('${image}');
         `
       : css`
-          background-image: url('src/assets/image/default_thumbnail_image.png');
+          background-image: url('/assets/image/default_thumbnail_image.png');
         `}
   ${css`
     background-size: 102%;
@@ -106,7 +108,6 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
   const isAuth = true;
 
   // 타입에 따라 썸네일, url 설정
-  const queryClient = useQueryClient();
   useEffect(() => {
     if (content.type === 'VIDEO') {
       setUrl(`https://youtu.be/${content.source}`);
@@ -144,6 +145,27 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
     return `${year}.${month}.${day}`;
   };
 
+
+  // query 재요청 로직 추가 : 한별
+  type filterItem = {
+    id: number;
+    content: string;
+    status: boolean;
+  };
+  
+  const timeFilter = useRecoilValue(homeFilterTimeState);
+  const [timeFilterIdx, setTimeFilterIdx] = useState(6);
+  const typeFilter = useRecoilValue(homeFilterBtnState);
+
+  useEffect(() => {
+    let timeIdx: number = 6;
+    timeFilter.forEach((time: filterItem) => {
+      if (time.status === true) timeIdx = time.id;
+    });
+    setTimeFilterIdx(timeIdx);
+  }, [timeFilter]);
+
+
   // 북마크 버튼 클릭 시
   const changeMarkHandler = () => {
     // 북마크 추가
@@ -154,18 +176,27 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
     }
   };
 
+  const queryClient = useQueryClient();
   // 북마크 추가
   const { mutate: postMarkMutate } = useMutation({
     mutationFn: (contentId: number) => post_bookmark(contentId),
     // 성공하면 회원 북마크 정보 invalidate
-    onSuccess: () => setIsMarked(true),
+    onSuccess: () => {
+      setIsMarked(true);
+      // query 재요청 로직 추가 : 한별
+      queryClient.invalidateQueries(['get_personal_contents', "bookmarked", timeFilterIdx, typeFilter]);
+    },
   });
 
   // 북마크 삭제
   const { mutate: deleteMarkMutate } = useMutation({
     mutationFn: (contentId: number) => delete_bookmark(contentId),
     // 성공하면 회원 북마크 정보 invalidate
-    onSuccess: () => setIsMarked(false),
+    onSuccess: () => {
+      setIsMarked(false);
+      // query 재요청 로직 추가 : 한별
+      queryClient.invalidateQueries(['get_personal_contents', "bookmarked", timeFilterIdx, typeFilter]);
+    },
   });
 
   const startTime = useRecoilValue(startTimeState);
@@ -174,6 +205,12 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
   const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState);
   const setContent = useSetRecoilState(recentContentState);
 
+  const useGetVisitContent = useQuery({
+    queryKey: ['get_visit'], 
+    queryFn: () => get_visit(content.id),
+    enabled: false,
+  });
+    
   const clickContentHandler = (url: string) => {
     window.open(url, '_blank', 'noopener, noreferrer');
     setStartTime(Number(Date.now().toString()));
@@ -182,7 +219,9 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
       setIsModalOpen(true);
       setContent(content);
     }
+    useGetVisitContent.refetch();
   };
+
 
   return (
     <div
