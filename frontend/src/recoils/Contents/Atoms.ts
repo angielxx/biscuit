@@ -22,7 +22,7 @@ const isModalOpenState = atom({
 });
 
 interface Content {
-  id?: number;
+  id: number;
   title: string;
   source: string; // 영상: video_id, 글: url
   creditBy: string;
