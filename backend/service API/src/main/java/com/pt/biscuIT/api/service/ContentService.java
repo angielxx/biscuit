@@ -44,17 +44,17 @@ public class ContentService {
     public void getContentDetail(Member member, Long contentId) {
         Content content = contentRepository.findById(contentId)
             .orElseThrow(() -> new BiscuitException(ErrorCode.CONTENT_NOT_FOUND));
-        contentRepository.save(Content.builder()
-                .id(content.getId())
-                .title(content.getTitle())
-                .source(content.getSource())
-                .writer(content.getWriter())
-                .channel(content.getChannel())
-                .createdDate(content.getCreatedDate())
-                .hit(content.getHit() + 1)
-                .timeCost(content.getTimeCost())
-                .type(content.getType())
-                .build());
+        // contentRepository.save(Content.builder()
+        //         .id(content.getId())
+        //         .title(content.getTitle())
+        //         .source(content.getSource())
+        //         .writer(content.getWriter())
+        //         .channel(content.getChannel())
+        //         .createdDate(content.getCreatedDate())
+        //         .hit(content.getHit() + 1)
+        //         .timeCost(content.getTimeCost())
+        //         .type(content.getType())
+        //         .build());
 
         if(member != null) {
             memberHistoryRepository.save(MemberHistory.builder()
