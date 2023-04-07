@@ -129,7 +129,7 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
             <AsideLogin onClick={startModal} />
           )}
 
-          <ul className='w-full h-[450px] overflow-scroll relative'>
+          <ul className='w-full h-[400px] overflow-scroll relative'>
             {data?.map((item, index) => {
               return (
                 <BigCategory
