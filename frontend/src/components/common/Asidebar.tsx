@@ -20,7 +20,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { getCookie } from 'typescript-cookie';
 
 const Aside = styled.div`
-  ${tw`h-full z-50 flex flex-col items-start p-2 fixed w-[314px] right-0 top-0 bg-black`}
+  ${tw`absolute h-full z-30 flex flex-col items-start p-2 w-[314px] right-0 top-0 bg-black`}
 
   &.open {
     ${css`
@@ -51,7 +51,7 @@ const BackdropWrapper = styled.div`
   ${tw`fixed top-0 left-0 w-full h-full z-20`}
 `;
 
-const Container = tw.div`bottom-0 h-14 w-full p-2 border-t border-solid border-dark-evaluated flex justify-end items-center bg-black`; 
+const Container = tw.div`absolute bottom-0 h-14 w-[calc(100% - 16px)] p-2 border-t border-solid border-dark-evaluated flex justify-end items-center bg-black`; 
 const Btn = tw.button`w-6 h-5`;
 const Img = tw.img`w-full h-full`;
 
@@ -113,68 +113,70 @@ const Asidebar = ({ isOpen, setIsOpen }: AsidebarStatus) => {
     <>
       <Backdrop onClose={() => setIsOpen(false)} />
 
-      <Aside className={isOpen ? 'open' : ''}>
-        <Closeicon>
-          <img
-            src={close}
-            alt="close"
-            onClick={() => (isOpen ? setIsOpen(false) : setIsOpen(true))}
-          />
-        </Closeicon>
+      <div className='fixed w-full h-full z-[999] top-0 left-0'>
+        <Aside className={isOpen ? 'open' : ''}>
+          <Closeicon>
+            <img
+              src={close}
+              alt="close"
+              onClick={() => (isOpen ? setIsOpen(false) : setIsOpen(true))}
+            />
+          </Closeicon>
 
-        {isNoob === false ? (
-          <AsideProfile isName={isName} onClick={goToMypage} setIsOpen={setIsOpen} />
-        ) : (
-          <AsideLogin onClick={startModal} />
-        )}
+          {isNoob === false ? (
+            <AsideProfile isName={isName} onClick={goToMypage} setIsOpen={setIsOpen} />
+          ) : (
+            <AsideLogin onClick={startModal} />
+          )}
 
-        <ul className='w-full overflow-scroll'>
-          {data?.map((item, index) => {
-            return (
-              <BigCategory
-                key={item.id}
-                isCategory={page === index ? isCategory : false}
-                isClicked={isClicked}
-                item={item}
-                onClick={() => {
-                  setPage(index);
-                  // page !== index 일 경우, isCategory가 true면, 걍 true로 냅둬야한다.
-                  isCategory
-                    ? page === index
-                      ? setIsCategory(false)
-                      : setIsCategory(true)
-                    : setIsCategory(true);
-                }}
-                selectList={[]}
-                locate="aside"
-              />
-            );
-          })}
-        </ul>
-        
-        {/* 로그아웃 버튼 좀 추가할게 고마워 */}
-        {isNoob === false 
-          ? (
-            <Container>
-              <Btn onClick={() => setIsLogout(true)}>
-                <Img src="/assets/icons/logout.svg" />
-              </Btn>
-            </Container>
-          )
-          : (
-            <Container>
-              <Btn onClick={() => setIsLogout(true)}>
-                <Img src="/assets/icons/logout.svg" />
-              </Btn>
-            </Container>
-          )
+          <ul className='w-full h-[450px] overflow-scroll relative'>
+            {data?.map((item, index) => {
+              return (
+                <BigCategory
+                  key={item.id}
+                  isCategory={page === index ? isCategory : false}
+                  isClicked={isClicked}
+                  item={item}
+                  onClick={() => {
+                    setPage(index);
+                    // page !== index 일 경우, isCategory가 true면, 걍 true로 냅둬야한다.
+                    isCategory
+                      ? page === index
+                        ? setIsCategory(false)
+                        : setIsCategory(true)
+                      : setIsCategory(true);
+                  }}
+                  selectList={[]}
+                  locate="aside"
+                />
+              );
+            })}
+          </ul>
+          
+          {/* 로그아웃 버튼 좀 추가할게 고마워 */}
+          {isNoob === false 
+            ? (
+              <Container>
+                <Btn onClick={() => setIsLogout(true)}>
+                  <Img src="/assets/icons/logout.svg" />
+                </Btn>
+              </Container>
+            )
+            : (
+              <Container>
+                <Btn onClick={() => setIsLogout(true)}>
+                  <Img src="/assets/icons/logout.svg" />
+                </Btn>
+              </Container>
+            )
+          }
+        </Aside>
+
+        {isLogout
+          ? <LogoutBox setIsOpen={setIsOpen} setIsLogout={setIsLogout} />
+          : null
         }
-      </Aside>
-
-      {isLogout
-        ? <LogoutBox setIsOpen={setIsOpen} setIsLogout={setIsLogout} />
-        : null
-      }
+      </div>
     
     </>
   );

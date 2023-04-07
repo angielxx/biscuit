@@ -54,7 +54,7 @@ const BackdropWrapper = styled.div`
   ${css`
     background: rgba(0, 0, 0, 0.75);
   `}
-  ${tw`fixed top-0 left-0 w-full h-full z-20`}
+  ${tw`fixed top-0 left-0 w-full h-full z-30`}
 `;
 
 interface BackdropProps {
