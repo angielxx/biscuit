@@ -28,7 +28,7 @@ import { get_visit } from '../../api/visit';
 
 // Styled component
 const Tag = styled.div`
-  ${tw`rounded-full text-tiny px-[10px] py-1 bg-dark-grey50 w-fit `}
+  ${tw`rounded-full text-sub font-thin px-[10px] py-1 bg-dark-grey30 w-fit text-dark-grey70`}
 `;
 
 const Thumbnail = styled.div<{ image: string | undefined }>`
@@ -239,8 +239,8 @@ const ContentCardItem = ({ content }: ContentCardItemProps) => {
       className="flex flex-col gap-4 text-white w-full min-w-[240px]"
     >
       <div className="flex gap-2">
-        {content.tags?.slice(0, 2) &&
-          content.tags.map((tag, index) => (
+        {content.tags &&
+          content.tags?.slice(0, 3).map((tag, index) => (
             <Tag key={index}>
               <span>{tag}</span>
             </Tag>
