@@ -112,11 +112,13 @@ const Search = () => {
         searchKey={searchKey}
         setIsSearch={setIsSearch}
       />
+
       <FilterBar2
         filterBtnState={filterBtnState}
         setFilterBtnState={setFilterBtnState}
         setOption={setOption}
       />
+
       <ResultContainer id="result-container">
         {data?.pages.map((page, index: number) => (
           <React.Fragment key={index}>
