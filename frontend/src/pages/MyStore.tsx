@@ -39,6 +39,7 @@ interface Bookmark {
   timeCost: number;
   title: string;
   type: string;
+  img: string;
 }
 
 interface History {
@@ -62,7 +63,7 @@ const MyStore = () => {
   const { page } = useParams();
   useEffect(() => {
     if (page) setClickedTab(parseInt(page));
-  }, [page])
+  }, [page]);
 
   // 북마크, 히스토리 get
   // const result = useQueries({

@@ -61,7 +61,7 @@ interface Bookmark {
 }
 
 interface Content {
-  id?: number;
+  id: number;
   title: string;
   source: string; // 영상: video_id, 글: url
   creditBy: string;
@@ -114,8 +114,7 @@ const BookmarkItem = ({ bookmark }: StoreItemProps) => {
     setIsStart(true);
     if (!isModalOpen) {
       setIsModalOpen(true);
-      const content: Content = { ...bookmark };
-      content.id = bookmark.contentId;
+      const content: Content = { ...bookmark, id: bookmark.contentId };
       setContent(content);
     }
   };
