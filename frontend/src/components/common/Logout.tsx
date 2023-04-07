@@ -13,7 +13,7 @@ const SelectBtn = styled.button`
   ${tw`h-9 w-15 flex items-center justify-center py-3 px-2 border-[1px] border-dark-primary rounded-[10px] text-tiny`}
 `
 const ModalContainer = styled.div((props: { isOnboarding: boolean }) => [
-  tw`fixed z-50 bg-dark-evaluated p-6 text-white rounded-20`,
+  tw`fixed z-[102] bg-dark-evaluated p-6 text-white rounded-20`,
   tw`w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[45vw] 2xl:w-[40vw]`,
   css`
     top: 50%;
@@ -54,7 +54,7 @@ const BackdropWrapper = styled.div`
   ${css`
     background: rgba(0, 0, 0, 0.75);
   `}
-  ${tw`fixed top-0 left-0 w-full h-full z-30`}
+  ${tw`fixed top-0 left-0 w-full h-full z-[101]`}
 `;
 
 interface BackdropProps {
