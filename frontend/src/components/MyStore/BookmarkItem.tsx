@@ -57,6 +57,21 @@ interface Bookmark {
   timeCost: number;
   title: string;
   type: string;
+  img: string;
+}
+
+interface Content {
+  id?: number;
+  title: string;
+  source: string; // 영상: video_id, 글: url
+  creditBy: string;
+  createdDate: string;
+  timeCost: number;
+  type: string;
+  marked: boolean;
+  tags: Array<string> | null;
+  hit: number;
+  img: string;
 }
 
 interface StoreItemProps {
@@ -88,16 +103,20 @@ const BookmarkItem = ({ bookmark }: StoreItemProps) => {
     return `${year}.${month}.${day}`;
   };
 
+  const setStartTime = useSetRecoilState(startTimeState);
+  const setIsStart = useSetRecoilState(isStartState);
   const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState);
-  // const setContent = useSetRecoilState(recentContentState);
+  const setContent = useSetRecoilState(recentContentState);
 
   const clickContentHandler = (url: string) => {
     window.open(url, '_blank', 'noopener, noreferrer');
-    // setStartTime(Number(Date.now().toString()));
-    // setIsStart(true);
+    setStartTime(Number(Date.now().toString()));
+    setIsStart(true);
     if (!isModalOpen) {
       setIsModalOpen(true);
-      // setContent(bookmark);
+      const content: Content = { ...bookmark };
+      content.id = bookmark.contentId;
+      setContent(content);
     }
   };
 
@@ -107,7 +126,7 @@ const BookmarkItem = ({ bookmark }: StoreItemProps) => {
         if (e.target === e.currentTarget) clickContentHandler(url);
       }}
     >
-      <div className="w-10 h-10 shrink-0 bg-primary rounded-full"></div>
+      {/* <div className="w-10 h-10 shrink-0 bg-primary rounded-full"></div> */}
       <TextInfo id="text">
         <p
           className="truncate text-main-bold"

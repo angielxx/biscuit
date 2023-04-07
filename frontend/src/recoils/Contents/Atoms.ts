@@ -21,8 +21,8 @@ const isModalOpenState = atom({
   default: false,
 });
 
-interface content {
-  id: number;
+interface Content {
+  id?: number;
   title: string;
   source: string; // 영상: video_id, 글: url
   creditBy: string;
@@ -34,7 +34,7 @@ interface content {
   hit: number;
   img: string;
 }
-const recentContentState = atom<content>({
+const recentContentState = atom<Content>({
   key: 'recentContentState',
   default: {
     id: 0,
