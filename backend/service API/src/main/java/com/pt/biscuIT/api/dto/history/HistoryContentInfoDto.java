@@ -32,6 +32,7 @@ public class HistoryContentInfoDto {
     private boolean isMarked;
     private List<String> tags;
     private Integer hit;
+    private String img;
 
     public HistoryContentInfoDto(Content content) {
         this.contentId = content.getId();
@@ -43,5 +44,6 @@ public class HistoryContentInfoDto {
         this.type = content.getType();
         this.isMarked = false;
         this.hit = content.getHit();
+        this.img = content.getImg();
     }
 }
