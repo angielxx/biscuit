@@ -14,7 +14,7 @@ import { JsxElement } from 'typescript';
 
 // Styled component
 const ModalContainer = styled.div((props: { isOnboarding: boolean }) => [
-  tw`fixed z-50 bg-dark-evaluated p-6 text-white rounded-20`,
+  tw`fixed z-50 bg-evaluated p-6 text-white rounded-20`,
   tw`w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[45vw] 2xl:w-[40vw]`,
   css`
     top: 50%;

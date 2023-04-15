@@ -28,7 +28,7 @@ import { get_visit } from '../../api/visit';
 
 // Styled component
 const Tag = styled.div`
-  ${tw`rounded-full text-sub font-thin px-[10px] py-1 bg-dark-grey30 w-fit text-dark-grey70`}
+  ${tw`rounded-full text-sub font-thin px-[10px] py-1 bg-grey30 w-fit text-grey70`}
 `;
 
 const Thumbnail = styled.div<{ image: string | undefined }>`

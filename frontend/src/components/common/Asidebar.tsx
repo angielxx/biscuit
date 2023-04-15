@@ -64,7 +64,7 @@ const CategoryList = styled.ul`
   `}
 `
 
-const Container = tw.div`absolute bottom-0 h-14 w-[calc(100% - 16px)] p-2 border-t border-solid border-dark-evaluated flex justify-end items-center bg-black`; 
+const Container = tw.div`absolute bottom-0 h-14 w-[calc(100% - 16px)] p-2 border-t border-solid border-evaluated flex justify-end items-center bg-black`; 
 const Btn = tw.button`w-6 h-5`;
 const Img = tw.img`w-full h-full`;
 

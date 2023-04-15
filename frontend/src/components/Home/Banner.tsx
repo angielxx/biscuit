@@ -76,31 +76,28 @@ const Banner = () => {
     <BannerContainer>
       <div className="carousel">
         <Slider {...settings}>
-          
-          {isNoob === true
-            ?
-              <div>
-                <BannerBg key="1" img={gradient_bg}>
-                  <div className="flex flex-col items-start gap-[2vh]">
-                    <div className="flex flex-col items-start text-left text-[2rem] leading-10 tracking-tight relative z-auto px-1">
-                      <span className="z-10">
-                        나에게 딱! 맞는 <br />
-                        <span className="underline underline-offset-[-8px] decoration-primary decoration-[1rem] break-keep">
-                          <strong className="text-bold">테크 컨텐츠</strong> 추천
-                          서비스
-                        </span>
+          {isNoob === true ? (
+            <div>
+              <BannerBg key="1" img={gradient_bg}>
+                <div className="flex flex-col items-start gap-[2vh]">
+                  <div className="flex flex-col items-start text-left text-[2rem] leading-10 tracking-tight relative z-auto px-1">
+                    <span className="z-10">
+                      나에게 딱! 맞는 <br />
+                      <span className="underline underline-offset-[-8px] decoration-primary decoration-[1rem] break-keep">
+                        <strong className="text-bold">테크 컨텐츠</strong> 추천
+                        서비스
                       </span>
-                      {/* <div className="bg-dark-primary w-full h-[1rem] absolute bottom-0 left-[1px]" /> */}
-                    </div>
-                    <span className="text-main px-1">
-                      지금 가입하고 바로 만나보세요.
                     </span>
+                    {/* <div className="bg-primary w-full h-[1rem] absolute bottom-0 left-[1px]" /> */}
                   </div>
-                  <SeeMoreBtn onClick={startModal}>비스킷 시작하기</SeeMoreBtn>
-                </BannerBg>
-              </div>
-            : null
-          }
+                  <span className="text-main px-1">
+                    지금 가입하고 바로 만나보세요.
+                  </span>
+                </div>
+                <SeeMoreBtn onClick={startModal}>비스킷 시작하기</SeeMoreBtn>
+              </BannerBg>
+            </div>
+          ) : null}
           {/* {bannerList?.map((banner) => {
             return (
               <BannerContent

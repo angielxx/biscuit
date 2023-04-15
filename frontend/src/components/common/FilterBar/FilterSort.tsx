@@ -37,11 +37,11 @@ const ArrowDropDown = styled.div`
 `;
 
 const FilterTimeBtn = tw.button`
-  w-[128px] h-9 flex rounded-full justify-between items-center pl-[14px] pr-[10px] py-4 border-[1px] border-dark-primary bg-black
+  w-[128px] h-9 flex rounded-full justify-between items-center pl-[14px] pr-[10px] py-4 border-[1px] border-primary bg-black
 `;
 
 const FilterTimeHolder = tw.span`
-  text-tiny-bold truncate w-18 text-start text-dark-primary
+  text-tiny-bold truncate w-18 text-start text-primary
 `;
 
 const FilterSort = ({

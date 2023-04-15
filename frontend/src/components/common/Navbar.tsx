@@ -17,7 +17,7 @@ import theme from '../../assets/icons/theme.svg';
 import menu from '../../assets/icons/menu.svg';
 
 const Nav = styled.div`
-  ${tw`fixed z-10 box-border flex justify-between items-center px-3 py-4 w-full h-20 left-0 top-0 border-b border-solid border-dark-grey20 bg-black`}
+  ${tw`fixed z-10 box-border flex justify-between items-center px-3 py-4 w-full h-20 left-0 top-0 border-b border-solid border-grey20 bg-black`}
 `;
 
 const Menus = styled.div`
@@ -60,7 +60,17 @@ const Navbar = () => {
               isSearch ? setIsSearch(false) : setIsSearch(true);
             }}
           />
-          {/* <img src={theme} alt="theme" /> */}
+          <img
+            src={theme}
+            alt="theme"
+            className="cursor-pointer"
+            onClick={() => {
+              const htmlTag = document.getElementById('html');
+              if (htmlTag)
+                if (htmlTag.className === 'dark') htmlTag.className = '';
+                else htmlTag.className = 'dark';
+            }}
+          />
           <img
             src={menu}
             alt="aside-bar"
@@ -68,12 +78,10 @@ const Navbar = () => {
           />
         </Menus>
       </Nav>
-      {isSearch 
-        ? <Searchbar isSearch={isSearch} setIsSearch={setIsSearch} searchKey="" />
-        : null}
-      {isOpen 
-        ? <Asidebar isOpen={isOpen} setIsOpen={setIsOpen} /> 
-        : null}
+      {isSearch ? (
+        <Searchbar isSearch={isSearch} setIsSearch={setIsSearch} searchKey="" />
+      ) : null}
+      {isOpen ? <Asidebar isOpen={isOpen} setIsOpen={setIsOpen} /> : null}
     </div>
   );
 };

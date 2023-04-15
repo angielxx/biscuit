@@ -3,62 +3,86 @@ module.exports = {
   darkMode: 'class',
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    fontFamily: {},
+    colors: {
+      black: 'rgb(var(--color-black) / <alpha-value>)',
+      white: 'rgb(var(--color-white) / <alpha-value>)',
+      // grey
+      grey10: 'rgb(var(--color-grey10) / <alpha-value>)',
+      grey20: 'rgb(var(--color-grey20) / <alpha-value>)',
+      grey30: 'rgb(var(--color-grey30) / <alpha-value>)',
+      grey40: 'rgb(var(--color-grey40) / <alpha-value>)',
+      grey50: 'rgb(var(--color-grey50) / <alpha-value>)',
+      grey60: 'rgb(var(--color-grey60) / <alpha-value>)',
+      grey70: 'rgb(var(--color-grey70) / <alpha-value>)',
+      grey80: 'rgb(var(--color-grey80) / <alpha-value>)',
+      grey90: 'rgb(var(--color-grey90) / <alpha-value>)',
+      // bg
+      evaluated: 'rgb(var(--color-evaluated) / <alpha-value>)',
+      // main
+      primary: 'rgb(var(--color-primary) / <alpha-value>)',
+      'primary-var': 'rgb(var(--color-primary-var) / <alpha-value>)',
+      secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
+      'secondary-var': 'rgb(var(--color-secondary-var) / <alpha-value>)',
+      danger: 'rgb(var(--color-danger) / <alpha-value>)',
+      'danger-var': 'rgb(var(--color-danger-var) / <alpha-value>)',
+      // text
+      subColor: 'rgb(var(--color-subColor) / <alpha-value>)',
+    },
     extend: {
-      colors: {
-        black: '#202124',
-        white: '#F7F8F8',
+      // colors: {
+      //   black: '#202124',
+      //   white: '#F7F8F8',
 
-        // Light Theme Color
-        // grey
-        grey10: '#ECECEC',
-        grey20: '#DDDDDD',
-        grey30: '#C3C5C6',
-        grey40: '#9DA3AA',
-        grey50: '#7F878F',
-        grey60: '#626971',
-        grey70: '#484E55',
-        grey80: '#32373D',
-        grey90: '#252B30',
-        // bg
-        evaluated: '#ECECEC',
-        // main
-        primary: '#3FE5EF',
-        'primary-var': '#6DF5F1',
-        secondary: '#34E87C',
-        'secondary-var': '#75EEA5',
-        // sub color
-        danger: '#FF7B5E',
-        'danger-var': '#FFA693',
-        // text
-        subColor: '#9DA3AA',
+      //   // Light Theme Color
+      //   // grey
+      //   grey10: '#ECECEC',
+      //   grey20: '#DDDDDD',
+      //   grey30: '#C3C5C6',
+      //   grey40: '#9DA3AA',
+      //   grey50: '#7F878F',
+      //   grey60: '#626971',
+      //   grey70: '#484E55',
+      //   grey80: '#32373D',
+      //   grey90: '#252B30',
+      //   // bg
+      //   evaluated: '#ECECEC',
+      //   // main
+      //   primary: '#3FE5EF',
+      //   'primary-var': '#6DF5F1',
+      //   secondary: '#34E87C',
+      //   'secondary-var': '#75EEA5',
+      //   // sub color
+      //   danger: '#FF7B5E',
+      //   'danger-var': '#FFA693',
+      //   // text
+      //   subColor: '#9DA3AA',
 
-        // Dark Theme Color
-        dark: {
-          // grey
-          grey10: '#252B30',
-          grey20: '#32373D',
-          grey30: '#484E55',
-          grey40: '#636971',
-          grey50: '#7F878F',
-          grey60: '#9DA3AA',
-          grey70: '#C3C5C7',
-          grey80: '#DDDDDD',
-          grey90: '#ECECEC',
-          // bg
-          evaluated: '#252B30',
-          // main
-          primary: '#3FE5EF',
-          'primary-var': '#2FB0CF',
-          secondary: '#34E87C',
-          'secondary-var': '#1AA76E',
-          // sub
-          danger: '#FF7B5E',
-          'danger-var': '#EC6447',
-          // text
-          subColor: '#636971',
-        },
-      },
+      //   // Dark Theme Color
+      //   dark: {
+      //     // grey
+      //     grey10: '#252B30',
+      //     grey20: '#32373D',
+      //     grey30: '#484E55',
+      //     grey40: '#636971',
+      //     grey50: '#7F878F',
+      //     grey60: '#9DA3AA',
+      //     grey70: '#C3C5C7',
+      //     grey80: '#DDDDDD',
+      //     grey90: '#ECECEC',
+      //     // bg
+      //     evaluated: '#252B30',
+      //     // main
+      //     primary: '#3FE5EF',
+      //     'primary-var': '#2FB0CF',
+      //     secondary: '#34E87C',
+      //     'secondary-var': '#1AA76E',
+      //     // sub
+      //     danger: '#FF7B5E',
+      //     'danger-var': '#EC6447',
+      //     // text
+      //     subColor: '#636971',
+      //   },
+      // },
       fontFamily: {
         sans: ['Pretendard', 'sans-serif'],
       },

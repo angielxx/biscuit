@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react';
 import tw, { styled } from 'twin.macro';
 
 const CategoryBox = styled.li`
-  ${tw`flex flex-col items-start order-5 w-full px-4 py-3 gap-[10px] text-white border-b border-solid border-dark-grey10 cursor-pointer`}
+  ${tw`flex flex-col items-start order-5 w-full px-4 py-3 gap-[10px] text-white border-b border-solid border-grey10 cursor-pointer`}
 
   &.choose {
-    ${tw`bg-dark-primary-var`}
+    ${tw`bg-primary-var`}
   }
 `;
 

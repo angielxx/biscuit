@@ -42,7 +42,7 @@ const Container = styled.div`
 `;
 
 const DivideLine = styled.hr`
-  ${tw`bg-dark-grey20 h-[1px] my-4`}
+  ${tw`bg-grey20 h-[1px] my-4`}
   ${css`
     border: 0;
   `}
@@ -174,9 +174,11 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
   type QuizResultType = {
     memberPoint: number;
     changePoint: number;
-  }
-  const [quizResult, setQuizResult] = useState<QuizResultType>({memberPoint: 0, changePoint: 0});
-
+  };
+  const [quizResult, setQuizResult] = useState<QuizResultType>({
+    memberPoint: 0,
+    changePoint: 0,
+  });
 
   // 피드백 제출
   const feedbackSubmitHandler = (feedback: number | null) => {
@@ -208,12 +210,12 @@ const RecentContentModal = ({ onClose }: FeedbackModalProps) => {
       {page === 2 && !isNoob && (
         <div className="flex flex-col justify-center items-center">
           <img src={seed} alt="" className="aspect-ratio-1 h-20 w-20 mb-3" />
-          <span className="text-sub text-dark-grey70">
-            포인트를 획득하였습니다!
-          </span>
+          <span className="text-sub text-grey70">포인트를 획득하였습니다!</span>
           {/* <h1 className="text-h1">130 (+1)</h1> */}
           {/* 한별 수정, dashBoardQuery의 point 값을 들고와서 보여주기 */}
-          <h1 className="text-h1">{`${quizResult?.memberPoint+quizResult?.changePoint} (+${quizResult?.changePoint})`}</h1>
+          <h1 className="text-h1">{`${
+            quizResult?.memberPoint + quizResult?.changePoint
+          } (+${quizResult?.changePoint})`}</h1>
         </div>
       )}
       {page === 2 && isNoob && (

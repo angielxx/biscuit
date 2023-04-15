@@ -15,9 +15,9 @@ type BtnStatusType = {
 };
 
 const btnStatus: BtnStatusType = {
-  active: tw`bg-dark-secondary text-black hover:bg-dark-secondary-var`,
-  disabled: tw`bg-dark-grey20 text-dark-grey40`,
-  danger: tw`bg-dark-danger text-black`,
+  active: tw`bg-secondary text-black hover:bg-secondary-var`,
+  disabled: tw`bg-grey20 text-grey40`,
+  danger: tw`bg-danger text-black`,
 };
 
 const Btn = styled.button((props: { status: StatusType }) => [

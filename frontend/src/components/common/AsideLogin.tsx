@@ -7,8 +7,8 @@ const LoginBox = styled.div`
 `;
 
 const Login = styled.div`
-  ${tw`w-[266px] h-14 flex justify-center items-center p-4 gap-2 bg-dark-evaluated rounded-[77px]`}
-`
+  ${tw`w-[266px] h-14 flex justify-center items-center p-4 gap-2 bg-evaluated rounded-[77px]`}
+`;
 
 interface AsideLoginProps {
   onClick: React.MouseEventHandler<HTMLDivElement>;
@@ -19,10 +19,10 @@ const AsideLogin = ({ onClick }: AsideLoginProps) => {
     <LoginBox>
       <img src={biscuit} />
       <Login onClick={onClick}>
-        <span className='text-white'>로그인</span>
+        <span className="text-white">로그인</span>
       </Login>
     </LoginBox>
-  )
-}
+  );
+};
 
 export default AsideLogin;

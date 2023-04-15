@@ -23,7 +23,7 @@ const FeedbackBtns = styled.div`
 `;
 
 const FeedbackBtn = styled.button<{ status: string }>`
-  ${tw`bg-dark-grey30 hover:bg-dark-primary-var rounded-full aspect-h-1 aspect-w-1 min-w-[40px] max-w-[60px] p-2`}
+  ${tw`bg-grey30 hover:bg-primary-var rounded-full aspect-h-1 aspect-w-1 min-w-[40px] max-w-[60px] p-2`}
   ${({ status }) => FeedbackBtnStyles[status]}
   & {
     img {
@@ -38,8 +38,8 @@ type FeedbackBtnStylesType = {
   clicked: TwStyle;
 };
 const FeedbackBtnStyles: FeedbackBtnStylesType = {
-  default: tw`bg-dark-grey30 hover:bg-dark-primary-var`,
-  clicked: tw`bg-dark-primary hover:bg-dark-primary-var`,
+  default: tw`bg-grey30 hover:bg-primary-var`,
+  clicked: tw`bg-primary hover:bg-primary-var`,
 };
 
 interface FeedbackPageProps {
@@ -88,7 +88,7 @@ const FeedbackPage = ({ onSubmit, quizStatus }: FeedbackPageProps) => {
               >
                 <img src={emoji[index]} alt="너무 쉬워요 이모티콘" />
               </FeedbackBtn>
-              <span className="text-dark-grey80 text-tiny">{text}</span>
+              <span className="text-grey80 text-tiny">{text}</span>
             </div>
           );
         })}

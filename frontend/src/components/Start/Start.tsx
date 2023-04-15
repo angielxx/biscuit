@@ -44,13 +44,14 @@ const Start = () => {
   return (
     <Container>
       <Introduce>
-        <span className="text-h2">비스킷 시작하기</span>
+        <span className="text-h2 text-black">비스킷 시작하기</span>
         <span className="text-main text-grey50 text-center">
-          지금 로그인하고<br/> 추천 컨텐츠를 받아보세요!
+          지금 로그인하고
+          <br /> 추천 컨텐츠를 받아보세요!
         </span>
       </Introduce>
       <LoginContainer>
-        {/* <LoginBox className="bg-dark-grey20" onClick={GithubLogin}>
+        {/* <LoginBox className="bg-grey20" onClick={GithubLogin}>
           <img src={Github} />
           <span>GitHub</span>
         </LoginBox> */}

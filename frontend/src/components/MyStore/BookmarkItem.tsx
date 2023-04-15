@@ -21,7 +21,7 @@ const TextInfo = styled.div`
 `;
 
 const StoreItemContainer = styled.div`
-  ${tw`flex justify-between bg-dark-evaluated rounded p-4 relative cursor-pointer gap-4 hover:bg-dark-primary-var text-ellipsis`}
+  ${tw`flex justify-between bg-evaluated rounded p-4 relative cursor-pointer gap-4 hover:bg-primary-var text-ellipsis`}
   p {
     ${tw`text-main text-white text-ellipsis`}
   }
@@ -30,17 +30,17 @@ const StoreItemContainer = styled.div`
   }
 
   svg {
-    ${tw`fill-dark-grey30`}
+    ${tw`fill-grey30`}
   }
   &:hover {
     p {
       ${tw`text-black text-ellipsis`}
     }
     span {
-      ${tw`text-dark-grey30`}
+      ${tw`text-grey30`}
     }
     svg {
-      ${tw`fill-dark-grey70`}
+      ${tw`fill-grey70`}
     }
   }
 `;
@@ -146,7 +146,7 @@ const BookmarkItem = ({ bookmark }: StoreItemProps) => {
         }}
       >
         <svg
-          className="fill-dark-grey30"
+          className="fill-grey30"
           width="4"
           height="16"
           viewBox="0 0 4 16"
@@ -156,7 +156,7 @@ const BookmarkItem = ({ bookmark }: StoreItemProps) => {
         </svg>
         {showMore && (
           <div
-            className="bg-black text-white rounded absolute px-3 py-1 z-10 right-0 w-fit truncate border-[1px] top-6 border-primary hover:bg-dark-primary-var"
+            className="bg-black text-white rounded absolute px-3 py-1 z-10 right-0 w-fit truncate border-[1px] top-6 border-primary hover:bg-primary-var"
             onMouseLeave={() => setShowMore(false)}
           >
             <span>삭제</span>

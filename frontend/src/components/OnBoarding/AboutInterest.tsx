@@ -40,7 +40,7 @@ const AboutInterest = ({
           관심사에 맞춘 컨텐츠를 홈 화면에서 추천드려요.
         </span>
       </div>
-      <hr className="my-4 border-[1px] border-dark-grey20" />
+      <hr className="my-4 border-[1px] border-grey20" />
       <ul className="h-[320px] overflow-scroll">
         {data?.map((item, index) => {
           return (

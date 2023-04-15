@@ -60,9 +60,11 @@ const AboutUser = ({
       </div>
       <div className="flex flex-col gap-2 mt-4">
         <span className="text-h3">OO님에 대해 알고 싶어요!</span>
-        <span className="text-sub text-subColor">직무와 경력에 맞는 컨텐츠를 추천드려요</span>
+        <span className="text-sub text-subColor">
+          직무와 경력에 맞는 컨텐츠를 추천드려요
+        </span>
       </div>
-      <hr className="my-4 border-[1px] border-dark-grey20" />
+      <hr className="my-4 border-[1px] border-grey20" />
       <ChooseContent>
         <ChooseItem>
           <span className="text-h4">어떤 직무의 개발자신가요?</span>

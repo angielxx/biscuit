@@ -1,5 +1,5 @@
-import React, { useState, ChangeEvent } from "react";
-import tw, { css, styled, TwStyle } from "twin.macro";
+import React, { useState, ChangeEvent } from 'react';
+import tw, { css, styled, TwStyle } from 'twin.macro';
 
 type ChangeHanlder = (e: any) => void;
 
@@ -19,25 +19,24 @@ type InputStatusType = {
 
 const InputStatus: InputStatusType = {
   primary: tw`border-none`,
-  error: tw`border-2 border-dark-danger`,
-  success: tw`border-2 border-secondary`
+  error: tw`border-2 border-danger`,
+  success: tw`border-2 border-secondary`,
 };
 
 const Input = styled.input((props: { status: StatusType }) => [
-  tw`w-full h-11 p-4 gap-2 bg-dark-grey20 rounded-10 text-sub text-dark-grey70`,
+  tw`w-full h-11 p-4 gap-2 bg-grey20 rounded-10 text-sub text-grey70`,
   css`
     :focus {
       outline: none;
     }
   `,
-  InputStatus[props.status]
+  InputStatus[props.status],
 ]);
 
-const TextInput = ({status, isCount, onChange, value}: TextInputProps) => {
-
+const TextInput = ({ status, isCount, onChange, value }: TextInputProps) => {
   return (
     <div className="w-full flex flex-col items-start p-2 gap-2">
-      <Input 
+      <Input
         placeholder="닉네임을 입력하세요"
         maxLength={10}
         status={status}

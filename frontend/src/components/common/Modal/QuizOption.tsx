@@ -20,8 +20,8 @@ type optionStylesType = {
 const optionStyles: optionStylesType = {
   default: tw`border-[1px] border-white`,
   selected: tw`border-[1px] border-primary bg-primary text-black text-sub-bold`,
-  wrong: tw`bg-dark-danger text-black`,
-  right: tw`bg-dark-secondary text-black`,
+  wrong: tw`bg-danger text-black`,
+  right: tw`bg-secondary text-black`,
 };
 
 const Option = styled.button((props: { status: StatusType }) => [

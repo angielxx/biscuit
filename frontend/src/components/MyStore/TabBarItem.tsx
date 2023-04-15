@@ -11,7 +11,7 @@ interface TabItemStylesTypes {
 }
 
 const TabItemStyles: TabItemStylesTypes = {
-  inactive: tw`text-dark-grey40 border-b border-transparent`,
+  inactive: tw`text-grey40 border-b border-transparent`,
   active: tw`border-b border-primary text-main-bold text-primary`,
 };
 
@@ -31,7 +31,7 @@ const TabBarItem = ({ title, icon, status, onClick }: TabBarItemProps) => {
   return (
     <TabItemContainer status={status} onClick={onClick}>
       {React.cloneElement(icon, {
-        className: status === 'active' ? 'fill-primary' : 'fill-dark-grey40',
+        className: status === 'active' ? 'fill-primary' : 'fill-grey40',
       })}
       <span>{title}</span>
     </TabItemContainer>

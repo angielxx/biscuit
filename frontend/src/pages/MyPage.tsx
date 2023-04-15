@@ -12,14 +12,14 @@ import { useRecoilValue } from 'recoil';
 import { functionToggleState } from '../recoils/FuntionToggle/Atoms';
 
 const HomeContainer = tw.div`flex-col w-screen justify-center px-6 pt-4`;
-const MyInfoContainer = tw.div`pb-6 mb-6 border-b-2 border-dark-grey20`;
+const MyInfoContainer = tw.div`pb-6 mb-6 border-b-2 border-grey20`;
 const SettingContainer = tw.div`flex flex-col w-[25%] items-end justify-center`;
 const DashboardContainer = tw.div``;
 const HeaderContainer = tw.div`flex flex-row mb-5`;
 const DashboardHeader = tw.div`flex flex-col w-[75%]`;
 const PointContainer = tw.div`flex flex-col w-[25%] justify-around items-end`;
 const Title = tw.p`text-white text-h2`;
-const Span = tw.p`text-dark-grey70 text-sub`;
+const Span = tw.p`text-grey70 text-sub`;
 const Logo = tw.img`w-6 h-6`;
 
 const Setting = ({ category }: { category: string }) => {
@@ -121,9 +121,17 @@ export default function MyPage() {
             )}
           </PointContainer>
         </HeaderContainer>
-        {functionToggle.dashBoardToggle && dashBoardData && <Contributions histories={dashBoardData.histories} />}
-        {myInfoData && <Span>{myInfoData.nickname}님이 비스킷에서 가장 많이 본 콘텐츠에요.</Span>}
-        {functionToggle.graphToggle && dashBoardData && <Graph graphs={dashBoardData.graphs}/>}
+        {functionToggle.dashBoardToggle && dashBoardData && (
+          <Contributions histories={dashBoardData.histories} />
+        )}
+        {myInfoData && (
+          <Span>
+            {myInfoData.nickname}님이 비스킷에서 가장 많이 본 콘텐츠에요.
+          </Span>
+        )}
+        {functionToggle.graphToggle && dashBoardData && (
+          <Graph graphs={dashBoardData.graphs} />
+        )}
       </DashboardContainer>
     </HomeContainer>
   );

@@ -16,7 +16,7 @@ interface FilterBarProps {
 }
 
 const FilterBarContainer = tw.div`
-  w-full h-17 flex justify-between items-start px-4 bg-black
+  w-full h-17 flex justify-between items-start px-4
 `;
 
 const FilterBar = ({

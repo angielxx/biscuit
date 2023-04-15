@@ -7,13 +7,13 @@ import { useSetRecoilState } from 'recoil';
 import { useMutation } from '@tanstack/react-query';
 import { post_signout } from '../../api/logout';
 import { removeCookie } from 'typescript-cookie';
-import Close from '../../assets/icons/close.svg'
+import Close from '../../assets/icons/close.svg';
 
 const SelectBtn = styled.button`
-  ${tw`h-9 w-15 flex items-center justify-center py-3 px-2 border-[1px] border-dark-primary rounded-[10px] text-tiny`}
-`
+  ${tw`h-9 w-15 flex items-center justify-center py-3 px-2 border-[1px] border-primary rounded-[10px] text-tiny`}
+`;
 const ModalContainer = styled.div((props: { isOnboarding: boolean }) => [
-  tw`fixed z-[102] bg-dark-evaluated p-6 text-white rounded-20`,
+  tw`fixed z-[102] bg-evaluated p-6 text-white rounded-20`,
   tw`w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[45vw] 2xl:w-[40vw]`,
   css`
     top: 50%;
@@ -88,11 +88,11 @@ const LogoutBox = ({ setIsOpen, setIsLogout }: LogoutProps) => {
   const onClick = () => {
     setIsNoob(true);
     // signOutMutate();
-    removeCookie('access-token', { path: '/'});
-    removeCookie('refresh-token', { path: '/'});
+    removeCookie('access-token', { path: '/' });
+    removeCookie('refresh-token', { path: '/' });
     navigate(`/`);
     setIsOpen(false);
-  }
+  };
 
   return (
     <>
@@ -100,12 +100,16 @@ const LogoutBox = ({ setIsOpen, setIsLogout }: LogoutProps) => {
 
       <ModalContainer isOnboarding={false}>
         <div id="close-row" className="flex justify-end">
-          <img src={Close} alt="모달 닫는 버튼" onClick={() => setIsLogout(false)} />
+          <img
+            src={Close}
+            alt="모달 닫는 버튼"
+            onClick={() => setIsLogout(false)}
+          />
         </div>
         <ModalContentContainer>
-          <div className='flex flex-col justify-center items-center gap-4 mb-2'>
+          <div className="flex flex-col justify-center items-center gap-4 mb-2">
             <span>로그아웃 하시겠습니까?</span>
-            <div className='flex gap-4'>
+            <div className="flex gap-4">
               <SelectBtn onClick={onClick}>네</SelectBtn>
               <SelectBtn onClick={() => setIsLogout(false)}>아니오</SelectBtn>
             </div>
@@ -113,7 +117,7 @@ const LogoutBox = ({ setIsOpen, setIsLogout }: LogoutProps) => {
         </ModalContentContainer>
       </ModalContainer>
     </>
-  )
+  );
 };
 
 export default LogoutBox;
