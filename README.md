@@ -136,15 +136,15 @@
 
 #### 4) 로그인 및 회원가입
 
-<img src="assets/03_Login_01_modal.png" width="24%"/><img src="assets/03_Login_02_nickname.png" width="24%"/><img src="assets/03_Login_05_info.png" width="24%"/><img src="assets/03_Login_07_interest_clicked.png" width="24%"/>
+<img src="assets/03_Login_01_modal.png" width="24%"/> <img src="assets/03_Login_02_nickname.png" width="24%"/> <img src="assets/03_Login_05_info.png" width="24%"/> <img src="assets/03_Login_07_interest_clicked.png" width="24%"/>
 
 #### 5) 마이페이지
 
-<img src="assets/06_Mypage_01.png" width="30%"/><img src="assets/06_Mypage_02.png" width="30%"/><img src="assets/06_Mypage_03_edit.png" width="30%"/>
+<img src="assets/06_Mypage_01.png" width="30%"/> <img src="assets/06_Mypage_02.png" width="30%"/> <img src="assets/06_Mypage_03_edit.png" width="30%"/>
 
 #### 6) 북마크 및 히스토리
 
-<img src="assets/07_Mystore_01.png" width="30%"/><img src="assets/07_Mystore_02.png" width="30%"/>
+<img src="assets/07_Mystore_01.png" width="30%"/> <img src="assets/07_Mystore_02.png" width="30%"/>
 
 <br/>
 <br/>
